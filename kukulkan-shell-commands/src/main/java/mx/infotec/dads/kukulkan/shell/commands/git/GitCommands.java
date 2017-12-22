@@ -16,7 +16,7 @@ import mx.infotec.dads.kukulkan.shell.commands.publishers.EventType;
 import mx.infotec.dads.kukulkan.shell.commands.publishers.LocationUpdatedEvent;
 import mx.infotec.dads.kukulkan.shell.domain.NativeCommand;
 import mx.infotec.dads.kukulkan.shell.domain.Navigator;
-import mx.infotec.dads.kukulkan.shell.domain.ProjectContext;
+import mx.infotec.dads.kukulkan.shell.domain.NativeCommandContext;
 import mx.infotec.dads.kukulkan.shell.domain.ShellCommand;
 import mx.infotec.dads.kukulkan.shell.services.CommandService;
 import mx.infotec.dads.kukulkan.shell.util.ResultFormatter;
@@ -36,7 +36,7 @@ public class GitCommands {
     public static final String GIT_COMMAND = "git";
 
     @Autowired
-    ProjectContext projectContext;
+    NativeCommandContext projectContext;
 
     @Autowired
     Navigator nav;

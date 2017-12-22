@@ -16,26 +16,26 @@ import org.springframework.stereotype.Component;
 @Component
 public class Navigator {
 
-    private Path currentPath;
+	private Path currentPath;
 
-    private Path previusPath;
+	private Path previusPath;
 
-    @PostConstruct
-    private void init() {
-        this.currentPath = Paths.get(System.getProperty("user.dir"));
-        this.previusPath = null;
-    }
+	@PostConstruct
+	private void init() {
+		this.currentPath = Paths.get(System.getProperty("user.dir"));
+		this.previusPath = null;
+	}
 
-    public Path getCurrentPath() {
-        return currentPath;
-    }
+	public Path getCurrentPath() {
+		return currentPath;
+	}
 
-    public void setCurrentPath(Path currentPath) {
-        this.previusPath= this.currentPath;
-        this.currentPath = currentPath;
-    }
+	public void setCurrentPath(Path currentPath) {
+		this.previusPath = this.currentPath;
+		this.currentPath = currentPath;
+	}
 
-    public Path getPreviusPath() {
-        return previusPath;
-    }
+	public Path getPreviusPath() {
+		return previusPath;
+	}
 }

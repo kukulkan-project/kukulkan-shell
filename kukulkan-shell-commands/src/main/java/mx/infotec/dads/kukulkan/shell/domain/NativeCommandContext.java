@@ -8,7 +8,7 @@ import java.util.SortedMap;
  * @author Daniel Cortes Pichardo
  *
  */
-public class ProjectContext {
+public class NativeCommandContext {
 
     private SortedMap<String, NativeCommand> availableCommands;
 

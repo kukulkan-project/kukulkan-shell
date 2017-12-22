@@ -14,7 +14,7 @@ import org.springframework.shell.standard.ShellComponent;
 import org.springframework.shell.standard.ShellMethod;
 
 import mx.infotec.dads.kukulkan.shell.domain.AboutInfo;
-import mx.infotec.dads.kukulkan.shell.domain.ProjectContext;
+import mx.infotec.dads.kukulkan.shell.domain.NativeCommandContext;
 import mx.infotec.dads.kukulkan.shell.domain.ShellCommand;
 import mx.infotec.dads.kukulkan.shell.handlers.ShellResultHandler;
 import mx.infotec.dads.kukulkan.shell.services.CommandService;
@@ -31,7 +31,7 @@ import mx.infotec.dads.kukulkan.shell.util.ShellException;
 public class CommonCommands {
 
     @Autowired
-    private ProjectContext context;
+    private NativeCommandContext context;
     @Autowired
     @Lazy
     private Terminal terminal;

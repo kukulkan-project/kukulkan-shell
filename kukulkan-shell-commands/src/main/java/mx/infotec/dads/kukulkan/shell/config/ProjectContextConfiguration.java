@@ -8,7 +8,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 import mx.infotec.dads.kukulkan.shell.domain.NativeCommand;
-import mx.infotec.dads.kukulkan.shell.domain.ProjectContext;
+import mx.infotec.dads.kukulkan.shell.domain.NativeCommandContext;
 import mx.infotec.dads.kukulkan.shell.services.NativeCommandProvided;
 import mx.infotec.dads.kukulkan.shell.services.NativeCommandService;
 
@@ -16,9 +16,9 @@ import mx.infotec.dads.kukulkan.shell.services.NativeCommandService;
 public class ProjectContextConfiguration {
 
     @Bean
-    public ProjectContext configProjectContext(List<NativeCommandProvided> nativeCommands,
+    public NativeCommandContext configProjectContext(List<NativeCommandProvided> nativeCommands,
             NativeCommandService commandService) {
-        ProjectContext context = new ProjectContext();
+        NativeCommandContext context = new NativeCommandContext();
         context.setAvailableCommands(mapDefaultNativeCommands(nativeCommands, commandService));
         return context;
     }

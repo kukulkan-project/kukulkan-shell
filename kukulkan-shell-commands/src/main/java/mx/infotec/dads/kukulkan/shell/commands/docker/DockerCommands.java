@@ -10,7 +10,7 @@ import org.springframework.shell.standard.ShellMethodAvailability;
 import org.springframework.shell.standard.ShellOption;
 
 import mx.infotec.dads.kukulkan.shell.domain.NativeCommand;
-import mx.infotec.dads.kukulkan.shell.domain.ProjectContext;
+import mx.infotec.dads.kukulkan.shell.domain.NativeCommandContext;
 import mx.infotec.dads.kukulkan.shell.domain.ShellCommand;
 import mx.infotec.dads.kukulkan.shell.services.CommandService;
 
@@ -26,7 +26,7 @@ public class DockerCommands {
     public static final String DOCKER_COMMAND = "docker";
 
     @Autowired
-    ProjectContext projectContext;
+    NativeCommandContext projectContext;
 
     @Autowired
     CommandService commandService;

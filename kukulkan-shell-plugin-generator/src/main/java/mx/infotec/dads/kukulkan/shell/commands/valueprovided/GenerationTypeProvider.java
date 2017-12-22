@@ -10,7 +10,7 @@ import org.springframework.shell.CompletionProposal;
 import org.springframework.shell.standard.ValueProviderSupport;
 import org.springframework.stereotype.Component;
 
-import mx.infotec.dads.kukulkan.engine.util.PKGenerationStrategy;
+import mx.infotec.dads.kukulkan.metamodel.util.PKGenerationStrategy;
 
 @Component
 public class GenerationTypeProvider extends ValueProviderSupport {
