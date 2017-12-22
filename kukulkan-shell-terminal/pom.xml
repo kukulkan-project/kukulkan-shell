@@ -36,6 +36,11 @@
 			<artifactId>spring-boot-starter-test</artifactId>
 			<scope>test</scope>
 		</dependency>
+		<!-- Commands -->
+		<dependency>
+			<groupId>mx.infotec.dads.kukulkan</groupId>
+			<artifactId>kukulkan-shell-plugin-generator</artifactId>
+		</dependency>
 		<dependency>
 			<groupId>mx.infotec.dads.kukulkan</groupId>
 			<artifactId>kukulkan-shell-commands</artifactId>

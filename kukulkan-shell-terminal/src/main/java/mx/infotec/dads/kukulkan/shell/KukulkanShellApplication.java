@@ -1,7 +1,10 @@
 package mx.infotec.dads.kukulkan.shell;
 
 import org.springframework.boot.SpringApplication;
-import org.springframework.context.annotation.ComponentScan;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
+
+import mx.infotec.dads.kukulkan.engine.util.KukulkanConfigurationProperties;
 
 /**
  * Init of the Shell
@@ -9,10 +12,8 @@ import org.springframework.context.annotation.ComponentScan;
  * @author Daniel Cortes Pichardo
  *
  */
-@ComponentScan(basePackages = { "mx.infotec.dads.kukulkan", "mx.infotec.dads.kukulkan.engine" })
-// @EnableAutoConfiguration(exclude = { MetricFilterAutoConfiguration.class,
-// MetricRepositoryAutoConfiguration.class })
-// @EnableConfigurationProperties({ KukulkanConfigurationProperties.class })
+@SpringBootApplication(scanBasePackages = { "mx.infotec.dads.kukulkan", "mx.infotec.dads.kukulkan.engine" })
+@EnableConfigurationProperties({ KukulkanConfigurationProperties.class })
 public class KukulkanShellApplication {
     public static void main(String[] args) {
         SpringApplication.run(KukulkanShellApplication.class, args);
