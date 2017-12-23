@@ -58,4 +58,5 @@ public class DatabaseConfiguration {
         mongobee.setEnabled(true);
         return mongobee;
     }
+
 }

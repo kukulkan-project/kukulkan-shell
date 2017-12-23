@@ -1,5 +1,7 @@
 package mx.infotec.dads.kukulkan.shell.domain;
 
+import java.io.Serializable;
+
 import mx.infotec.dads.kukulkan.metamodel.foundation.ProjectConfiguration;
 
 /**
@@ -8,16 +10,18 @@ import mx.infotec.dads.kukulkan.metamodel.foundation.ProjectConfiguration;
  * @author Daniel Cortes Pichardo
  *
  */
-public class ProjectContext {
+public class ProjectContext implements Serializable {
+    
+    private static final long serialVersionUID = 1L;
+    
+    private ProjectConfiguration project;
 
-	private ProjectConfiguration project;
+    public ProjectConfiguration getProject() {
+        return project;
+    }
 
-	public ProjectConfiguration getProject() {
-		return project;
-	}
-
-	public void setProject(ProjectConfiguration project) {
-		this.project = project;
-	}
+    public void setProject(ProjectConfiguration project) {
+        this.project = project;
+    }
 
 }

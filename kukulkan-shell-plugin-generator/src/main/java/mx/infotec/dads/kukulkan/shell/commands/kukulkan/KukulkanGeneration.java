@@ -42,63 +42,66 @@ import mx.infotec.dads.kukulkan.shell.domain.ProjectContext;
 @ShellComponent
 public class KukulkanGeneration {
 
-	private static final Logger LOGGER = LoggerFactory.getLogger(KukulkanGeneration.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(KukulkanGeneration.class);
 
-	@Autowired
-	private GenerationService generationService;
-	@Autowired
-	private RuleRepository ruleRepository;
-	@Autowired
-	private RuleTypeRepository ruleTypeRepository;
+    @Autowired
+    private GenerationService generationService;
+    @Autowired
+    private RuleRepository ruleRepository;
+    @Autowired
+    private RuleTypeRepository ruleTypeRepository;
 
-	@Autowired
-	private ProjectContext context;
+    private ProjectContext context;
 
-	@Autowired
-	private LayerTaskFactory layerTaskFactory;
+    @Autowired
+    private LayerTaskFactory layerTaskFactory;
 
-	@Autowired
-	private KukulkanConfigurationProperties prop;
+    @Autowired
+    private KukulkanConfigurationProperties prop;
 
-	@PostConstruct
-	public void initApplication() {
+    @PostConstruct
+    public void initApplication() {
 
-	}
+    }
 
-	@ShellMethod("Show the current output dir")
-	public String outputdir() {
-		return prop.getConfig().getOutputdir();
+    public KukulkanGeneration(ProjectContext context) {
+        this.context = context;
+    }
 
-	}
+    @ShellMethod("Show the current output dir")
+    public String outputdir() {
+        return prop.getConfig().getOutputdir();
 
-	@ShellMethod("Create entities from file with .3k extension")
-	public void createScaffoldingFromFile(@ShellOption(valueProvider = KukulkanFilesProvider.class) File file)
-			throws IOException {
-		// Create ProjectConfiguration
-		configInflectorProcessor();
-		// Create DataModel
-		DomainModel dataModel = new JavaDomainModel();
-		KukulkanVisitor semanticAnalyzer = new KukulkanVisitor();
-		// Mapping DataContext into DataModel
-		List<DomainModelGroup> dmgList = GrammarMapping.createSingleDataModelGroupList(semanticAnalyzer, file);
-		dataModel.setDomainModelGroup(dmgList);
-		// Create GeneratorContext
-		LOGGER.info("Processing File...");
-		GeneratorContext genCtx = new GeneratorContext(dataModel, context.getProject());
-		// Process Activities
-		generationService.process(genCtx, layerTaskFactory.getLayerTaskSet(ArchetypeType.ANGULAR_SPRING));
-		FileUtil.saveToFile(genCtx);
-	}
+    }
 
-	public void configInflectorProcessor() {
-		Rule rule = new Rule();
-		RuleType ruleType = ruleTypeRepository.findAll().get(0);
-		ruleType.setName("singular");
-		rule.setRuleType(ruleType);
-		Example<Rule> ruleExample = Example.of(rule);
-		List<Rule> rulesList = ruleRepository.findAll(ruleExample);
-		for (Rule item : rulesList) {
-			InflectorProcessor.getInstance().addSingularize(item.getExpression(), item.getReplacement());
-		}
-	}
+    @ShellMethod("Create entities from file with .3k extension")
+    public void createScaffoldingFromFile(@ShellOption(valueProvider = KukulkanFilesProvider.class) File file)
+            throws IOException {
+        // Create ProjectConfiguration
+        configInflectorProcessor();
+        // Create DataModel
+        DomainModel dataModel = new JavaDomainModel();
+        KukulkanVisitor semanticAnalyzer = new KukulkanVisitor();
+        // Mapping DataContext into DataModel
+        List<DomainModelGroup> dmgList = GrammarMapping.createSingleDataModelGroupList(semanticAnalyzer, file);
+        dataModel.setDomainModelGroup(dmgList);
+        // Create GeneratorContext
+        LOGGER.info("Processing File...");
+        GeneratorContext genCtx = new GeneratorContext(dataModel, context.getProject());
+        // Process Activities
+        generationService.process(genCtx, layerTaskFactory.getLayerTaskSet(ArchetypeType.ANGULAR_SPRING));
+        FileUtil.saveToFile(genCtx);
+    }
+
+    public void configInflectorProcessor() {
+        Rule rule = new Rule();
+        RuleType ruleType = ruleTypeRepository.findAll().get(0);
+        ruleType.setName("singular");
+        rule.setRuleType(ruleType);
+        Example<Rule> ruleExample = Example.of(rule);
+        List<Rule> rulesList = ruleRepository.findAll(ruleExample);
+        for (Rule item : rulesList) {
+            InflectorProcessor.getInstance().addSingularize(item.getExpression(), item.getReplacement());
+        }
+    }
 }

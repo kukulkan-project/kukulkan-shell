@@ -13,10 +13,10 @@ import mx.infotec.dads.kukulkan.shell.services.NativeCommandProvided;
 import mx.infotec.dads.kukulkan.shell.services.NativeCommandService;
 
 @Configuration
-public class ProjectContextConfiguration {
+public class NativeCommandContextConfiguration {
 
     @Bean
-    public NativeCommandContext configProjectContext(List<NativeCommandProvided> nativeCommands,
+    public NativeCommandContext configNativeCommandContext(List<NativeCommandProvided> nativeCommands,
             NativeCommandService commandService) {
         NativeCommandContext context = new NativeCommandContext();
         context.setAvailableCommands(mapDefaultNativeCommands(nativeCommands, commandService));
