@@ -16,7 +16,7 @@ import org.springframework.shell.standard.ShellMethod;
 import mx.infotec.dads.kukulkan.shell.domain.AboutInfo;
 import mx.infotec.dads.kukulkan.shell.domain.NativeCommandContext;
 import mx.infotec.dads.kukulkan.shell.domain.ShellCommand;
-import mx.infotec.dads.kukulkan.shell.handlers.ShellResultHandler;
+import mx.infotec.dads.kukulkan.shell.event.handler.ShellResultHandler;
 import mx.infotec.dads.kukulkan.shell.services.CommandService;
 import mx.infotec.dads.kukulkan.shell.util.ExceptionType;
 import mx.infotec.dads.kukulkan.shell.util.ShellException;

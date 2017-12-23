@@ -10,12 +10,12 @@ import org.springframework.shell.CompletionProposal;
  */
 public class ShellCompletionProposal extends CompletionProposal {
 
-	public ShellCompletionProposal(String lineText, String description) {
-		super(lineText);
-		this.description(description);
-	}
+    public ShellCompletionProposal(String lineText, String description) {
+        super(lineText);
+        this.description(description);
+    }
 
-	public ShellCompletionProposal(String lineText) {
-		super(lineText);
-	}
+    public ShellCompletionProposal(String lineText) {
+        super(lineText);
+    }
 }

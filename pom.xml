@@ -51,6 +51,7 @@
 	</properties>
 
 	<modules>
+		<module>kukulkan-shell-commons</module>
 		<module>kukulkan-shell-plugin-generator</module>
 		<module>kukulkan-shell-commands</module>
 		<module>kukulkan-shell-terminal</module>
@@ -85,6 +86,11 @@
 			<dependency>
 				<groupId>mx.infotec.dads.kukulkan</groupId>
 				<artifactId>kukulkan-shell-plugin-generator</artifactId>
+				<version>0.0.1-SNAPSHOT</version>
+			</dependency>
+			<dependency>
+				<groupId>mx.infotec.dads.kukulkan</groupId>
+				<artifactId>kukulkan-shell-commons</artifactId>
 				<version>0.0.1-SNAPSHOT</version>
 			</dependency>
 			<dependency>

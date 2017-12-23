@@ -17,9 +17,9 @@ import org.springframework.shell.standard.ShellComponent;
 import org.springframework.shell.standard.ShellMethod;
 import org.springframework.shell.standard.ShellOption;
 
-import mx.infotec.dads.kukulkan.shell.commands.publishers.EventType;
-import mx.infotec.dads.kukulkan.shell.commands.publishers.LocationUpdatedEvent;
-import mx.infotec.dads.kukulkan.shell.domain.Navigator;
+import mx.infotec.dads.kukulkan.shell.component.Navigator;
+import mx.infotec.dads.kukulkan.shell.event.message.EventType;
+import mx.infotec.dads.kukulkan.shell.event.message.LocationUpdatedEvent;
 import mx.infotec.dads.kukulkan.shell.services.CommandService;
 
 /**

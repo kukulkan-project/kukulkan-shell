@@ -38,6 +38,10 @@
 			<artifactId>spring-boot-starter-test</artifactId>
 			<scope>test</scope>
 		</dependency>
+		<dependency>
+			<groupId>mx.infotec.dads.kukulkan</groupId>
+			<artifactId>kukulkan-shell-commons</artifactId>
+		</dependency>
 	</dependencies>
 	<repositories>
 		<repository>

@@ -9,7 +9,7 @@ import org.springframework.shell.CompletionProposal;
 import org.springframework.shell.standard.ValueProviderSupport;
 import org.springframework.stereotype.Component;
 
-import mx.infotec.dads.kukulkan.shell.domain.Navigator;
+import mx.infotec.dads.kukulkan.shell.component.Navigator;
 import mx.infotec.dads.kukulkan.shell.util.FilesCommons;
 
 @Component

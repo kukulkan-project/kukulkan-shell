@@ -1,4 +1,4 @@
-package mx.infotec.dads.kukulkan.shell.commands.publishers;
+package mx.infotec.dads.kukulkan.shell.event.message;
 
 import org.jline.utils.AttributedStyle;
 

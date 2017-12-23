@@ -1,4 +1,4 @@
-package mx.infotec.dads.kukulkan.shell.handlers;
+package mx.infotec.dads.kukulkan.shell.event.handler;
 
 import org.jline.utils.AttributedStringBuilder;
 import org.jline.utils.AttributedStyle;
