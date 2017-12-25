@@ -54,9 +54,6 @@ public class KukulkanGeneration {
     private ProjectContext context;
 
     @Autowired
-    private LayerTaskFactory layerTaskFactory;
-
-    @Autowired
     private KukulkanConfigurationProperties prop;
 
     @PostConstruct
@@ -89,7 +86,9 @@ public class KukulkanGeneration {
         LOGGER.info("Processing File...");
         GeneratorContext genCtx = new GeneratorContext(dataModel, context.getProject());
         // Process Activities
-        generationService.process(genCtx, layerTaskFactory.getLayerTaskSet(ArchetypeType.ANGULAR_SPRING));
+        generationService.findGeneratorByName("angular-spring").ifPresent(generator->{
+            generationService.process(genCtx, generator);                   
+        });
         FileUtil.saveToFile(genCtx);
     }
 
