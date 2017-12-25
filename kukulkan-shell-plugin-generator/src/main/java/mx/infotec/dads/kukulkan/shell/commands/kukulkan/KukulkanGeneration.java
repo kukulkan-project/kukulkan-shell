@@ -14,17 +14,15 @@ import org.springframework.shell.standard.ShellComponent;
 import org.springframework.shell.standard.ShellMethod;
 import org.springframework.shell.standard.ShellOption;
 
-import mx.infotec.dads.kukulkan.engine.factories.LayerTaskFactory;
+import mx.infotec.dads.kukulkan.engine.domain.Rule;
+import mx.infotec.dads.kukulkan.engine.domain.RuleType;
 import mx.infotec.dads.kukulkan.engine.repository.RuleRepository;
 import mx.infotec.dads.kukulkan.engine.repository.RuleTypeRepository;
 import mx.infotec.dads.kukulkan.engine.service.GenerationService;
-import mx.infotec.dads.kukulkan.metamodel.foundation.ArchetypeType;
 import mx.infotec.dads.kukulkan.metamodel.foundation.DomainModel;
 import mx.infotec.dads.kukulkan.metamodel.foundation.DomainModelGroup;
 import mx.infotec.dads.kukulkan.metamodel.foundation.GeneratorContext;
 import mx.infotec.dads.kukulkan.metamodel.foundation.JavaDomainModel;
-import mx.infotec.dads.kukulkan.metamodel.foundation.Rule;
-import mx.infotec.dads.kukulkan.metamodel.foundation.RuleType;
 import mx.infotec.dads.kukulkan.metamodel.translator.dsl.GrammarMapping;
 import mx.infotec.dads.kukulkan.metamodel.translator.dsl.KukulkanVisitor;
 import mx.infotec.dads.kukulkan.metamodel.util.FileUtil;
@@ -86,10 +84,10 @@ public class KukulkanGeneration {
         LOGGER.info("Processing File...");
         GeneratorContext genCtx = new GeneratorContext(dataModel, context.getProject());
         // Process Activities
-        generationService.findGeneratorByName("angular-spring").ifPresent(generator->{
+        generationService.findGeneratorByName("angularJs-spring").ifPresent(generator->{
             generationService.process(genCtx, generator);                   
+            FileUtil.saveToFile(genCtx);
         });
-        FileUtil.saveToFile(genCtx);
     }
 
     public void configInflectorProcessor() {
