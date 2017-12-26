@@ -23,11 +23,11 @@ import com.mongodb.MongoClient;
 import mx.infotec.dads.kukulkan.metamodel.util.JSR310DateConverters;
 
 @Configuration
-@EnableMongoRepositories(basePackages = { "mx.infotec.dads.kukulkan.engine.repository" })
+@EnableMongoRepositories(basePackages = { "mx.infotec.dads.kukulkan.generator.angularjs.repository" })
 @Import(value = MongoAutoConfiguration.class)
 public class DatabaseConfiguration {
 
-    private final Logger log = LoggerFactory.getLogger(DatabaseConfiguration.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(DatabaseConfiguration.class);
 
     @Bean
     public ValidatingMongoEventListener validatingMongoEventListener() {
@@ -49,12 +49,12 @@ public class DatabaseConfiguration {
 
     @Bean
     public Mongobee mongobee(MongoClient mongoClient, MongoTemplate mongoTemplate, MongoProperties mongoProperties) {
-        log.debug("Configuring Mongobee");
+        LOGGER.debug("Configuring Mongobee");
         Mongobee mongobee = new Mongobee(mongoClient);
         mongobee.setDbName(mongoProperties.getDatabase());
         mongobee.setMongoTemplate(mongoTemplate);
         // package to scan for migrations
-        mongobee.setChangeLogsScanPackage("mx.infotec.dads.kukulkan.engine.dbmigrations");
+        mongobee.setChangeLogsScanPackage("mx.infotec.dads.kukulkan.generator.angularjs.dbmigrations");
         mongobee.setEnabled(true);
         return mongobee;
     }
