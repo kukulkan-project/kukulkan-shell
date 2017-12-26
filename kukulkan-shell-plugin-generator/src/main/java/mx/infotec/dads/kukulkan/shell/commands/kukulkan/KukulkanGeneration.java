@@ -14,11 +14,11 @@ import org.springframework.shell.standard.ShellComponent;
 import org.springframework.shell.standard.ShellMethod;
 import org.springframework.shell.standard.ShellOption;
 
-import mx.infotec.dads.kukulkan.engine.domain.Rule;
-import mx.infotec.dads.kukulkan.engine.domain.RuleType;
 import mx.infotec.dads.kukulkan.engine.service.GenerationService;
 import mx.infotec.dads.kukulkan.engine.translator.dsl.GrammarMapping;
 import mx.infotec.dads.kukulkan.engine.translator.dsl.KukulkanVisitor;
+import mx.infotec.dads.kukulkan.generator.angularjs.domain.Rule;
+import mx.infotec.dads.kukulkan.generator.angularjs.domain.RuleType;
 import mx.infotec.dads.kukulkan.generator.angularjs.repository.RuleRepository;
 import mx.infotec.dads.kukulkan.generator.angularjs.repository.RuleTypeRepository;
 import mx.infotec.dads.kukulkan.metamodel.foundation.DomainModel;
