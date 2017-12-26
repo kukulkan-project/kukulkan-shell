@@ -37,20 +37,8 @@
 			<scope>test</scope>
 		</dependency>
 		<dependency>
-			<groupId>mx.infotec.dads.kukulkan</groupId>
-			<artifactId>kukulkan-metamodel</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>com.github.mongobee</groupId>
-			<artifactId>mongobee</artifactId>
-		</dependency>
-		<dependency>
 			<groupId>de.flapdoodle.embed</groupId>
 			<artifactId>de.flapdoodle.embed.mongo</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>mx.infotec.dads.kukulkan</groupId>
-			<artifactId>kukulkan-engine</artifactId>
 		</dependency>
 		<!-- Commands -->
 		<dependency>

@@ -33,7 +33,7 @@
 			<groupId>com.beust</groupId>
 			<artifactId>jcommander</artifactId>
 		</dependency>
-		
+
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-test</artifactId>
@@ -45,7 +45,7 @@
 		</dependency>
 		<dependency>
 			<groupId>mx.infotec.dads.kukulkan</groupId>
-			<artifactId>kukulkan-engine</artifactId>
+			<artifactId>kukulkan-generator-angularjs</artifactId>
 		</dependency>
 	</dependencies>
 	<repositories>
