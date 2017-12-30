@@ -17,7 +17,7 @@ public class ProjectContextConfiguration {
 
     private ProjectContext createDefaultProjectConfiguration(ProjectContext context) {
         ProjectConfiguration pConf = new ProjectConfiguration();
-        pConf.setId("kukulkanmongo");
+        pConf.setId("paz");
         pConf.setGroupId("mx.infotec.dads.mongo");
         pConf.setVersion("1.0.0");
         pConf.setPackaging("mx.infotec.dads.mongo");

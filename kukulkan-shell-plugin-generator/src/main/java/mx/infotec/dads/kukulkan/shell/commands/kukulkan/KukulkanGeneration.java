@@ -84,9 +84,20 @@ public class KukulkanGeneration {
         LOGGER.info("Processing File...");
         GeneratorContext genCtx = new GeneratorContext(dataModel, context.getProject());
         // Process Activities
-        generationService.findGeneratorByName("angularJs-spring").ifPresent(generator->{
-            generationService.process(genCtx, generator);                   
+        generationService.findGeneratorByName("angularJs-spring").ifPresent(generator -> {
+            generationService.process(genCtx, generator);
             FileUtil.saveToFile(genCtx);
+        });
+    }
+
+    @ShellMethod("Create a project from archetype")
+    public void createProject() throws IOException {
+        // Create GeneratorContext
+        LOGGER.info("Processing Archetype...");
+        GeneratorContext genCtx = new GeneratorContext(context.getProject());
+        // Process Activities
+        generationService.findGeneratorByName("angular-js-archetype-generator").ifPresent(generator -> {
+            generationService.process(genCtx, generator);
         });
     }
 
