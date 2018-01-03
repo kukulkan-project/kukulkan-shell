@@ -51,6 +51,7 @@
 	</properties>
 
 	<modules>
+		<module>kukulkan-shell-client</module>
 		<module>kukulkan-shell-commons</module>
 		<module>kukulkan-shell-plugin-generator</module>
 		<module>kukulkan-shell-commands</module>
