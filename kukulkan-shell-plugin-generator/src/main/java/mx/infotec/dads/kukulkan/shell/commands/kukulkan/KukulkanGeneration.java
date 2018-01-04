@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.util.List;
 
 import javax.annotation.PostConstruct;
+import javax.validation.constraints.NotNull;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -54,11 +55,6 @@ public class KukulkanGeneration {
     @Autowired
     private KukulkanConfigurationProperties prop;
 
-    @PostConstruct
-    public void initApplication() {
-
-    }
-
     public KukulkanGeneration(ProjectContext context) {
         this.context = context;
     }
@@ -70,7 +66,7 @@ public class KukulkanGeneration {
     }
 
     @ShellMethod("Create entities from file with .3k extension")
-    public void createScaffoldingFromFile(@ShellOption(valueProvider = KukulkanFilesProvider.class) File file)
+    public void generateEntitiesFromFile(@ShellOption(valueProvider = KukulkanFilesProvider.class) File file)
             throws IOException {
         // Create ProjectConfiguration
         configInflectorProcessor();
@@ -91,11 +87,11 @@ public class KukulkanGeneration {
     }
 
     @ShellMethod("Create a project from archetype")
-    public void createProject() throws IOException {
-        // Create GeneratorContext
+    public void createProject(@NotNull String appName, @NotNull String groupId) {
+        context.getProject().setGroupId(groupId);
+        context.getProject().setId(appName);
         LOGGER.info("Processing Archetype...");
         GeneratorContext genCtx = new GeneratorContext(context.getProject());
-        // Process Activities
         generationService.findGeneratorByName("angular-js-archetype-generator").ifPresent(generator -> {
             generationService.process(genCtx, generator);
         });
