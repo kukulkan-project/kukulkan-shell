@@ -1,5 +1,7 @@
 package mx.infotec.dads.kukulkan.shell.commands.kukulkan;
 
+import static mx.infotec.dads.kukulkan.shell.commands.validation.UserInputValidation.createProjectValidation;
+
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
@@ -29,8 +31,11 @@ import mx.infotec.dads.kukulkan.metamodel.foundation.JavaDomainModel;
 import mx.infotec.dads.kukulkan.metamodel.util.FileUtil;
 import mx.infotec.dads.kukulkan.metamodel.util.InflectorProcessor;
 import mx.infotec.dads.kukulkan.metamodel.util.KukulkanConfigurationProperties;
+import mx.infotec.dads.kukulkan.shell.commands.validation.UserInputValidation;
 import mx.infotec.dads.kukulkan.shell.commands.valueprovided.KukulkanFilesProvider;
+import mx.infotec.dads.kukulkan.shell.component.Navigator;
 import mx.infotec.dads.kukulkan.shell.domain.ProjectContext;
+import mx.infotec.dads.kukulkan.shell.services.CommandService;
 
 /**
  * Util Commands
@@ -50,6 +55,12 @@ public class KukulkanGeneration {
     @Autowired
     private RuleTypeRepository ruleTypeRepository;
 
+    @Autowired
+    private CommandService commandService;
+
+    @Autowired
+    private Navigator navigator;
+
     private ProjectContext context;
 
     @Autowired
@@ -66,8 +77,7 @@ public class KukulkanGeneration {
     }
 
     @ShellMethod("Create entities from file with .3k extension")
-    public void generateEntitiesFromFile(@ShellOption(valueProvider = KukulkanFilesProvider.class) File file)
-            throws IOException {
+    public void generateEntitiesFromFile(@ShellOption(valueProvider = KukulkanFilesProvider.class) File file) {
         // Create ProjectConfiguration
         configInflectorProcessor();
         // Create DataModel
@@ -88,13 +98,18 @@ public class KukulkanGeneration {
 
     @ShellMethod("Create a project from archetype")
     public void createProject(@NotNull String appName, @NotNull String groupId) {
+        createProjectValidation(appName, groupId);
         context.getProject().setGroupId(groupId);
         context.getProject().setId(appName);
+        context.getProject().setOutputDir(navigator.getCurrentPath());
         LOGGER.info("Processing Archetype...");
         GeneratorContext genCtx = new GeneratorContext(context.getProject());
         generationService.findGeneratorByName("angular-js-archetype-generator").ifPresent(generator -> {
             generationService.process(genCtx, generator);
         });
+        commandService.printf("Execute the command", "mvn-config-front-End");
+        commandService.printf("\n\n\r");
+
     }
 
     public void configInflectorProcessor() {
