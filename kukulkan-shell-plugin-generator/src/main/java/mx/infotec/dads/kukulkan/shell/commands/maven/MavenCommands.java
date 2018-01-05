@@ -1,12 +1,14 @@
 package mx.infotec.dads.kukulkan.shell.commands.maven;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.jline.utils.AttributedString;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.shell.standard.ShellComponent;
 import org.springframework.shell.standard.ShellMethod;
 
+import mx.infotec.dads.kukulkan.shell.domain.Line;
 import mx.infotec.dads.kukulkan.shell.domain.NativeCommandContext;
 import mx.infotec.dads.kukulkan.shell.domain.ShellCommand;
 import mx.infotec.dads.kukulkan.shell.services.CommandService;
@@ -34,8 +36,11 @@ public class MavenCommands {
      * -Pprod -DskiptTests"
      */
     @ShellMethod("Configurate a initial Archetype")
-    public List<AttributedString> mvnConfigFrontEnd() {
-        List<CharSequence> exec= commandService.exec(new ShellCommand(MVN_COMMAND).addArg("package").addArg("-Pprod").addArg("-DskipTests"));
-        return ResultFormatter.formatToGitOutput(exec);
+    public void mvnConfigFrontEnd() {
+        commandService.exec(new ShellCommand(MVN_COMMAND).addArg("package").addArg("-Pprod").addArg("-DskipTests"),
+                line -> {
+                    System.out.println(line);
+                    return Optional.ofNullable(new Line(line));
+                });
     }
 }

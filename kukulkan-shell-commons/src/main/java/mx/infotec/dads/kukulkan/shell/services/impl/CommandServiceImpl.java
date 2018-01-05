@@ -56,11 +56,6 @@ public class CommandServiceImpl implements CommandService {
         terminal.writer().append(String.format(ANSI_GREEN + "[%-15s] -" + ANSI_RESET + "%-30s", key, message));
     }
 
-    @Override
-    public List<CharSequence> exec(final ShellCommand command, LineProcessor processor) {
-        return exec(nav.getCurrentPath(), command, processor);
-    }
-
     public List<Line> exec(final ShellCommand command, LineValuedProcessor processor) {
         List<Line> lines = new ArrayList<>();
         try {

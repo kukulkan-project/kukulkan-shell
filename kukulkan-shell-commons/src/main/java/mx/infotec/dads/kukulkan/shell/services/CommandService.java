@@ -24,8 +24,6 @@ public interface CommandService {
 
     public List<CharSequence> exec(final ShellCommand command);
 
-    public List<CharSequence> exec(final ShellCommand command, LineProcessor processor);
-
     public List<Line> exec(final ShellCommand command, LineValuedProcessor processor);
 
     public List<CharSequence> exec(final Path workingDirectory, final ShellCommand command);
