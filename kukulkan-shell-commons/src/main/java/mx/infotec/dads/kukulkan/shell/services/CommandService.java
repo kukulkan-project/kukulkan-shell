@@ -1,3 +1,26 @@
+/*
+ *  
+ * The MIT License (MIT)
+ * Copyright (c) 2016 Daniel Cortes Pichardo
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ */
 package mx.infotec.dads.kukulkan.shell.services;
 
 import java.nio.file.Path;
@@ -10,25 +33,68 @@ import mx.infotec.dads.kukulkan.shell.util.LineProcessor;
 import mx.infotec.dads.kukulkan.shell.util.LineValuedProcessor;
 
 /**
- * Useful methods to handle the main Console
- * 
- * @author Daniel Cortes Pichardo
+ * Useful methods to handle the main Console.
  *
+ * @author Daniel Cortes Pichardo
  */
 
 public interface CommandService {
 
+    /**
+     * Printf.
+     *
+     * @param text the text
+     */
     public void printf(String text);
 
+    /**
+     * Printf.
+     *
+     * @param key the key
+     * @param message the message
+     */
     public void printf(String key, String message);
 
+    /**
+     * Exec.
+     *
+     * @param command the command
+     * @return the list
+     */
     public List<CharSequence> exec(final ShellCommand command);
 
+    /**
+     * Exec.
+     *
+     * @param command the command
+     * @param processor the processor
+     * @return the list
+     */
     public List<Line> exec(final ShellCommand command, LineValuedProcessor processor);
 
+    /**
+     * Exec.
+     *
+     * @param workingDirectory the working directory
+     * @param command the command
+     * @return the list
+     */
     public List<CharSequence> exec(final Path workingDirectory, final ShellCommand command);
 
+    /**
+     * Exec.
+     *
+     * @param workingDirectory the working directory
+     * @param command the command
+     * @param processor the processor
+     * @return the list
+     */
     public List<CharSequence> exec(final Path workingDirectory, final ShellCommand command, LineProcessor processor);
 
+    /**
+     * Test native command.
+     *
+     * @param nc the nc
+     */
     public void testNativeCommand(NativeCommand nc);
 }
