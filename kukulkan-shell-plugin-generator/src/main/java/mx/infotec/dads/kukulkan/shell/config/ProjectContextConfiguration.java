@@ -5,19 +5,13 @@ import org.springframework.context.annotation.Configuration;
 
 import mx.infotec.dads.kukulkan.metamodel.foundation.ProjectConfiguration;
 import mx.infotec.dads.kukulkan.metamodel.util.PKGenerationStrategy;
-import mx.infotec.dads.kukulkan.shell.domain.ProjectContext;
 
 @Configuration
 public class ProjectContextConfiguration {
     @Bean
-    public ProjectContext configProjectContext() {
-        ProjectContext context = new ProjectContext();
-        return createDefaultProjectConfiguration(context);
-    }
-
-    private ProjectContext createDefaultProjectConfiguration(ProjectContext context) {
+    public ProjectConfiguration configProjectContext() {
         ProjectConfiguration pConf = new ProjectConfiguration();
-        pConf.setId("paz");
+        pConf.setId("demo");
         pConf.setGroupId("mx.infotec.dads.mongo");
         pConf.setVersion("1.0.0");
         pConf.setPackaging("mx.infotec.dads.mongo");
@@ -31,7 +25,6 @@ public class ProjectContextConfiguration {
         pConf.setDomainLayerName("domain");
         pConf.setMongoDb(true);
         pConf.setGlobalGenerationType(PKGenerationStrategy.SEQUENCE);
-        context.setProject(pConf);
-        return context;
+        return pConf;
     }
 }

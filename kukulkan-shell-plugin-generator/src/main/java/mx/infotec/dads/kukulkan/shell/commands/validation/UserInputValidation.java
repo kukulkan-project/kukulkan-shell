@@ -13,21 +13,21 @@ import mx.infotec.dads.kukulkan.shell.commands.exception.GeneratorException;
  */
 public class UserInputValidation {
     public static final Pattern APP_NAME_PATTERN = Pattern.compile("^[a-z]*$");
-    public static final Pattern GROUP_ID_PATTERN = Pattern.compile(
+    public static final Pattern PACKAGE_ID_PATTERN = Pattern.compile(
             "^([a-zA-Z_]{1}[a-zA-Z]*){2,10}\\.([a-zA-Z_]{1}[a-zA-Z0-9_]*){1,30}((\\.([a-zA-Z_]{1}[a-zA-Z0-9_]*){1,61})*)?$");
 
     private UserInputValidation() {
 
     }
 
-    public static void createProjectValidation(String appName, String groupId) {
+    public static void validateProjectParams(String appName, String packaging) {
         Objects.requireNonNull(appName);
-        Objects.requireNonNull(groupId);
+        Objects.requireNonNull(packaging);
         StringBuilder message = new StringBuilder();
         if (!APP_NAME_PATTERN.matcher(appName).matches()) {
             message.append("\n\n\t").append("[app-name] no fullfilment the pattern ").append("^[a-z]*$");
         }
-        if (!GROUP_ID_PATTERN.matcher(groupId).matches()) {
+        if (!PACKAGE_ID_PATTERN.matcher(packaging).matches()) {
             message.append("\n\n\t").append("[group-id] no fullfilment the pattern ").append(
                     "^([a-zA-Z_]{1}[a-zA-Z]*){2,10}\\.([a-zA-Z_]{1}[a-zA-Z0-9_]*){1,30}((\\.([a-zA-Z_]{1}[a-zA-Z0-9_]*){1,61})*)?$").append("\n\n");
         }
