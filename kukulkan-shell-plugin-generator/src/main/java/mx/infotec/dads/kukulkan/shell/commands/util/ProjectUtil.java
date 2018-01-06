@@ -37,9 +37,9 @@ public class ProjectUtil {
         }
     }
 
-    public static ProjectConfiguration readKukulkanFile(ProjectConfiguration config) {
+    public static ProjectConfiguration readKukulkanFile(Path projectPath) {
         try {
-            Path kukulkanFilePath = Paths.get(config.getOutputDir().toString(), config.getId(), KUKULKAN_FILE);
+            Path kukulkanFilePath = Paths.get(projectPath.toString(), KUKULKAN_FILE);
             ObjectMapper objectMapper = new ObjectMapper();
             return objectMapper.readValue(kukulkanFilePath.toFile(), ProjectConfiguration.class);
         } catch (IOException e) {

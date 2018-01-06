@@ -29,6 +29,7 @@ import mx.infotec.dads.kukulkan.metamodel.foundation.DomainModel;
 import mx.infotec.dads.kukulkan.metamodel.foundation.DomainModelGroup;
 import mx.infotec.dads.kukulkan.metamodel.foundation.GeneratorContext;
 import mx.infotec.dads.kukulkan.metamodel.foundation.JavaDomainModel;
+import mx.infotec.dads.kukulkan.metamodel.foundation.ProjectConfiguration;
 import mx.infotec.dads.kukulkan.metamodel.util.FileUtil;
 import mx.infotec.dads.kukulkan.metamodel.util.InflectorProcessor;
 import mx.infotec.dads.kukulkan.metamodel.util.KukulkanConfigurationProperties;
@@ -80,6 +81,9 @@ public class KukulkanGeneration {
 
     @ShellMethod("Create entities from file with .3k extension")
     public void generatorCreateEntitiesFromFile(@ShellOption(valueProvider = KukulkanFilesProvider.class) File file) {
+        ProjectConfiguration pConf = ProjectUtil.readKukulkanFile(navigator.getCurrentPath());
+        context.getProject().setId(pConf.getId());
+        context.getProject().setGroupId(pConf.getGroupId());
         context.getProject().setOutputDir(navigator.getCurrentPath());
         // Create ProjectConfiguration
         configInflectorProcessor();
