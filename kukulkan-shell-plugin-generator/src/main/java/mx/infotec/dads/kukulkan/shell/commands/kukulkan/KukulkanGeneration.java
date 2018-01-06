@@ -1,3 +1,26 @@
+/*
+ *  
+ * The MIT License (MIT)
+ * Copyright (c) 2016 Daniel Cortes Pichardo
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ */
 package mx.infotec.dads.kukulkan.shell.commands.kukulkan;
 
 import static mx.infotec.dads.kukulkan.shell.commands.kukulkan.CommandHelper.configProjectConfiguration;
@@ -26,16 +49,21 @@ import mx.infotec.dads.kukulkan.shell.commands.valueprovided.KukulkanFilesProvid
 import mx.infotec.dads.kukulkan.shell.util.TextFormatter;
 
 /**
- * Generator Command
- * 
- * @author Daniel Cortes Pichardo
+ * Generator Command.
  *
+ * @author Daniel Cortes Pichardo
  */
 @ShellComponent
 public class KukulkanGeneration extends AbstractCommand {
 
+    /** The Constant LOGGER. */
     private static final Logger LOGGER = LoggerFactory.getLogger(KukulkanGeneration.class);
 
+    /**
+     * Outputdir.
+     *
+     * @return the string
+     */
     @ShellMethod("Show the current output dir")
     public String outputdir() {
         return configurationProperties.getConfig().getOutputdir();
@@ -44,8 +72,8 @@ public class KukulkanGeneration extends AbstractCommand {
     /**
      * Command Shell for Generate all the entities that come from a file with .3
      * extension
-     * 
-     * @param file
+     *
+     * @param file the file
      */
     @ShellMethod("Generate all the entities that come from a file with .3k extension")
     public void generateEntitiesFromFile(@ShellOption(valueProvider = KukulkanFilesProvider.class) File file) {
@@ -58,10 +86,10 @@ public class KukulkanGeneration extends AbstractCommand {
     }
 
     /**
-     * Command Shell that Generate a Project from an Archetype Catalog
-     * 
-     * @param appName
-     * @param groupId
+     * Command Shell that Generate a Project from an Archetype Catalog.
+     *
+     * @param appName the app name
+     * @param packaging the packaging
      */
     @ShellMethod("Generate a Project from an Archetype Catalog")
     public void generateProject(@NotNull String appName, @NotNull String packaging) {
@@ -79,8 +107,8 @@ public class KukulkanGeneration extends AbstractCommand {
 
     /**
      * Command Shell that show the current project configuration applied to the
-     * current context
-     * 
+     * current context.
+     *
      * @return List<AttributedString>
      */
     @ShellMethod("Show the current project configuration applied to the current context")

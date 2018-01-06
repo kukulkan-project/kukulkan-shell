@@ -21,31 +21,49 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-
 package mx.infotec.dads.kukulkan.shell.commands.exception;
 
 /**
- * Runtime Exception of the Applicaton
- * 
- * @author Daniel Cortes Pichardo
+ * Runtime Exception of the Applicaton.
  *
+ * @author Daniel Cortes Pichardo
  */
 public class GeneratorException extends RuntimeException {
 
+    /** The Constant serialVersionUID. */
     private static final long serialVersionUID = 1L;
 
+    /**
+     * Instantiates a new generator exception.
+     */
     public GeneratorException() {
         super();
     }
 
+    /**
+     * Instantiates a new generator exception.
+     *
+     * @param s the s
+     */
     public GeneratorException(String s) {
         super(s);
     }
 
+    /**
+     * Instantiates a new generator exception.
+     *
+     * @param s the s
+     * @param throwable the throwable
+     */
     public GeneratorException(String s, Throwable throwable) {
         super(s, throwable);
     }
 
+    /**
+     * Instantiates a new generator exception.
+     *
+     * @param throwable the throwable
+     */
     public GeneratorException(Throwable throwable) {
         super(throwable);
     }

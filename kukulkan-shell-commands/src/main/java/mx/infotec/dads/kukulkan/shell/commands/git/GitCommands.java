@@ -1,3 +1,26 @@
+/*
+ *  
+ * The MIT License (MIT)
+ * Copyright (c) 2016 Daniel Cortes Pichardo
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ */
 package mx.infotec.dads.kukulkan.shell.commands.git;
 
 import java.util.List;
@@ -22,28 +45,37 @@ import mx.infotec.dads.kukulkan.shell.services.CommandService;
 import mx.infotec.dads.kukulkan.shell.util.TextFormatter;
 
 /**
- * Docker Commands
- * 
- * @author Daniel Cortes Pichardo
+ * Docker Commands.
  *
+ * @author Daniel Cortes Pichardo
  */
 @ShellComponent
 public class GitCommands {
 
+    /** The command service. */
     @Autowired
     CommandService commandService;
 
+    /** The Constant GIT_COMMAND. */
     public static final String GIT_COMMAND = "git";
 
+    /** The project context. */
     @Autowired
     NativeCommandContext projectContext;
 
+    /** The nav. */
     @Autowired
     Navigator nav;
 
+    /** The publisher. */
     @Autowired
     private ApplicationEventPublisher publisher;
 
+    /**
+     * Git status.
+     *
+     * @return the list
+     */
     @ShellMethod("Show the status of the current git project")
     public List<AttributedString> gitStatus() {
         List<CharSequence> exec = commandService.exec(new ShellCommand(GIT_COMMAND, "status"));
@@ -51,6 +83,11 @@ public class GitCommands {
         return TextFormatter.formatToGitOutput(exec);
     }
 
+    /**
+     * Git create feature.
+     *
+     * @param name the name
+     */
     @ShellMethod("Create a new Feature")
     public void gitCreateFeature(@NotNull String name) {
         commandService.exec(nav.getCurrentPath(),
@@ -58,6 +95,11 @@ public class GitCommands {
         publisher.publishEvent(new LocationUpdatedEvent(EventType.FILE_NAVIGATION));
     }
 
+    /**
+     * Git terminate feature.
+     *
+     * @param name the name
+     */
     @ShellMethod("Terminate a Feature")
     public void gitTerminateFeature(@NotNull String name) {
         commandService.exec(nav.getCurrentPath(), new ShellCommand(GIT_COMMAND, "checkout", "develop"));
@@ -67,12 +109,22 @@ public class GitCommands {
         publisher.publishEvent(new LocationUpdatedEvent(EventType.FILE_NAVIGATION));
     }
 
+    /**
+     * Git publish feature.
+     *
+     * @param name the name
+     */
     @ShellMethod("Publish a Feature to a remote server")
     public void gitPublishFeature(@NotNull String name) {
         commandService.exec(nav.getCurrentPath(), new ShellCommand(GIT_COMMAND, "push", "origin", "develop"));
         publisher.publishEvent(new LocationUpdatedEvent(EventType.FILE_NAVIGATION));
     }
 
+    /**
+     * Git create release.
+     *
+     * @param name the name
+     */
     @ShellMethod("Create a new Release")
     public void gitCreateRelease(@NotNull String name) {
         commandService.exec(nav.getCurrentPath(),
@@ -80,6 +132,11 @@ public class GitCommands {
         publisher.publishEvent(new LocationUpdatedEvent(EventType.FILE_NAVIGATION));
     }
 
+    /**
+     * Git terminate release.
+     *
+     * @param name the name
+     */
     @ShellMethod("Terminate a Release")
     public void gitTerminateRelease(@NotNull String name) {
         commandService.exec(nav.getCurrentPath(), new ShellCommand(GIT_COMMAND, "checkout", "develop"));
@@ -88,12 +145,22 @@ public class GitCommands {
         publisher.publishEvent(new LocationUpdatedEvent(EventType.FILE_NAVIGATION));
     }
 
+    /**
+     * Git publish release.
+     *
+     * @param name the name
+     */
     @ShellMethod("Publish a Release to a remote server")
     public void gitPublishRelease(@NotNull String name) {
         commandService.exec(nav.getCurrentPath(), new ShellCommand(GIT_COMMAND, "push", "origin", "develop"));
         publisher.publishEvent(new LocationUpdatedEvent(EventType.FILE_NAVIGATION));
     }
 
+    /**
+     * Docker show running process availability.
+     *
+     * @return the availability
+     */
     @ShellMethodAvailability({ "gitCreateFeature", "gitTerminateFeature", "gitPublishFeature", "gitCreateRelease",
             "gitTerminateRelease", "gitPublishRelease" })
     public Availability dockerShowRunningProcessAvailability() {
