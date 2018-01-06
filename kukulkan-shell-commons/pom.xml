@@ -30,6 +30,10 @@
 			<artifactId>spring-shell-starter</artifactId>
 		</dependency>
 		<dependency>
+			<groupId>mx.infotec.dads.kukulkan</groupId>
+			<artifactId>kukulkan-metamodel</artifactId>
+		</dependency>
+		<dependency>
 			<groupId>com.beust</groupId>
 			<artifactId>jcommander</artifactId>
 		</dependency>

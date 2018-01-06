@@ -1,8 +1,8 @@
 package mx.infotec.dads.kukulkan.shell.commands.navigation;
 
 import static mx.infotec.dads.kukulkan.shell.util.FilesCommons.showFiles;
-import static mx.infotec.dads.kukulkan.shell.util.ResultFormatter.formatDirNotExistText;
-import static mx.infotec.dads.kukulkan.shell.util.ResultFormatter.formatNormalText;
+import static mx.infotec.dads.kukulkan.shell.util.TextFormatter.formatDirNotExistText;
+import static mx.infotec.dads.kukulkan.shell.util.TextFormatter.formatNormalText;
 
 import java.nio.file.Path;
 import java.nio.file.Paths;

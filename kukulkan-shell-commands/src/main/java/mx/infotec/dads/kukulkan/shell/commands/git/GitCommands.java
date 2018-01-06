@@ -19,7 +19,7 @@ import mx.infotec.dads.kukulkan.shell.domain.ShellCommand;
 import mx.infotec.dads.kukulkan.shell.event.message.EventType;
 import mx.infotec.dads.kukulkan.shell.event.message.LocationUpdatedEvent;
 import mx.infotec.dads.kukulkan.shell.services.CommandService;
-import mx.infotec.dads.kukulkan.shell.util.ResultFormatter;
+import mx.infotec.dads.kukulkan.shell.util.TextFormatter;
 
 /**
  * Docker Commands
@@ -48,7 +48,7 @@ public class GitCommands {
     public List<AttributedString> gitStatus() {
         List<CharSequence> exec = commandService.exec(new ShellCommand(GIT_COMMAND, "status"));
         publisher.publishEvent(new LocationUpdatedEvent(EventType.FILE_NAVIGATION));
-        return ResultFormatter.formatToGitOutput(exec);
+        return TextFormatter.formatToGitOutput(exec);
     }
 
     @ShellMethod("Create a new Feature")

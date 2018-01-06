@@ -3,12 +3,13 @@ package mx.infotec.dads.kukulkan.shell.commands.kukulkan;
 import static mx.infotec.dads.kukulkan.shell.commands.validation.UserInputValidation.createProjectValidation;
 
 import java.io.File;
-import java.io.IOException;
+import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.List;
 
-import javax.annotation.PostConstruct;
 import javax.validation.constraints.NotNull;
 
+import org.jline.utils.AttributedString;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,11 +32,12 @@ import mx.infotec.dads.kukulkan.metamodel.foundation.JavaDomainModel;
 import mx.infotec.dads.kukulkan.metamodel.util.FileUtil;
 import mx.infotec.dads.kukulkan.metamodel.util.InflectorProcessor;
 import mx.infotec.dads.kukulkan.metamodel.util.KukulkanConfigurationProperties;
-import mx.infotec.dads.kukulkan.shell.commands.validation.UserInputValidation;
+import mx.infotec.dads.kukulkan.shell.commands.util.ProjectUtil;
 import mx.infotec.dads.kukulkan.shell.commands.valueprovided.KukulkanFilesProvider;
 import mx.infotec.dads.kukulkan.shell.component.Navigator;
 import mx.infotec.dads.kukulkan.shell.domain.ProjectContext;
 import mx.infotec.dads.kukulkan.shell.services.CommandService;
+import mx.infotec.dads.kukulkan.shell.util.TextFormatter;
 
 /**
  * Util Commands
@@ -77,7 +79,8 @@ public class KukulkanGeneration {
     }
 
     @ShellMethod("Create entities from file with .3k extension")
-    public void generateEntitiesFromFile(@ShellOption(valueProvider = KukulkanFilesProvider.class) File file) {
+    public void generatorCreateEntitiesFromFile(@ShellOption(valueProvider = KukulkanFilesProvider.class) File file) {
+        context.getProject().setOutputDir(navigator.getCurrentPath());
         // Create ProjectConfiguration
         configInflectorProcessor();
         // Create DataModel
@@ -97,7 +100,7 @@ public class KukulkanGeneration {
     }
 
     @ShellMethod("Create a project from archetype")
-    public void createProject(@NotNull String appName, @NotNull String groupId) {
+    public void generatorCreateProject(@NotNull String appName, @NotNull String groupId) {
         createProjectValidation(appName, groupId);
         context.getProject().setGroupId(groupId);
         context.getProject().setId(appName);
@@ -109,7 +112,15 @@ public class KukulkanGeneration {
         });
         commandService.printf("Execute the command", "mvn-config-front-End");
         commandService.printf("\n\n\r");
+        ProjectUtil.saveKukulkanFile(context.getProject());
+    }
 
+    @ShellMethod("Create a project from archetype")
+    public List<AttributedString> generatorShowConfiguration() {
+        List<AttributedString> attrList = new ArrayList<>();
+        attrList.add(TextFormatter.formatLikeGlossary("AppName", context.getProject().getId()));
+        attrList.add(TextFormatter.formatLikeGlossary("GroupId", context.getProject().getGroupId()));
+        return attrList;
     }
 
     public void configInflectorProcessor() {

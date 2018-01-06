@@ -1,6 +1,6 @@
 package mx.infotec.dads.kukulkan.shell.commands.fiware;
 
-import static mx.infotec.dads.kukulkan.shell.util.Constants.NULL;
+import static mx.infotec.dads.kukulkan.shell.commands.docker.DockerCommands.DOCKER_COMMAND;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.shell.Availability;
@@ -12,8 +12,6 @@ import org.springframework.shell.standard.ShellOption;
 import mx.infotec.dads.kukulkan.shell.domain.ShellCommand;
 import mx.infotec.dads.kukulkan.shell.services.CommandService;
 
-import static mx.infotec.dads.kukulkan.shell.commands.docker.DockerCommands.DOCKER_COMMAND;
-
 /**
  * Orion Context Broker Commands
  * 
@@ -22,6 +20,7 @@ import static mx.infotec.dads.kukulkan.shell.commands.docker.DockerCommands.DOCK
  */
 @ShellComponent
 public class OrionCommands {
+    public static final String NULL = "@NULL";
 
     @Autowired
     CommandService commandService;

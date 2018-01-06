@@ -1,7 +1,5 @@
 package mx.infotec.dads.kukulkan.shell.services.impl;
 
-import static mx.infotec.dads.kukulkan.shell.util.Constants.GIT;
-
 import java.nio.file.Path;
 import java.util.List;
 import java.util.Optional;
@@ -23,6 +21,8 @@ import mx.infotec.dads.kukulkan.shell.util.FilesCommons;
  */
 @Service
 public class PromptServiceImpl implements PromptService {
+
+    private static final String GIT = "git";
 
     @Autowired
     CommandServiceImpl commandService;

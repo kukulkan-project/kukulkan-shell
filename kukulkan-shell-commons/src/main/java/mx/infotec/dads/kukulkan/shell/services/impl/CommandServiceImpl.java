@@ -6,7 +6,6 @@ import static mx.infotec.dads.kukulkan.shell.util.AnsiConstants.ANSI_RESET;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -24,7 +23,6 @@ import mx.infotec.dads.kukulkan.shell.domain.Line;
 import mx.infotec.dads.kukulkan.shell.domain.NativeCommand;
 import mx.infotec.dads.kukulkan.shell.domain.ShellCommand;
 import mx.infotec.dads.kukulkan.shell.services.CommandService;
-import mx.infotec.dads.kukulkan.shell.util.AnsiConstants;
 import mx.infotec.dads.kukulkan.shell.util.LineProcessor;
 import mx.infotec.dads.kukulkan.shell.util.LineValuedProcessor;
 
@@ -46,20 +44,30 @@ public class CommandServiceImpl implements CommandService {
     @Autowired
     Navigator nav;
 
+    /**
+     * @deprecated prefered use TextFormatter class
+     */
     @Override
+    @Deprecated
     public void printf(String text) {
-        terminal.writer().append(AnsiConstants.ANSI_GREEN + text + AnsiConstants.ANSI_RESET);
+        terminal.writer().append(text).append("\n");
+        terminal.flush();
     }
 
+    /**
+     * @deprecated prefered use TextFormatter class
+     */
     @Override
+    @Deprecated
     public void printf(String key, String message) {
-        terminal.writer().append(String.format(ANSI_GREEN + "[%-15s] -" + ANSI_RESET + "%-30s", key, message));
+        terminal.writer().append(String.format("%s[%-15s] %s-%-30s%n\t", ANSI_GREEN, key, ANSI_RESET, message));
+        terminal.flush();
     }
 
     public List<Line> exec(final ShellCommand command, LineValuedProcessor processor) {
         List<Line> lines = new ArrayList<>();
         try {
-            Process p = Runtime.getRuntime().exec(command.getExecutableCommand(), null, Paths.get(".").toFile());
+            Process p = Runtime.getRuntime().exec(command.getExecutableCommand(), null, nav.getCurrentPath().toFile());
             BufferedReader reader = new BufferedReader(new InputStreamReader(p.getInputStream()));
             String line = "";
             while ((line = reader.readLine()) != null) {

@@ -1,7 +1,7 @@
 package mx.infotec.dads.kukulkan.shell.config;
 
-import static mx.infotec.dads.kukulkan.shell.util.ResultFormatter.defaulBasePrompt;
-import static mx.infotec.dads.kukulkan.shell.util.ResultFormatter.defaulEndPrompt;
+import static mx.infotec.dads.kukulkan.shell.util.TextFormatter.defaulBasePrompt;
+import static mx.infotec.dads.kukulkan.shell.util.TextFormatter.defaulEndPrompt;
 
 import javax.annotation.PostConstruct;
 

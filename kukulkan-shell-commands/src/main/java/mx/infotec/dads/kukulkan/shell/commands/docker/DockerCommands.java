@@ -1,7 +1,5 @@
 package mx.infotec.dads.kukulkan.shell.commands.docker;
 
-import static mx.infotec.dads.kukulkan.shell.util.Constants.NULL;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.shell.Availability;
 import org.springframework.shell.standard.ShellComponent;
@@ -22,6 +20,8 @@ import mx.infotec.dads.kukulkan.shell.services.CommandService;
  */
 @ShellComponent
 public class DockerCommands {
+
+    private static final String NULL = "@NULL";
 
     public static final String DOCKER_COMMAND = "docker";
 

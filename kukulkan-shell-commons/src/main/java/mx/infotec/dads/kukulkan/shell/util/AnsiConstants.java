@@ -1,6 +1,7 @@
 package mx.infotec.dads.kukulkan.shell.util;
 
 public class AnsiConstants {
+
     public static final String ANSI_RESET = "\u001B[0m";
     public static final String ANSI_BLACK = "\u001B[30m";
     public static final String ANSI_RED = "\u001B[31m";
@@ -11,4 +12,8 @@ public class AnsiConstants {
     public static final String ANSI_CYAN = "\u001B[36m";
     public static final String ANSI_GRAY = "\u001B[37m";
     public static final String ANSI_WHITE = "\u001B[37;1m";
+
+    private AnsiConstants() {
+
+    }
 }
