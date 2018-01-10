@@ -36,7 +36,7 @@ import org.springframework.stereotype.Component;
 
 import mx.infotec.dads.kukulkan.shell.component.Navigator;
 import mx.infotec.dads.kukulkan.shell.event.message.LocationUpdatedEvent;
-import mx.infotec.dads.kukulkan.shell.services.PromptService;
+import mx.infotec.dads.kukulkan.shell.services.PromptLocationtUpdateService;
 
 /**
  * KukulkanPrompt Provided: * A provider that sets the shell prompt to
@@ -53,7 +53,7 @@ public class KukulkanPromptProvided implements PromptProvider {
 
     /** The prompt service. */
     @Autowired
-    private PromptService promptService;
+    private PromptLocationtUpdateService promptLocationtUpdateService;
 
     /** The prompt. */
     private AttributedString prompt;
@@ -71,10 +71,12 @@ public class KukulkanPromptProvided implements PromptProvider {
     private void init() {
         basePrompt = defaulBasePrompt();
         endPrompt = defaulEndPrompt();
-        prompt = promptService.createPrompt(nav.getCurrentPath(), basePrompt, endPrompt);
+        prompt = promptLocationtUpdateService.createPrompt(nav.getCurrentPath(), basePrompt, endPrompt);
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see org.springframework.shell.jline.PromptProvider#getPrompt()
      */
     @Override
@@ -85,11 +87,18 @@ public class KukulkanPromptProvided implements PromptProvider {
     /**
      * Handle.
      *
-     * @param event the event
+     * @param event
+     *            the event
      */
     @EventListener
     public void handle(LocationUpdatedEvent event) {
-        prompt = promptService.createPrompt(nav.getCurrentPath(), basePrompt, endPrompt);
+        switch (event.getEventType()) {
+        case FILE_NAVIGATION:
+            prompt = promptLocationtUpdateService.createPrompt(nav.getCurrentPath(), basePrompt, endPrompt);
+            break;
+        default:
+            break;
+        }
     }
 
 }

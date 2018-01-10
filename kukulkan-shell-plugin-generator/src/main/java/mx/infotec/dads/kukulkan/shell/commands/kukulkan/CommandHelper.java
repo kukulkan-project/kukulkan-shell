@@ -67,8 +67,8 @@ public class CommandHelper {
     public static void readProjectConfiguration(ProjectConfiguration projectConfiguration, Path currentPath) {
         ProjectConfiguration pConf = ProjectUtil.readKukulkanFile(currentPath);
         projectConfiguration.setId(pConf.getId());
-        projectConfiguration.setGroupId(pConf.getGroupId());
-        projectConfiguration.setOutputDir(currentPath);
+        projectConfiguration.setPackaging(pConf.getPackaging());
+        projectConfiguration.setOutputDir(currentPath.getParent());
     }
 
     /**

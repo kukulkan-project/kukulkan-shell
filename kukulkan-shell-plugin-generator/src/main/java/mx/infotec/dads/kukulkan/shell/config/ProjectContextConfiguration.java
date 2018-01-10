@@ -49,12 +49,6 @@ public class ProjectContextConfiguration {
         pConf.setPackaging("mx.infotec.dads.mongo");
         pConf.setYear("2017");
         pConf.setAuthor("KUKULKAN");
-        pConf.setWebLayerName("web.rest");
-        pConf.setServiceLayerName("service");
-        pConf.setDaoLayerName("repository");
-        pConf.setDtoLayerName("dto");
-        pConf.setExceptionLayerName("exception");
-        pConf.setDomainLayerName("domain");
         pConf.setMongoDb(true);
         pConf.setGlobalGenerationType(PKGenerationStrategy.SEQUENCE);
         return pConf;

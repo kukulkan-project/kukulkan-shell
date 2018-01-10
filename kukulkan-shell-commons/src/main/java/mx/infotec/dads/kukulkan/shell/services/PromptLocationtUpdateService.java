@@ -32,7 +32,7 @@ import org.jline.utils.AttributedString;
  *
  * @author Daniel Cortes Pichardo
  */
-public interface PromptService {
+public interface PromptLocationtUpdateService {
 
     /**
      * Creates the prompt.

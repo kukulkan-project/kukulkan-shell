@@ -33,7 +33,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import mx.infotec.dads.kukulkan.shell.domain.ShellCommand;
-import mx.infotec.dads.kukulkan.shell.services.PromptService;
+import mx.infotec.dads.kukulkan.shell.services.PromptLocationtUpdateService;
 import mx.infotec.dads.kukulkan.shell.util.FilesCommons;
 
 /**
@@ -42,7 +42,7 @@ import mx.infotec.dads.kukulkan.shell.util.FilesCommons;
  * @author Daniel Cortes Pichardo
  */
 @Service
-public class PromptServiceImpl implements PromptService {
+public class PromptServiceImpl implements PromptLocationtUpdateService {
 
     /** The Constant GIT. */
     private static final String GIT = "git";

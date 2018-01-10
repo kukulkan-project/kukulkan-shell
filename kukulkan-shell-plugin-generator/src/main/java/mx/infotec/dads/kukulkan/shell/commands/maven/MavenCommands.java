@@ -66,4 +66,12 @@ public class MavenCommands {
                     return Optional.ofNullable(new Line(line));
                 });
     }
+
+    @ShellMethod("Run a Spring-Boot App")
+    public void runApp() {
+        commandService.exec(new ShellCommand(MVN_COMMAND).addArg("spring-boot:run"), line -> {
+            commandService.printf(TextFormatter.formatLogText(line).toAnsi());
+            return Optional.ofNullable(new Line(line));
+        });
+    }
 }
