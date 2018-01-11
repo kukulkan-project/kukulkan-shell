@@ -49,7 +49,7 @@ public class PromptServiceImpl implements PromptLocationtUpdateService {
 
     /** The command service. */
     @Autowired
-    CommandServiceImpl commandService;
+    private CommandServiceImpl commandService;
 
     /* (non-Javadoc)
      * @see mx.infotec.dads.kukulkan.shell.services.PromptService#createPrompt(java.nio.file.Path, org.jline.utils.AttributedString, org.jline.utils.AttributedString)

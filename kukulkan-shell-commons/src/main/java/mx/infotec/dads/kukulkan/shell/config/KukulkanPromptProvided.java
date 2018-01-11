@@ -35,6 +35,7 @@ import org.springframework.shell.jline.PromptProvider;
 import org.springframework.stereotype.Component;
 
 import mx.infotec.dads.kukulkan.shell.component.Navigator;
+import mx.infotec.dads.kukulkan.shell.event.message.EventType;
 import mx.infotec.dads.kukulkan.shell.event.message.LocationUpdatedEvent;
 import mx.infotec.dads.kukulkan.shell.services.PromptLocationtUpdateService;
 
@@ -92,12 +93,8 @@ public class KukulkanPromptProvided implements PromptProvider {
      */
     @EventListener
     public void handle(LocationUpdatedEvent event) {
-        switch (event.getEventType()) {
-        case FILE_NAVIGATION:
+        if (EventType.FILE_NAVIGATION.equals(event.getEventType())) {
             prompt = promptLocationtUpdateService.createPrompt(nav.getCurrentPath(), basePrompt, endPrompt);
-            break;
-        default:
-            break;
         }
     }
 
