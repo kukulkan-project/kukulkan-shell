@@ -72,7 +72,8 @@ public class CommandServiceImpl implements CommandService {
     /**
      * Printf.
      *
-     * @param text the text
+     * @param text
+     *            the text
      * @deprecated prefered use TextFormatter class
      */
     @Override
@@ -85,8 +86,10 @@ public class CommandServiceImpl implements CommandService {
     /**
      * Printf.
      *
-     * @param key the key
-     * @param message the message
+     * @param key
+     *            the key
+     * @param message
+     *            the message
      * @deprecated prefered use TextFormatter class
      */
     @Override
@@ -96,8 +99,13 @@ public class CommandServiceImpl implements CommandService {
         terminal.flush();
     }
 
-    /* (non-Javadoc)
-     * @see mx.infotec.dads.kukulkan.shell.services.CommandService#exec(mx.infotec.dads.kukulkan.shell.domain.ShellCommand, mx.infotec.dads.kukulkan.shell.util.LineValuedProcessor)
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * mx.infotec.dads.kukulkan.shell.services.CommandService#exec(mx.infotec.
+     * dads.kukulkan.shell.domain.ShellCommand,
+     * mx.infotec.dads.kukulkan.shell.util.LineValuedProcessor)
      */
     public List<Line> exec(final ShellCommand command, LineValuedProcessor processor) {
         List<Line> lines = new ArrayList<>();
@@ -114,24 +122,37 @@ public class CommandServiceImpl implements CommandService {
         return lines;
     }
 
-    /* (non-Javadoc)
-     * @see mx.infotec.dads.kukulkan.shell.services.CommandService#exec(mx.infotec.dads.kukulkan.shell.domain.ShellCommand)
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * mx.infotec.dads.kukulkan.shell.services.CommandService#exec(mx.infotec.
+     * dads.kukulkan.shell.domain.ShellCommand)
      */
     @Override
     public List<CharSequence> exec(final ShellCommand command) {
         return exec(nav.getCurrentPath(), command);
     }
 
-    /* (non-Javadoc)
-     * @see mx.infotec.dads.kukulkan.shell.services.CommandService#exec(java.nio.file.Path, mx.infotec.dads.kukulkan.shell.domain.ShellCommand)
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * mx.infotec.dads.kukulkan.shell.services.CommandService#exec(java.nio.file
+     * .Path, mx.infotec.dads.kukulkan.shell.domain.ShellCommand)
      */
     @Override
     public List<CharSequence> exec(final Path workingDirectory, final ShellCommand command) {
         return exec(workingDirectory, command, line -> Optional.ofNullable(new AttributedString(line)));
     }
 
-    /* (non-Javadoc)
-     * @see mx.infotec.dads.kukulkan.shell.services.CommandService#exec(java.nio.file.Path, mx.infotec.dads.kukulkan.shell.domain.ShellCommand, mx.infotec.dads.kukulkan.shell.util.LineProcessor)
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * mx.infotec.dads.kukulkan.shell.services.CommandService#exec(java.nio.file
+     * .Path, mx.infotec.dads.kukulkan.shell.domain.ShellCommand,
+     * mx.infotec.dads.kukulkan.shell.util.LineProcessor)
      */
     @Override
     public List<CharSequence> exec(final Path workingDirectory, final ShellCommand command, LineProcessor processor) {
@@ -150,8 +171,12 @@ public class CommandServiceImpl implements CommandService {
         return lines;
     }
 
-    /* (non-Javadoc)
-     * @see mx.infotec.dads.kukulkan.shell.services.CommandService#testNativeCommand(mx.infotec.dads.kukulkan.shell.domain.NativeCommand)
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * mx.infotec.dads.kukulkan.shell.services.CommandService#testNativeCommand(
+     * mx.infotec.dads.kukulkan.shell.domain.NativeCommand)
      */
     @Override
     public void testNativeCommand(NativeCommand nc) {

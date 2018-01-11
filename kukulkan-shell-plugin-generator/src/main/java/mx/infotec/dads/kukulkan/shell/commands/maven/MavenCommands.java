@@ -23,12 +23,20 @@
  */
 package mx.infotec.dads.kukulkan.shell.commands.maven;
 
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.List;
 import java.util.Optional;
 
+import javax.validation.constraints.NotNull;
+
+import org.jline.utils.AttributedString;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.shell.standard.ShellComponent;
 import org.springframework.shell.standard.ShellMethod;
+import org.springframework.shell.standard.ShellOption;
 
+import mx.infotec.dads.kukulkan.shell.component.Navigator;
 import mx.infotec.dads.kukulkan.shell.domain.Line;
 import mx.infotec.dads.kukulkan.shell.domain.NativeCommandContext;
 import mx.infotec.dads.kukulkan.shell.domain.ShellCommand;
@@ -43,6 +51,10 @@ import mx.infotec.dads.kukulkan.shell.util.TextFormatter;
 @ShellComponent
 public class MavenCommands {
 
+    Thread thread;
+
+    Runnable runnable;
+
     /** The Constant MVN_COMMAND. */
     public static final String MVN_COMMAND = "mvn";
 
@@ -54,12 +66,15 @@ public class MavenCommands {
     @Autowired
     CommandService commandService;
 
+    @Autowired
+    Navigator navigator;
+
     /**
      * Configurate a front end application, It execute the command "mvn package
      * -Pprod -DskiptTests".
      */
     @ShellMethod("Configurate a initial Archetype")
-    public void mvnConfigFrontEnd() {
+    public void configurateFrontEnd() {
         commandService.exec(new ShellCommand(MVN_COMMAND).addArg("package").addArg("-Pprod").addArg("-DskipTests"),
                 line -> {
                     commandService.printf(TextFormatter.formatLogText(line).toAnsi());
@@ -69,9 +84,40 @@ public class MavenCommands {
 
     @ShellMethod("Run a Spring-Boot App")
     public void runApp() {
-        commandService.exec(new ShellCommand(MVN_COMMAND).addArg("spring-boot:run"), line -> {
-            commandService.printf(TextFormatter.formatLogText(line).toAnsi());
-            return Optional.ofNullable(new Line(line));
-        });
+        runnable = new Runnable() {
+            @Override
+            public void run() {
+                commandService.exec(new ShellCommand(MVN_COMMAND).addArg("spring-boot:run"), line -> {
+                    commandService.printf(TextFormatter.formatLogText(line).toAnsi());
+                    return Optional.ofNullable(new Line(line));
+                });
+            }
+        };
+        thread = new Thread(runnable);
+        thread.start();
+
     }
+
+    @ShellMethod("Stop a Process")
+    public void stopProcess(@ShellOption(valueProvider = JavaProcessValueProvider.class) @NotNull String id) {
+        commandService.exec(new ShellCommand("kill", "-9", id));
+    }
+
+    @ShellMethod("Stop an App")
+    public List<AttributedString> stopApp() {
+        List<CharSequence> exec = commandService.exec(new ShellCommand(MVN_COMMAND).addArg("spring-boot:stop"));
+        return TextFormatter.formatToGitOutput(exec);
+    }
+
+    /**
+     * Show the runnin apps.
+     *
+     * @return the list
+     */
+    @ShellMethod("Show running apps")
+    public List<AttributedString> showProcess() {
+        List<CharSequence> exec = commandService.exec(new ShellCommand("jps"));
+        return TextFormatter.formatToGitOutput(exec);
+    }
+
 }

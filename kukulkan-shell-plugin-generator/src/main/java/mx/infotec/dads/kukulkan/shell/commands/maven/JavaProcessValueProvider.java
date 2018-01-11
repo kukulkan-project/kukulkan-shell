@@ -21,29 +21,34 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package mx.infotec.dads.kukulkan.shell.commands.valueprovided;
+package mx.infotec.dads.kukulkan.shell.commands.maven;
 
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.MethodParameter;
 import org.springframework.shell.CompletionContext;
 import org.springframework.shell.CompletionProposal;
 import org.springframework.shell.standard.ValueProviderSupport;
 import org.springframework.stereotype.Component;
 
+import mx.infotec.dads.kukulkan.shell.domain.Line;
+import mx.infotec.dads.kukulkan.shell.domain.ShellCommand;
+import mx.infotec.dads.kukulkan.shell.domain.ShellCompletionProposal;
+import mx.infotec.dads.kukulkan.shell.services.CommandService;
+import mx.infotec.dads.kukulkan.shell.util.LineValuedProcessor;
+
 /**
- * The Class KukulkanFilesProvider.
+ * The Class JavaProcessValueProvider.
  */
 @Component
-public class KukulkanFilesProvider extends ValueProviderSupport {
+public class JavaProcessValueProvider extends ValueProviderSupport {
 
-    /** The Constant KUKULKAN_FILE_PATTERN. */
-    private static final String KUKULKAN_FILE_PATTERN = "^[^!]*\\.(3k|kukulkan)$";
+    /** The command service. */
+    @Autowired
+    CommandService commandService;
 
     /*
      * (non-Javadoc)
@@ -55,14 +60,16 @@ public class KukulkanFilesProvider extends ValueProviderSupport {
     @Override
     public List<CompletionProposal> complete(MethodParameter parameter, CompletionContext completionContext,
             String[] hints) {
-        try {
-            return Files.list(Paths.get("."))
-                    .filter(path -> path.getFileName().toString().matches(KUKULKAN_FILE_PATTERN))
-                    .map(path -> new CompletionProposal(path.getFileName().toString())).collect(Collectors.toList());
-        } catch (IOException e) {
-            List<CompletionProposal> defaultList = new ArrayList<>();
-            defaultList.add(new CompletionProposal("[No Files Found with .3K or .kukulkan extension]"));
-            return defaultList;
-        }
+        LineValuedProcessor processor = (line -> {
+            String[] split = line.split("\\s{1,}");
+            if (split.length > 0) {
+                return Optional.ofNullable(new Line(split[0], split[1]));
+            } else {
+                return Optional.empty();
+            }
+        });
+        List<Line> lines = commandService.exec(new ShellCommand("jps"), processor);
+        return lines.stream().map(line -> new ShellCompletionProposal(line.getText(), line.getDescription()))
+                .collect(Collectors.toList());
     }
 }

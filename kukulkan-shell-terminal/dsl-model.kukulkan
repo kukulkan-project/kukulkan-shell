@@ -1,0 +1,25 @@
+entity Persona {
+	nombre String required minlength(3) maxlength(50),
+    primerApellido String required minlength(3) maxlength(50),
+    segundoApellido String minlength(3) maxlength(50),
+    edad Integer min(1) max(120),
+    correo String required minlength(2) maxlength(50),
+	telefono String
+}
+
+entity Direccion {
+	delegacion String required minlength(3) maxlength(50),
+    avenida String required minlength(3) maxlength(50),
+    numInterior Integer,
+    codigoPostal Integer
+}
+
+entity Puesto {
+	nombre String required,
+    desc String minlength(3) maxlength(50)
+}
+
+relationship OneToMany {
+	Persona{direccion} to Direccion,
+    Persona{puesto} to Puesto
+}

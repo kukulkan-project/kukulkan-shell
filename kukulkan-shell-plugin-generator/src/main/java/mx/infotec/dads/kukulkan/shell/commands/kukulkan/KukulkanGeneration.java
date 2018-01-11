@@ -118,4 +118,5 @@ public class KukulkanGeneration extends AbstractCommand {
         attrList.add(TextFormatter.formatLikeGlossary("GroupId", projectConfiguration.getGroupId()));
         return attrList;
     }
+    
 }

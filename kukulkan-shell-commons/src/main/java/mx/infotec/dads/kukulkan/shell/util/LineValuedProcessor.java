@@ -34,11 +34,12 @@ import mx.infotec.dads.kukulkan.shell.domain.Line;
  */
 @FunctionalInterface
 public interface LineValuedProcessor {
-    
+
     /**
      * Process a Single Line in the Console exec method.
      *
-     * @param line the line
+     * @param line
+     *            the line
      * @return the optional
      */
     Optional<Line> process(String line);
