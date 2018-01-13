@@ -42,6 +42,7 @@ import org.springframework.shell.standard.ShellMethod;
 import org.springframework.shell.standard.ShellOption;
 
 import mx.infotec.dads.kukulkan.metamodel.foundation.GeneratorContext;
+import mx.infotec.dads.kukulkan.metamodel.foundation.ProjectConfiguration;
 import mx.infotec.dads.kukulkan.metamodel.util.FileUtil;
 import mx.infotec.dads.kukulkan.shell.commands.AbstractCommand;
 import mx.infotec.dads.kukulkan.shell.commands.util.ProjectUtil;
@@ -73,7 +74,8 @@ public class KukulkanGeneration extends AbstractCommand {
      * Command Shell for Generate all the entities that come from a file with .3
      * extension
      *
-     * @param file the file
+     * @param file
+     *            the file
      */
     @ShellMethod("Generate all the entities that come from a file with .3k extension")
     public void generateEntitiesFromFile(@ShellOption(valueProvider = KukulkanFilesProvider.class) File file) {
@@ -88,15 +90,18 @@ public class KukulkanGeneration extends AbstractCommand {
     /**
      * Command Shell that Generate a Project from an Archetype Catalog.
      *
-     * @param appName the app name
-     * @param packaging the packaging
+     * @param appName
+     *            the app name
+     * @param packaging
+     *            the packaging
      */
     @ShellMethod("Generate a Project from an Archetype Catalog")
     public void generateProject(@NotNull String appName, @NotNull String packaging) {
         LOGGER.info("Generating Project...");
         validateProjectParams(appName, packaging);
         configProjectConfiguration(projectConfiguration, appName, packaging, navigator.getCurrentPath());
-        GeneratorContext genCtx = new GeneratorContext(projectConfiguration);
+        GeneratorContext genCtx = new GeneratorContext();
+        genCtx.put(ProjectConfiguration.class, projectConfiguration);
         generationService.findGeneratorByName("angular-js-archetype-generator").ifPresent(generator -> {
             generationService.process(genCtx, generator);
         });
@@ -118,5 +123,5 @@ public class KukulkanGeneration extends AbstractCommand {
         attrList.add(TextFormatter.formatLikeGlossary("GroupId", projectConfiguration.getGroupId()));
         return attrList;
     }
-    
+
 }

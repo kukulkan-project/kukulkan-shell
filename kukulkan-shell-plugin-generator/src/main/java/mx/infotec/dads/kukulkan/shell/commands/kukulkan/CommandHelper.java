@@ -61,8 +61,10 @@ public class CommandHelper {
      * Read the project configuration from a file and set the properties into
      * the main ProjectConfiguration instance.
      *
-     * @param projectConfiguration the project configuration
-     * @param currentPath the current path
+     * @param projectConfiguration
+     *            the project configuration
+     * @param currentPath
+     *            the current path
      */
     public static void readProjectConfiguration(ProjectConfiguration projectConfiguration, Path currentPath) {
         ProjectConfiguration pConf = ProjectUtil.readKukulkanFile(currentPath);
@@ -75,17 +77,21 @@ public class CommandHelper {
      * Create a Generator Context from a File. This file is the source code that
      * describe the domain model represented in the the kukulkan language.
      *
-     * @param projectConfiguration the project configuration
-     * @param file the file
+     * @param projectConfiguration
+     *            the project configuration
+     * @param file
+     *            the file
      * @return the generator context
      */
     public static GeneratorContext createGeneratorContext(ProjectConfiguration projectConfiguration, File file) {
-        DomainModel dataModel = new JavaDomainModel();
+        DomainModel domainModel = new JavaDomainModel();
         KukulkanVisitor semanticAnalyzer = new KukulkanVisitor();
         List<DomainModelGroup> dmgList = GrammarMapping.createSingleDataModelGroupList(semanticAnalyzer, file);
-        dataModel.setDomainModelGroup(dmgList);
+        domainModel.setDomainModelGroup(dmgList);
         LOGGER.info("Processing File...");
-        GeneratorContext genCtx = new GeneratorContext(dataModel, projectConfiguration);
+        GeneratorContext genCtx = new GeneratorContext();
+        genCtx.put(ProjectConfiguration.class, projectConfiguration);
+        genCtx.put(DomainModel.class, domainModel);
         return genCtx;
     }
 
@@ -93,10 +99,14 @@ public class CommandHelper {
      * Configure the ProjectConfiguration Object with the proper appName,
      * groupId and currentPath.
      *
-     * @param projectConfiguration the project configuration
-     * @param appName the app name
-     * @param packaging the packaging
-     * @param currentPath the current path
+     * @param projectConfiguration
+     *            the project configuration
+     * @param appName
+     *            the app name
+     * @param packaging
+     *            the packaging
+     * @param currentPath
+     *            the current path
      */
     public static void configProjectConfiguration(ProjectConfiguration projectConfiguration, String appName,
             String packaging, Path currentPath) {
