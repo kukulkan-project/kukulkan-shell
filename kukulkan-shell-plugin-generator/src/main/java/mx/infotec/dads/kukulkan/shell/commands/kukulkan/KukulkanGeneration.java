@@ -41,7 +41,7 @@ import org.springframework.shell.standard.ShellComponent;
 import org.springframework.shell.standard.ShellMethod;
 import org.springframework.shell.standard.ShellOption;
 
-import mx.infotec.dads.kukulkan.metamodel.foundation.GeneratorContext;
+import mx.infotec.dads.kukulkan.metamodel.context.GeneratorContext;
 import mx.infotec.dads.kukulkan.metamodel.foundation.ProjectConfiguration;
 import mx.infotec.dads.kukulkan.metamodel.util.FileUtil;
 import mx.infotec.dads.kukulkan.shell.commands.AbstractCommand;
@@ -61,16 +61,6 @@ public class KukulkanGeneration extends AbstractCommand {
     private static final Logger LOGGER = LoggerFactory.getLogger(KukulkanGeneration.class);
 
     /**
-     * Outputdir.
-     *
-     * @return the string
-     */
-    @ShellMethod("Show the current output dir")
-    public String outputdir() {
-        return configurationProperties.getConfig().getOutputdir();
-    }
-
-    /**
      * Command Shell for Generate all the entities that come from a file with .3
      * extension
      *
@@ -78,7 +68,7 @@ public class KukulkanGeneration extends AbstractCommand {
      *            the file
      */
     @ShellMethod("Generate all the entities that come from a file with .3k extension")
-    public void generateEntitiesFromFile(@ShellOption(valueProvider = KukulkanFilesProvider.class) File file) {
+    public void scaffoldingFromFile(@ShellOption(valueProvider = KukulkanFilesProvider.class) File file) {
         readProjectConfiguration(projectConfiguration, navigator.getCurrentPath());
         GeneratorContext genCtx = createGeneratorContext(projectConfiguration, file);
         generationService.findGeneratorByName("angularJs-spring").ifPresent(generator -> {
@@ -100,14 +90,13 @@ public class KukulkanGeneration extends AbstractCommand {
         LOGGER.info("Generating Project...");
         validateProjectParams(appName, packaging);
         configProjectConfiguration(projectConfiguration, appName, packaging, navigator.getCurrentPath());
-        GeneratorContext genCtx = new GeneratorContext();
-        genCtx.put(ProjectConfiguration.class, projectConfiguration);
+        GeneratorContext genCtx = new GeneratorContext(ProjectConfiguration.class, projectConfiguration);
         generationService.findGeneratorByName("angular-js-archetype-generator").ifPresent(generator -> {
             generationService.process(genCtx, generator);
+            ProjectUtil.saveKukulkanFile(projectConfiguration);
+            commandService.printf("Execute the command", "mvn-config-front-End");
+            commandService.printf("\n\n\r");
         });
-        ProjectUtil.saveKukulkanFile(projectConfiguration);
-        commandService.printf("Execute the command", "mvn-config-front-End");
-        commandService.printf("\n\n\r");
     }
 
     /**
