@@ -43,22 +43,26 @@ public interface CommandService {
     /**
      * Printf.
      *
-     * @param text the text
+     * @param text
+     *            the text
      */
     public void printf(String text);
 
     /**
      * Printf.
      *
-     * @param key the key
-     * @param message the message
+     * @param key
+     *            the key
+     * @param message
+     *            the message
      */
     public void printf(String key, String message);
 
     /**
      * Exec.
      *
-     * @param command the command
+     * @param command
+     *            the command
      * @return the list
      */
     public List<CharSequence> exec(final ShellCommand command);
@@ -66,8 +70,10 @@ public interface CommandService {
     /**
      * Exec.
      *
-     * @param command the command
-     * @param processor the processor
+     * @param command
+     *            the command
+     * @param processor
+     *            the processor
      * @return the list
      */
     public List<Line> exec(final ShellCommand command, LineValuedProcessor processor);
@@ -75,8 +81,10 @@ public interface CommandService {
     /**
      * Exec.
      *
-     * @param workingDirectory the working directory
-     * @param command the command
+     * @param workingDirectory
+     *            the working directory
+     * @param command
+     *            the command
      * @return the list
      */
     public List<CharSequence> exec(final Path workingDirectory, final ShellCommand command);
@@ -84,9 +92,12 @@ public interface CommandService {
     /**
      * Exec.
      *
-     * @param workingDirectory the working directory
-     * @param command the command
-     * @param processor the processor
+     * @param workingDirectory
+     *            the working directory
+     * @param command
+     *            the command
+     * @param processor
+     *            the processor
      * @return the list
      */
     public List<CharSequence> exec(final Path workingDirectory, final ShellCommand command, LineProcessor processor);
@@ -94,7 +105,8 @@ public interface CommandService {
     /**
      * Test native command.
      *
-     * @param nc the nc
+     * @param nc
+     *            the nc
      */
     public void testNativeCommand(NativeCommand nc);
 }

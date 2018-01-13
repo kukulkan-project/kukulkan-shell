@@ -25,24 +25,25 @@ package mx.infotec.dads.kukulkan.shell.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.scheduling.annotation.EnableAsync;
-
-import mx.infotec.dads.kukulkan.shell.event.handler.ShellResultHandler;
+import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 
 /**
  * The Class ResultHandlerConfiguration.
  */
 @Configuration
-@EnableAsync
-public class ResultHandlerConfiguration {
+public class TaskExecutorConfiguration {
 
     /**
-     * Shell result handler configuration.
+     * Configuration of the taskExecutor.
      *
      * @return the shell result handler
      */
     @Bean
-    public ShellResultHandler shellResultHandlerConfiguration() {
-        return new ShellResultHandler();
+    public ThreadPoolTaskExecutor taskExecutor() {
+        ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
+        executor.setCorePoolSize(5);
+        executor.setMaxPoolSize(10);
+        executor.setQueueCapacity(25);
+        return executor;
     }
 }
