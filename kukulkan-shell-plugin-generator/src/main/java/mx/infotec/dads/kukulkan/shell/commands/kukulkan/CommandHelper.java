@@ -109,10 +109,11 @@ public class CommandHelper {
      *            the current path
      */
     public static void configProjectConfiguration(ProjectConfiguration projectConfiguration, String appName,
-            String packaging, Path currentPath) {
+            String packaging, Path currentPath, boolean isMongoDb) {
         projectConfiguration.setId(appName);
         projectConfiguration.setPackaging(packaging);
         projectConfiguration.setOutputDir(currentPath);
+        projectConfiguration.setMongoDb(isMongoDb);
     }
 
 }

@@ -88,12 +88,19 @@ public class FileNavigationCommands {
     /**
      * Cd.
      *
-     * @param dir the dir
+     * @param dir
+     *            the dir
      * @return the attributed string
      */
     @ShellMethod("Change to other location")
-    public AttributedString cd(@ShellOption(valueProvider = DirectoryValueProvider.class) @NotNull String dir) {
-        Path toChange = Paths.get(dir);
+    public AttributedString cd(
+            @ShellOption(valueProvider = DirectoryValueProvider.class, defaultValue = "@home") String dir) {
+        Path toChange = null;
+        if ("@home".equals(dir)) {
+            toChange = Paths.get(System.getProperty("user.home"));
+        } else {
+            toChange = Paths.get(dir);
+        }
         Path newPath = getNewPath(toChange);
         return validateNewPath(newPath);
     }
@@ -101,7 +108,8 @@ public class FileNavigationCommands {
     /**
      * Validate new path.
      *
-     * @param newPath the new path
+     * @param newPath
+     *            the new path
      * @return the attributed string
      */
     private AttributedString validateNewPath(Path newPath) {
@@ -117,7 +125,8 @@ public class FileNavigationCommands {
     /**
      * Gets the new path.
      *
-     * @param toChange the to change
+     * @param toChange
+     *            the to change
      * @return the new path
      */
     private Path getNewPath(Path toChange) {

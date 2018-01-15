@@ -86,10 +86,11 @@ public class KukulkanGeneration extends AbstractCommand {
      *            the packaging
      */
     @ShellMethod("Generate a Project from an Archetype Catalog")
-    public void generateProject(@NotNull String appName, @NotNull String packaging) {
+    public void generateProject(@NotNull String appName, @NotNull String packaging,
+            @ShellOption(defaultValue = "false") boolean isMongoDb) {
         LOGGER.info("Generating Project...");
         validateProjectParams(appName, packaging);
-        configProjectConfiguration(projectConfiguration, appName, packaging, navigator.getCurrentPath());
+        configProjectConfiguration(projectConfiguration, appName, packaging, navigator.getCurrentPath(), isMongoDb);
         GeneratorContext genCtx = new GeneratorContext(ProjectConfiguration.class, projectConfiguration);
         generationService.findGeneratorByName("angular-js-archetype-generator").ifPresent(generator -> {
             generationService.process(genCtx, generator);
