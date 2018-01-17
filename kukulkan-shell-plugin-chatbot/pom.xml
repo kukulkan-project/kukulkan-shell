@@ -2,11 +2,13 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
-	<artifactId>kukulkan-shell-terminal</artifactId>
+
+	<artifactId>kukulkan-shell-plugin-chatbot</artifactId>
 	<packaging>jar</packaging>
 
-	<name>kukulkan-shell-terminal</name>
-	<description>The kukulkan shell</description>
+	<name>kukulkan-shell-plugin-generator-chatbot</name>
+	<description>The kukulkan generator for chatbot</description>
+
 	<parent>
 		<groupId>mx.infotec.dads.kukulkan</groupId>
 		<artifactId>kukulkan-shell</artifactId>
@@ -37,54 +39,18 @@
 			<scope>test</scope>
 		</dependency>
 		<dependency>
-			<groupId>de.flapdoodle.embed</groupId>
-			<artifactId>de.flapdoodle.embed.mongo</artifactId>
-		</dependency>
-		<!-- Commands -->
-		<dependency>
 			<groupId>mx.infotec.dads.kukulkan</groupId>
-			<artifactId>kukulkan-shell-plugin-generator</artifactId>
+			<artifactId>kukulkan-metamodel</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>mx.infotec.dads.kukulkan</groupId>
-			<artifactId>kukulkan-shell-plugin-chatbot</artifactId>
+			<artifactId>kukulkan-shell-commons</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>mx.infotec.dads.kukulkan</groupId>
-			<artifactId>kukulkan-shell-commands</artifactId>
+			<artifactId>kukulkan-generator-angularjs</artifactId>
 		</dependency>
 	</dependencies>
-	<profiles>
-		<profile>
-			<id>dev</id>
-			<activation>
-				<activeByDefault>true</activeByDefault>
-			</activation>
-			<dependencies>
-				<dependency>
-					<groupId>org.springframework.boot</groupId>
-					<artifactId>spring-boot-devtools</artifactId>
-					<scope>runtime</scope>
-					<optional>true</optional>
-				</dependency>
-			</dependencies>
-			<properties>
-				<!-- log configuration -->
-				<logback.loglevel>DEBUG</logback.loglevel>
-				<!-- default Spring profiles -->
-				<spring.profiles.active>dev</spring.profiles.active>
-			</properties>
-		</profile>
-		<profile>
-			<id>prod</id>
-			<properties>
-				<!-- log configuration -->
-				<logback.loglevel>INFO</logback.loglevel>
-				<!-- default Spring profiles -->
-				<spring.profiles.active>dev</spring.profiles.active>
-			</properties>
-		</profile>
-	</profiles>
 	<repositories>
 		<repository>
 			<id>spring-milestones</id>

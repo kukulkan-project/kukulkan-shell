@@ -53,6 +53,7 @@
 		<module>kukulkan-shell-client</module>
 		<module>kukulkan-shell-commons</module>
 		<module>kukulkan-shell-plugin-generator</module>
+		<module>kukulkan-shell-plugin-chatbot</module>
 		<module>kukulkan-shell-commands</module>
 		<module>kukulkan-shell-terminal</module>
 	</modules>
@@ -97,6 +98,11 @@
 				<groupId>mx.infotec.dads.kukulkan</groupId>
 				<artifactId>kukulkan-generator-angularjs</artifactId>
 				<version>0.0.1-SNAPSHOT</version>
+			</dependency>
+			<dependency>
+				<groupId>mx.infotec.dads.kukulkan</groupId>
+				<artifactId>kukulkan-shell-plugin-chatbot</artifactId>
+				<version>0.0.1-SNAPSHOT</version>s
 			</dependency>
 		</dependencies>
 	</dependencyManagement>
