@@ -26,6 +26,8 @@ package mx.infotec.dads.kukulkan.shell.config;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+import mx.infotec.dads.kukulkan.metamodel.foundation.Database;
+import mx.infotec.dads.kukulkan.metamodel.foundation.DatabaseType;
 import mx.infotec.dads.kukulkan.metamodel.foundation.ProjectConfiguration;
 import mx.infotec.dads.kukulkan.metamodel.util.PKGenerationStrategy;
 
@@ -44,13 +46,11 @@ public class ProjectContextConfiguration {
     public ProjectConfiguration configProjectContext() {
         ProjectConfiguration pConf = new ProjectConfiguration();
         pConf.setId("demo");
-        pConf.setGroupId("mx.infotec.dads.mongo");
         pConf.setVersion("1.0.0");
         pConf.setPackaging("mx.infotec.dads.mongo");
         pConf.setYear("2017");
         pConf.setAuthor("KUKULKAN");
-        pConf.setMongoDb(true);
-        pConf.setGlobalGenerationType(PKGenerationStrategy.SEQUENCE);
+        pConf.setDatabase(new Database(DatabaseType.SQL_MYSQL, PKGenerationStrategy.AUTO));
         return pConf;
     }
 }

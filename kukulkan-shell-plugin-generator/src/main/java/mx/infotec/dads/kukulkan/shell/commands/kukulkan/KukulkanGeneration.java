@@ -42,8 +42,10 @@ import org.springframework.shell.standard.ShellMethod;
 import org.springframework.shell.standard.ShellOption;
 
 import mx.infotec.dads.kukulkan.metamodel.context.GeneratorContext;
+import mx.infotec.dads.kukulkan.metamodel.foundation.DatabaseType;
 import mx.infotec.dads.kukulkan.metamodel.foundation.ProjectConfiguration;
 import mx.infotec.dads.kukulkan.metamodel.util.FileUtil;
+import mx.infotec.dads.kukulkan.metamodel.util.PKGenerationStrategy;
 import mx.infotec.dads.kukulkan.shell.commands.AbstractCommand;
 import mx.infotec.dads.kukulkan.shell.commands.util.ProjectUtil;
 import mx.infotec.dads.kukulkan.shell.commands.valueprovided.KukulkanFilesProvider;
@@ -87,10 +89,12 @@ public class KukulkanGeneration extends AbstractCommand {
      */
     @ShellMethod("Generate a Project from an Archetype Catalog")
     public void generateProject(@NotNull String appName, @NotNull String packaging,
-            @ShellOption(defaultValue = "false") boolean isMongoDb) {
+            @ShellOption(defaultValue = "NO_SQL_MONGODB") DatabaseType databaseType,
+            @ShellOption(defaultValue = "NULL") PKGenerationStrategy pkGenerationType) {
         LOGGER.info("Generating Project...");
         validateProjectParams(appName, packaging);
-        configProjectConfiguration(projectConfiguration, appName, packaging, navigator.getCurrentPath(), isMongoDb);
+        configProjectConfiguration(projectConfiguration, appName, packaging, navigator.getCurrentPath(), databaseType,
+                pkGenerationType);
         GeneratorContext genCtx = new GeneratorContext(ProjectConfiguration.class, projectConfiguration);
         generationService.findGeneratorByName("angular-js-archetype-generator").ifPresent(generator -> {
             generationService.process(genCtx, generator);
@@ -110,7 +114,7 @@ public class KukulkanGeneration extends AbstractCommand {
     public List<AttributedString> generatorShowConfiguration() {
         List<AttributedString> attrList = new ArrayList<>();
         attrList.add(TextFormatter.formatLikeGlossary("AppName", projectConfiguration.getId()));
-        attrList.add(TextFormatter.formatLikeGlossary("GroupId", projectConfiguration.getGroupId()));
+        attrList.add(TextFormatter.formatLikeGlossary("GroupId", projectConfiguration.getPackaging()));
         return attrList;
     }
 
