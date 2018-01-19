@@ -48,22 +48,12 @@ public class LinuxCommands {
     /**
      * Ping.
      *
-     * @param host the host
+     * @param host
+     *            the host
      * @return the string
      */
     @ShellMethod("make a ping to a host")
     public String ping(String host) {
-        commandService.printf("todo bien");
-        commandService.printf(AnsiConstants.ANSI_BLUE, "blue");
-        commandService.printf(AnsiConstants.ANSI_BLACK, "black");
-        commandService.printf(AnsiConstants.ANSI_CYAN, "cyan");
-        commandService.printf(AnsiConstants.ANSI_GRAY, "gray");
-        commandService.printf(AnsiConstants.ANSI_GREEN, "green");
-        commandService.printf(AnsiConstants.ANSI_PURPLE, "purple");
-        commandService.printf(AnsiConstants.ANSI_RED, "red");
-        commandService.printf(AnsiConstants.ANSI_WHITE, "white");
-        commandService.printf(AnsiConstants.ANSI_YELLOW, "yellow");
-
         String command = "ping -c 3 " + host;
         StringBuffer output = new StringBuffer();
 
@@ -84,5 +74,19 @@ public class LinuxCommands {
 
         return output.toString();
 
+    }
+
+    @ShellMethod("showColors")
+    public void showColors() {
+        commandService.printf("todo bien");
+        commandService.printf(AnsiConstants.ANSI_BLUE, "blue");
+        commandService.printf(AnsiConstants.ANSI_BLACK, "black");
+        commandService.printf(AnsiConstants.ANSI_CYAN, "cyan");
+        commandService.printf(AnsiConstants.ANSI_GRAY, "gray");
+        commandService.printf(AnsiConstants.ANSI_GREEN, "green");
+        commandService.printf(AnsiConstants.ANSI_PURPLE, "purple");
+        commandService.printf(AnsiConstants.ANSI_RED, "red");
+        commandService.printf(AnsiConstants.ANSI_WHITE, "white");
+        commandService.printf(AnsiConstants.ANSI_YELLOW, "yellow");
     }
 }

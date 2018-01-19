@@ -24,20 +24,19 @@ public class GitChangeLocationAwareness implements ChangeLocationAwareness {
     private CommandServiceImpl commandService;
 
     @Override
-    public AttributedString addPrompt(Path currentLocation) {
-        AttributedString dirPrompt = null;
+    public Optional<AttributedString> addPrompt(Path currentLocation) {
         if (FilesCommons.hasGitFiles(currentLocation)) {
             List<CharSequence> result = commandService.exec(currentLocation,
                     new ShellCommand(GIT_COMMAND).addArg("rev-parse").addArg("--abbrev-ref").addArg("HEAD"),
                     line -> Optional.ofNullable(new AttributedString(line)));
-            dirPrompt = AttributedString.join(new AttributedString(""),
-                    new AttributedString(" @", AttributedStyle.BOLD.foreground(AttributedStyle.YELLOW)),
+            AttributedString dirPrompt = AttributedString.join(new AttributedString(""),
+                    new AttributedString("@", AttributedStyle.BOLD.foreground(AttributedStyle.YELLOW)),
                     new AttributedString("git/" + result.get(0).toString(),
                             AttributedStyle.BOLD_OFF.foreground(AttributedStyle.YELLOW)));
+            return Optional.of(dirPrompt);
         } else {
-            dirPrompt = new AttributedString("");
+            return Optional.empty();
         }
-        return dirPrompt;
     }
 
 }

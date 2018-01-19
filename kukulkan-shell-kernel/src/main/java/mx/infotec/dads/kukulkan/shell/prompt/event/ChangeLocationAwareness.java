@@ -1,6 +1,7 @@
 package mx.infotec.dads.kukulkan.shell.prompt.event;
 
 import java.nio.file.Path;
+import java.util.Optional;
 
 import org.jline.utils.AttributedString;
 
@@ -14,6 +15,6 @@ import org.jline.utils.AttributedString;
 @FunctionalInterface
 public interface ChangeLocationAwareness {
 
-    AttributedString addPrompt(Path currentLocation);
+    Optional<AttributedString> addPrompt(Path currentLocation);
 
 }

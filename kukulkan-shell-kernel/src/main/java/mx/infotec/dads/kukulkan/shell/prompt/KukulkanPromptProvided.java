@@ -27,6 +27,7 @@ import static mx.infotec.dads.kukulkan.shell.util.TextFormatter.defaulBasePrompt
 import static mx.infotec.dads.kukulkan.shell.util.TextFormatter.defaulEndPrompt;
 
 import java.util.List;
+import java.util.Optional;
 
 import javax.annotation.PostConstruct;
 
@@ -94,17 +95,15 @@ public class KukulkanPromptProvided implements PromptProvider {
     @EventListener
     public void handle(LocationUpdatedEvent event) {
         if (EventType.FILE_NAVIGATION.equals(event.getEventType())) {
-            AttributedString newPrompt = new AttributedString("");
+            AttributedString currentPrompt = new AttributedString("");
             for (ChangeLocationAwareness task : tasksList) {
-                AttributedString current = task.addPrompt(nav.getCurrentPath());
-                newPrompt = AttributedString.join(new AttributedString(""), newPrompt, current);
+                Optional<AttributedString> newPrompt = task.addPrompt(nav.getCurrentPath());
+                if (newPrompt.isPresent()) {
+                    currentPrompt = AttributedString.join(new AttributedString(" "), currentPrompt, newPrompt.get());
+                }
+                prompt = AttributedString.join(new AttributedString(""), basePrompt, currentPrompt, endPrompt);
             }
-            createPrompt(newPrompt);
+            // New Location update Events must be below
         }
-        // New Location update Events must be below
-    }
-
-    private void createPrompt(AttributedString newPrompt) {
-        prompt = AttributedString.join(new AttributedString(""), basePrompt, newPrompt, endPrompt);
     }
 }
