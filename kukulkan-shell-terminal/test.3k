@@ -1,5 +1,5 @@
 entity Direccion (direcciones){
-    nombre String required minlength(3) maxlength(50) pattern("direccion"),
+    nombre String required minlength(3) maxlength(50),
     edad Integer required min(12) max(23),
     numeroCredencial Long required min(13) max(23),
     sueldo BigDecimal required min(15) max(23),

@@ -40,7 +40,7 @@
 		</dependency>
 		<dependency>
 			<groupId>mx.infotec.dads.kukulkan</groupId>
-			<artifactId>kukulkan-shell-commons</artifactId>
+			<artifactId>kukulkan-shell-kernel</artifactId>
 		</dependency>
 	</dependencies>
 	<repositories>

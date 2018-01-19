@@ -23,6 +23,8 @@
  */
 package mx.infotec.dads.kukulkan.shell.commands.navigation;
 
+import static mx.infotec.dads.kukulkan.shell.commands.navigation.FileNavigationHelper.calculateNewPath;
+import static mx.infotec.dads.kukulkan.shell.commands.navigation.FileNavigationHelper.processActions;
 import static mx.infotec.dads.kukulkan.shell.util.FilesCommons.showFiles;
 import static mx.infotec.dads.kukulkan.shell.util.TextFormatter.formatDirNotExistText;
 import static mx.infotec.dads.kukulkan.shell.util.TextFormatter.formatNormalText;
@@ -30,8 +32,6 @@ import static mx.infotec.dads.kukulkan.shell.util.TextFormatter.formatNormalText
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
-
-import javax.validation.constraints.NotNull;
 
 import org.jline.utils.AttributedString;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -92,52 +92,17 @@ public class FileNavigationCommands {
      *            the dir
      * @return the attributed string
      */
-    @ShellMethod("Change to other location")
+    @ShellMethod("Change location")
     public AttributedString cd(
             @ShellOption(valueProvider = DirectoryValueProvider.class, defaultValue = "@home") String dir) {
-        Path toChange = null;
-        if ("@home".equals(dir)) {
-            toChange = Paths.get(System.getProperty("user.home"));
-        } else {
-            toChange = Paths.get(dir);
-        }
-        Path newPath = getNewPath(toChange);
-        return validateNewPath(newPath);
-    }
-
-    /**
-     * Validate new path.
-     *
-     * @param newPath
-     *            the new path
-     * @return the attributed string
-     */
-    private AttributedString validateNewPath(Path newPath) {
+        Path newPath = calculateNewPath(dir, nav);
         if (newPath.toFile().exists()) {
             nav.setCurrentPath(newPath);
+//            processLocationUpdateActions();
             publisher.publishEvent(new LocationUpdatedEvent(EventType.FILE_NAVIGATION));
             return formatNormalText(newPath.toString());
         } else {
             return formatDirNotExistText(newPath.toString());
         }
-    }
-
-    /**
-     * Gets the new path.
-     *
-     * @param toChange
-     *            the to change
-     * @return the new path
-     */
-    private Path getNewPath(Path toChange) {
-        Path newPath;
-        if ("..".equals(toChange.toString())) {
-            newPath = nav.getCurrentPath().getParent();
-        } else if (toChange.isAbsolute()) {
-            newPath = toChange;
-        } else {
-            newPath = Paths.get(nav.getCurrentPath().toAbsolutePath().toString(), toChange.toString());
-        }
-        return newPath;
     }
 }

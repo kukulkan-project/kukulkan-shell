@@ -45,10 +45,10 @@ public class ProjectContextConfiguration {
     @Bean
     public ProjectConfiguration configProjectContext() {
         ProjectConfiguration pConf = new ProjectConfiguration();
-        pConf.setId("demo");
+        pConf.setId("default");
         pConf.setVersion("1.0.0");
-        pConf.setPackaging("mx.infotec.dads.mongo");
-        pConf.setYear("2017");
+        pConf.setPackaging("mx.infotec.dads.default");
+        pConf.setYear("2018");
         pConf.setAuthor("KUKULKAN");
         pConf.setDatabase(new Database(DatabaseType.SQL_MYSQL, PKGenerationStrategy.AUTO));
         return pConf;

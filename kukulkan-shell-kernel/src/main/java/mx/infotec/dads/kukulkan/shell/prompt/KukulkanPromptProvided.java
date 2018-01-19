@@ -21,10 +21,12 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package mx.infotec.dads.kukulkan.shell.config;
+package mx.infotec.dads.kukulkan.shell.prompt;
 
 import static mx.infotec.dads.kukulkan.shell.util.TextFormatter.defaulBasePrompt;
 import static mx.infotec.dads.kukulkan.shell.util.TextFormatter.defaulEndPrompt;
+
+import java.util.List;
 
 import javax.annotation.PostConstruct;
 
@@ -37,7 +39,7 @@ import org.springframework.stereotype.Component;
 import mx.infotec.dads.kukulkan.shell.component.Navigator;
 import mx.infotec.dads.kukulkan.shell.event.message.EventType;
 import mx.infotec.dads.kukulkan.shell.event.message.LocationUpdatedEvent;
-import mx.infotec.dads.kukulkan.shell.services.PromptLocationtUpdateService;
+import mx.infotec.dads.kukulkan.shell.prompt.event.ChangeLocationAwareness;
 
 /**
  * KukulkanPrompt Provided: * A provider that sets the shell prompt to
@@ -52,10 +54,8 @@ public class KukulkanPromptProvided implements PromptProvider {
     @Autowired
     private Navigator nav;
 
-    /** The prompt service. */
     @Autowired
-    private PromptLocationtUpdateService promptLocationtUpdateService;
-
+    private List<ChangeLocationAwareness> tasksList;
     /** The prompt. */
     private AttributedString prompt;
 
@@ -72,7 +72,7 @@ public class KukulkanPromptProvided implements PromptProvider {
     private void init() {
         basePrompt = defaulBasePrompt();
         endPrompt = defaulEndPrompt();
-        prompt = promptLocationtUpdateService.createPrompt(nav.getCurrentPath(), basePrompt, endPrompt);
+        prompt = AttributedString.join(new AttributedString(""), basePrompt, endPrompt);
     }
 
     /*
@@ -94,8 +94,17 @@ public class KukulkanPromptProvided implements PromptProvider {
     @EventListener
     public void handle(LocationUpdatedEvent event) {
         if (EventType.FILE_NAVIGATION.equals(event.getEventType())) {
-            prompt = promptLocationtUpdateService.createPrompt(nav.getCurrentPath(), basePrompt, endPrompt);
+            AttributedString newPrompt = new AttributedString("");
+            for (ChangeLocationAwareness task : tasksList) {
+                AttributedString current = task.addPrompt(nav.getCurrentPath());
+                newPrompt = AttributedString.join(new AttributedString(""), newPrompt, current);
+            }
+            createPrompt(newPrompt);
         }
+        // New Location update Events must be below
     }
 
+    private void createPrompt(AttributedString newPrompt) {
+        prompt = AttributedString.join(new AttributedString(""), basePrompt, newPrompt, endPrompt);
+    }
 }

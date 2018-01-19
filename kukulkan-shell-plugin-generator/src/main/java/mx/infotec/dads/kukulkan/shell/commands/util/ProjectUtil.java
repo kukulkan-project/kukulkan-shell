@@ -52,7 +52,8 @@ public class ProjectUtil {
     /**
      * Save kukulkan file.
      *
-     * @param config the config
+     * @param config
+     *            the config
      */
     public static void saveKukulkanFile(ProjectConfiguration config) {
         try {
@@ -69,7 +70,8 @@ public class ProjectUtil {
     /**
      * Read kukulkan file.
      *
-     * @param projectPath the project path
+     * @param projectPath
+     *            the project path
      * @return the project configuration
      */
     public static ProjectConfiguration readKukulkanFile(Path projectPath) {
@@ -78,7 +80,7 @@ public class ProjectUtil {
             ObjectMapper objectMapper = new ObjectMapper();
             return objectMapper.readValue(kukulkanFilePath.toFile(), ProjectConfiguration.class);
         } catch (IOException e) {
-            throw new GeneratorException("The file is no well structure");
+            throw new GeneratorException("The file is no well structure", e);
         }
 
     }

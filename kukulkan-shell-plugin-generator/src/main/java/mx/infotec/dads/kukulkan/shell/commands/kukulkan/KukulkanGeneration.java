@@ -69,7 +69,7 @@ public class KukulkanGeneration extends AbstractCommand {
      * @param file
      *            the file
      */
-    @ShellMethod("Generate all the entities that come from a file with .3k extension")
+    @ShellMethod("Generate all the entities that come from a file with .3k or .kukulkan extension")
     public void scaffoldingFromFile(@ShellOption(valueProvider = KukulkanFilesProvider.class) File file) {
         readProjectConfiguration(projectConfiguration, navigator.getCurrentPath());
         GeneratorContext genCtx = createGeneratorContext(projectConfiguration, file);

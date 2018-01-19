@@ -3,11 +3,11 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
-	<artifactId>kukulkan-shell-commons</artifactId>
+	<artifactId>kukulkan-shell-kernel</artifactId>
 	<packaging>jar</packaging>
 
-	<name>kukulkan-shell-util</name>
-	<description>Project with commons functionalities</description>
+	<name>kukulkan-shell-kernel</name>
+	<description>Kernel of the shell</description>
 
 	<parent>
 		<groupId>mx.infotec.dads.kukulkan</groupId>

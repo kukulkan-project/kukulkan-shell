@@ -41,7 +41,7 @@ public class NativeCommandServiceImpl implements NativeCommandService {
 
     /** The command service. */
     @Autowired
-    CommandServiceImpl commandService;
+    private CommandServiceImpl commandService;
 
     /* (non-Javadoc)
      * @see mx.infotec.dads.kukulkan.shell.services.NativeCommandService#isPresent(mx.infotec.dads.kukulkan.shell.domain.NativeCommand)

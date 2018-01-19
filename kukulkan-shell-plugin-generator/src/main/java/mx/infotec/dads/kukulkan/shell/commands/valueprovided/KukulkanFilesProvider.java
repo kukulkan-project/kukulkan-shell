@@ -30,11 +30,14 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.MethodParameter;
 import org.springframework.shell.CompletionContext;
 import org.springframework.shell.CompletionProposal;
 import org.springframework.shell.standard.ValueProviderSupport;
 import org.springframework.stereotype.Component;
+
+import mx.infotec.dads.kukulkan.shell.component.Navigator;
 
 /**
  * The Class KukulkanFilesProvider.
@@ -45,6 +48,8 @@ public class KukulkanFilesProvider extends ValueProviderSupport {
     /** The Constant KUKULKAN_FILE_PATTERN. */
     private static final String KUKULKAN_FILE_PATTERN = "^[^!]*\\.(3k|kukulkan)$";
 
+    @Autowired
+    private Navigator navigator;
     /*
      * (non-Javadoc)
      * 
@@ -56,7 +61,7 @@ public class KukulkanFilesProvider extends ValueProviderSupport {
     public List<CompletionProposal> complete(MethodParameter parameter, CompletionContext completionContext,
             String[] hints) {
         try {
-            return Files.list(Paths.get("."))
+            return Files.list(navigator.getCurrentPath())
                     .filter(path -> path.getFileName().toString().matches(KUKULKAN_FILE_PATTERN))
                     .map(path -> new CompletionProposal(path.getFileName().toString())).collect(Collectors.toList());
         } catch (IOException e) {

@@ -21,26 +21,40 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package mx.infotec.dads.kukulkan.shell.services;
+package mx.infotec.dads.kukulkan.shell.event.message;
 
-import java.nio.file.Path;
-
-import org.jline.utils.AttributedString;
+import org.jline.utils.AttributedStyle;
 
 /**
- * PromptFactory, It is used to create a config a prompt.
+ * The Enum EventType.
  *
  * @author Daniel Cortes Pichardo
  */
-public interface PromptLocationtUpdateService {
+public enum EventType {
+
+    /** The file navigation. */
+    FILE_NAVIGATION(AttributedStyle.DEFAULT.foreground(AttributedStyle.YELLOW));
+
+    /** The style. */
+    private AttributedStyle style;
 
     /**
-     * Creates the prompt.
+     * Instantiates a new event type.
      *
-     * @param currentPath the current path
-     * @param basePrompt the base prompt
-     * @param endPrompt the end prompt
-     * @return the attributed string
+     * @param style
+     *            the style
      */
-    public AttributedString createPrompt(Path currentPath, AttributedString basePrompt, AttributedString endPrompt);
+    private EventType(AttributedStyle style) {
+        this.style = style;
+    }
+
+    /**
+     * Style.
+     *
+     * @return the attributed style
+     */
+    public AttributedStyle style() {
+        return this.style;
+    }
+
 }
