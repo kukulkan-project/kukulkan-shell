@@ -23,6 +23,7 @@
  */
 package mx.infotec.dads.kukulkan.shell.util;
 
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.DirectoryStream;
 import java.nio.file.Files;
@@ -53,7 +54,8 @@ public class FilesCommons {
     /**
      * Filter files.
      *
-     * @param currentPath the current path
+     * @param currentPath
+     *            the current path
      * @return the list
      */
     public static List<CompletionProposal> filterFiles(Path currentPath) {
@@ -74,7 +76,8 @@ public class FilesCommons {
     /**
      * Show files.
      *
-     * @param currentPath the current path
+     * @param currentPath
+     *            the current path
      * @return the list
      */
     public static List<AttributedString> showFiles(Path currentPath) {
@@ -107,7 +110,8 @@ public class FilesCommons {
     /**
      * Filter dirs.
      *
-     * @param currentPath the current path
+     * @param currentPath
+     *            the current path
      * @return the list
      */
     public static List<CompletionProposal> filterDirs(Path currentPath) {
@@ -126,7 +130,8 @@ public class FilesCommons {
     /**
      * Checks for git files.
      *
-     * @param currentPath the current path
+     * @param currentPath
+     *            the current path
      * @return true, if successful
      */
     public static boolean hasGitFiles(Path currentPath) {
@@ -137,6 +142,23 @@ public class FilesCommons {
                 }
             }
         } catch (IOException e) {
+        }
+        return false;
+    }
+
+    /**
+     * Checks for git files.
+     *
+     * @param currentPath
+     *            the current path
+     * @return true, if successful
+     */
+    public static boolean hasKukulkanFile(Path currentPath) {
+        File[] files = currentPath.toFile().listFiles();
+        for (File file : files) {
+            if (file.getName().equals(".kukulkan.json")) {
+                return true;
+            }
         }
         return false;
     }
