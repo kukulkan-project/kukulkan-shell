@@ -95,15 +95,25 @@ public class KukulkanPromptProvided implements PromptProvider {
     @EventListener
     public void handle(LocationUpdatedEvent event) {
         if (EventType.FILE_NAVIGATION.equals(event.getEventType())) {
-            AttributedString currentPrompt = new AttributedString("");
-            for (ChangeLocationAwareness task : tasksList) {
-                Optional<AttributedString> newPrompt = task.addPrompt(nav.getCurrentPath());
-                if (newPrompt.isPresent()) {
-                    currentPrompt = AttributedString.join(new AttributedString(" "), currentPrompt, newPrompt.get());
-                }
-                prompt = AttributedString.join(new AttributedString(""), basePrompt, currentPrompt, endPrompt);
+            addPromptDecoration();
+            doActivities();
+        }
+    }
+
+    private void doActivities() {
+        for (ChangeLocationAwareness task : tasksList) {
+            task.doActivity(nav.getCurrentPath());
+        }
+    }
+
+    private void addPromptDecoration() {
+        AttributedString currentPrompt = new AttributedString("");
+        for (ChangeLocationAwareness task : tasksList) {
+            Optional<AttributedString> newPrompt = task.addPrompt(nav.getCurrentPath());
+            if (newPrompt.isPresent()) {
+                currentPrompt = AttributedString.join(new AttributedString(" "), currentPrompt, newPrompt.get());
             }
-            // New Location update Events must be below
+            prompt = AttributedString.join(new AttributedString(""), basePrompt, currentPrompt, endPrompt);
         }
     }
 }

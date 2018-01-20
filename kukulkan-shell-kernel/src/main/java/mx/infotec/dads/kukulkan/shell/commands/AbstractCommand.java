@@ -29,6 +29,7 @@ import mx.infotec.dads.kukulkan.engine.service.GenerationService;
 import mx.infotec.dads.kukulkan.metamodel.foundation.ProjectConfiguration;
 import mx.infotec.dads.kukulkan.metamodel.util.KukulkanConfigurationProperties;
 import mx.infotec.dads.kukulkan.shell.component.Navigator;
+import mx.infotec.dads.kukulkan.shell.domain.KukulkanShellContext;
 import mx.infotec.dads.kukulkan.shell.services.CommandService;
 
 /**
@@ -41,20 +42,20 @@ public abstract class AbstractCommand {
     /** The generation service. */
     @Autowired
     protected GenerationService generationService;
-    
+
     /** The command service. */
     @Autowired
     protected CommandService commandService;
-    
+
     /** The navigator. */
     @Autowired
     protected Navigator navigator;
-    
+
     /** The configuration properties. */
     @Autowired
     protected KukulkanConfigurationProperties configurationProperties;
-    
+
     /** The project configuration. */
     @Autowired
-    protected ProjectConfiguration projectConfiguration;
+    protected KukulkanShellContext shellContext;
 }

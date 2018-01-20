@@ -61,22 +61,6 @@ public class CommandHelper {
     }
 
     /**
-     * Read the project configuration from a file and set the properties into
-     * the main ProjectConfiguration instance.
-     *
-     * @param projectConfiguration
-     *            the project configuration
-     * @param currentPath
-     *            the current path
-     */
-    public static void readProjectConfiguration(ProjectConfiguration projectConfiguration, Path currentPath) {
-        ProjectConfiguration pConf = ProjectUtil.readKukulkanFile(currentPath);
-        projectConfiguration.setId(pConf.getId());
-        projectConfiguration.setPackaging(pConf.getPackaging());
-        projectConfiguration.setOutputDir(currentPath.getParent());
-    }
-
-    /**
      * Create a Generator Context from a File. This file is the source code that
      * describe the domain model represented in the the kukulkan language.
      *

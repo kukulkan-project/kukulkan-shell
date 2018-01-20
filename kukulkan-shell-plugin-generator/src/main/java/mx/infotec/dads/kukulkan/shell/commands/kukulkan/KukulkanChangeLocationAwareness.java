@@ -5,9 +5,14 @@ import java.util.Optional;
 
 import org.jline.utils.AttributedString;
 import org.jline.utils.AttributedStyle;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import mx.infotec.dads.kukulkan.shell.prompt.event.ChangeLocationAwareness;
+import mx.infotec.dads.kukulkan.metamodel.foundation.ProjectConfiguration;
+import mx.infotec.dads.kukulkan.shell.commands.util.ProjectUtil;
+import mx.infotec.dads.kukulkan.shell.domain.KukulkanShellContext;
+import mx.infotec.dads.kukulkan.shell.prompt.event.AbstractChangeLocationAwareness;
+import mx.infotec.dads.kukulkan.shell.services.CommandService;
 import mx.infotec.dads.kukulkan.shell.util.FilesCommons;
 
 /**
@@ -17,7 +22,13 @@ import mx.infotec.dads.kukulkan.shell.util.FilesCommons;
  *
  */
 @Component
-public class KukulkanChangeLocationAwareness implements ChangeLocationAwareness {
+public class KukulkanChangeLocationAwareness extends AbstractChangeLocationAwareness {
+
+    @Autowired
+    private KukulkanShellContext context;
+
+    @Autowired
+    private CommandService commandService;
 
     @Override
     public Optional<AttributedString> addPrompt(Path currentLocation) {
@@ -29,6 +40,14 @@ public class KukulkanChangeLocationAwareness implements ChangeLocationAwareness 
             return Optional.of(dirPrompt);
         } else {
             return Optional.empty();
+        }
+    }
+
+    @Override
+    public void doActivity(Path currentLocation) {
+        if (FilesCommons.hasKukulkanFile(currentLocation)) {
+            context.setConfiguration(ProjectUtil.readKukulkanFile(currentLocation));
+            commandService.printf("It is a Kukulkan project");
         }
     }
 }

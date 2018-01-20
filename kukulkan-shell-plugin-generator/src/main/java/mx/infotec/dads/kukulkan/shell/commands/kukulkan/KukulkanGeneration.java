@@ -25,10 +25,11 @@ package mx.infotec.dads.kukulkan.shell.commands.kukulkan;
 
 import static mx.infotec.dads.kukulkan.shell.commands.kukulkan.CommandHelper.configProjectConfiguration;
 import static mx.infotec.dads.kukulkan.shell.commands.kukulkan.CommandHelper.createGeneratorContext;
-import static mx.infotec.dads.kukulkan.shell.commands.kukulkan.CommandHelper.readProjectConfiguration;
 import static mx.infotec.dads.kukulkan.shell.commands.validation.UserInputValidation.validateProjectParams;
 
 import java.io.File;
+import java.lang.reflect.Field;
+import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -40,6 +41,10 @@ import org.slf4j.LoggerFactory;
 import org.springframework.shell.standard.ShellComponent;
 import org.springframework.shell.standard.ShellMethod;
 import org.springframework.shell.standard.ShellOption;
+
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
 
 import mx.infotec.dads.kukulkan.metamodel.context.GeneratorContext;
 import mx.infotec.dads.kukulkan.metamodel.foundation.DatabaseType;
@@ -71,8 +76,8 @@ public class KukulkanGeneration extends AbstractCommand {
      */
     @ShellMethod("Generate all the entities that come from a file with .3k or .kukulkan extension")
     public void scaffoldingFromFile(@ShellOption(valueProvider = KukulkanFilesProvider.class) File file) {
-        readProjectConfiguration(projectConfiguration, navigator.getCurrentPath());
-        GeneratorContext genCtx = createGeneratorContext(projectConfiguration, file);
+        shellContext.setConfiguration(ProjectUtil.readKukulkanFile(navigator.getCurrentPath()));
+        GeneratorContext genCtx = createGeneratorContext(shellContext.getConfiguration(), file);
         generationService.findGeneratorByName("angularJs-spring").ifPresent(generator -> {
             generationService.process(genCtx, generator);
             FileUtil.saveToFile(genCtx);
@@ -93,12 +98,12 @@ public class KukulkanGeneration extends AbstractCommand {
             @ShellOption(defaultValue = "NULL") PKGenerationStrategy pkGenerationType) {
         LOGGER.info("Generating Project...");
         validateProjectParams(appName, packaging);
-        configProjectConfiguration(projectConfiguration, appName, packaging, navigator.getCurrentPath(), databaseType,
-                pkGenerationType);
-        GeneratorContext genCtx = new GeneratorContext(ProjectConfiguration.class, projectConfiguration);
+        configProjectConfiguration(shellContext.getConfiguration(), appName, packaging, navigator.getCurrentPath(),
+                databaseType, pkGenerationType);
+        GeneratorContext genCtx = new GeneratorContext(ProjectConfiguration.class, shellContext.getConfiguration());
         generationService.findGeneratorByName("angular-js-archetype-generator").ifPresent(generator -> {
             generationService.process(genCtx, generator);
-            ProjectUtil.saveKukulkanFile(projectConfiguration);
+            ProjectUtil.saveKukulkanFile(shellContext.getConfiguration());
             commandService.printf("Execute the command", "mvn-config-front-End");
             commandService.printf("\n\n\r");
         });
@@ -109,13 +114,12 @@ public class KukulkanGeneration extends AbstractCommand {
      * current context.
      *
      * @return List<AttributedString>
+     * @throws JsonProcessingException 
      */
     @ShellMethod("Show the current project configuration applied to the current context")
-    public List<AttributedString> generatorShowConfiguration() {
-        List<AttributedString> attrList = new ArrayList<>();
-        attrList.add(TextFormatter.formatLikeGlossary("AppName", projectConfiguration.getId()));
-        attrList.add(TextFormatter.formatLikeGlossary("GroupId", projectConfiguration.getPackaging()));
-        return attrList;
+    public String showFileConfiguration() throws JsonProcessingException {
+        ObjectMapper objectMapper = new ObjectMapper();
+        objectMapper.configure(SerializationFeature.INDENT_OUTPUT, true);
+        return objectMapper.writeValueAsString(shellContext.getConfiguration());
     }
-
 }

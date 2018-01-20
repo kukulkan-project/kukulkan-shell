@@ -12,12 +12,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import mx.infotec.dads.kukulkan.shell.domain.ShellCommand;
+import mx.infotec.dads.kukulkan.shell.prompt.event.AbstractChangeLocationAwareness;
 import mx.infotec.dads.kukulkan.shell.prompt.event.ChangeLocationAwareness;
 import mx.infotec.dads.kukulkan.shell.services.impl.CommandServiceImpl;
 import mx.infotec.dads.kukulkan.shell.util.FilesCommons;
 
 @Component
-public class GitChangeLocationAwareness implements ChangeLocationAwareness {
+public class GitChangeLocationAwareness extends AbstractChangeLocationAwareness {
 
     /** The command service. */
     @Autowired

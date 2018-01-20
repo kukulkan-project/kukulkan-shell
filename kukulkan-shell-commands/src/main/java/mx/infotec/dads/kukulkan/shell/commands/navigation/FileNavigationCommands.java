@@ -98,7 +98,6 @@ public class FileNavigationCommands {
         Path newPath = calculateNewPath(dir, nav);
         if (newPath.toFile().exists()) {
             nav.setCurrentPath(newPath);
-//            processLocationUpdateActions();
             publisher.publishEvent(new LocationUpdatedEvent(EventType.FILE_NAVIGATION));
             return formatNormalText(newPath.toString());
         } else {

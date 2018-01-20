@@ -12,9 +12,10 @@ import org.jline.utils.AttributedString;
  * @author Daniel Cortes Pichardo
  *
  */
-@FunctionalInterface
 public interface ChangeLocationAwareness {
 
     Optional<AttributedString> addPrompt(Path currentLocation);
+
+    void doActivity(Path currentLocation);
 
 }
