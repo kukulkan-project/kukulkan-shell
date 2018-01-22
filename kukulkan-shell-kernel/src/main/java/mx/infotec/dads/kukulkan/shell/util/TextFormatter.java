@@ -65,7 +65,7 @@ public class TextFormatter {
         }).collect(Collectors.toList());
 
     }
-
+    
     /**
      * Format normal text.
      *

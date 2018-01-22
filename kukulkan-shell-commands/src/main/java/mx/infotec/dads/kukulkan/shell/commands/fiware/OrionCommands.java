@@ -25,6 +25,18 @@ package mx.infotec.dads.kukulkan.shell.commands.fiware;
 
 import static mx.infotec.dads.kukulkan.shell.commands.docker.DockerCommands.DOCKER_COMMAND;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Optional;
+import java.util.stream.Collectors;
+
+import javax.validation.constraints.NotNull;
+
+import org.jline.utils.AttributedString;
+import org.jline.utils.AttributedStringBuilder;
+import org.jline.utils.AttributedStyle;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.shell.Availability;
 import org.springframework.shell.standard.ShellComponent;
@@ -32,6 +44,7 @@ import org.springframework.shell.standard.ShellMethod;
 import org.springframework.shell.standard.ShellMethodAvailability;
 import org.springframework.shell.standard.ShellOption;
 
+import mx.infotec.dads.kukulkan.shell.commands.fiware.dto.OrionEntityResponse;
 import mx.infotec.dads.kukulkan.shell.domain.ShellCommand;
 import mx.infotec.dads.kukulkan.shell.services.CommandService;
 
@@ -42,13 +55,16 @@ import mx.infotec.dads.kukulkan.shell.services.CommandService;
  */
 @ShellComponent
 public class OrionCommands {
-    
+
     /** The Constant NULL. */
     public static final String NULL = "@NULL";
 
     /** The command service. */
     @Autowired
-    CommandService commandService;
+    private CommandService commandService;
+
+    @Autowired
+    private OrionService orionService;
 
     /** The is running. */
     private boolean isRunning;
@@ -56,7 +72,8 @@ public class OrionCommands {
     /**
      * Orion start.
      *
-     * @param port the port
+     * @param port
+     *            the port
      */
     @ShellMethod("Create a instance of the Orion Context Broker")
     public void orionStart(@ShellOption(defaultValue = "1026") String port) {
@@ -65,9 +82,58 @@ public class OrionCommands {
     }
 
     /**
+     * Orion start.
+     *
+     * @param port
+     *            the port
+     */
+    @ShellMethod("Create a instance of the Orion Context Broker")
+    public List<AttributedString> getAllEntities(@NotNull String url) {
+        Optional<List<OrionEntityResponse>> entities = orionService.getAllEntities(url);
+        if (entities.isPresent()) {
+            return formatToNGSI(entities.get());
+        } else {
+            return new ArrayList<>();
+        }
+    }
+
+    /**
+     * format a List<CharSequence> in order to highlight some git command
+     * results.
+     *
+     * @param input
+     *            the input
+     * @return List<AttributedString>
+     */
+    @Deprecated
+    public static List<AttributedString> formatToNGSI(List<OrionEntityResponse> orionReponse) {
+        return orionReponse.stream().map(result -> {
+            AttributedStringBuilder asb = new AttributedStringBuilder();
+            asb.append(new AttributedString(result.getId(), AttributedStyle.BOLD.foreground(AttributedStyle.BLUE)));
+            asb.append("\n");
+            asb.append(new AttributedString(result.getType(), AttributedStyle.BOLD.foreground(AttributedStyle.BLUE)));
+            asb.append("\n");
+            processMap(result.getAdditionalProperties(), asb);
+            asb.append("\n");
+            return asb.toAttributedString();
+        }).collect(Collectors.toList());
+    }
+
+    private static void processMap(Map<String, Object> additionalProperties, AttributedStringBuilder asb) {
+        for (Entry<String, Object> property : additionalProperties.entrySet()) {
+            asb.append(new AttributedString(property.getKey(), AttributedStyle.BOLD.foreground(AttributedStyle.BLUE)));
+            asb.append(":");
+            asb.append(new AttributedString(property.getValue().toString(),
+                    AttributedStyle.BOLD.foreground(AttributedStyle.WHITE)));
+            asb.append("\n");
+        }
+    }
+
+    /**
      * Orion stop.
      *
-     * @param containerId the container id
+     * @param containerId
+     *            the container id
      */
     @ShellMethod("Stop a instance of the Orion Context Broker")
     public void orionStop(@ShellOption(defaultValue = NULL) String containerId) {
