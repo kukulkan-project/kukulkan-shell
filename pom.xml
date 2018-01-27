@@ -56,6 +56,7 @@
 		<module>kukulkan-shell-plugin-chatbot</module>
 		<module>kukulkan-shell-commands</module>
 		<module>kukulkan-shell-terminal</module>
+		<module>kukulkan-shell-plugin-antlr4</module>
 	</modules>
 	<dependencyManagement>
 		<dependencies>
@@ -102,6 +103,16 @@
 			<dependency>
 				<groupId>mx.infotec.dads.kukulkan</groupId>
 				<artifactId>kukulkan-shell-plugin-chatbot</artifactId>
+				<version>0.0.1-SNAPSHOT</version>
+			</dependency>
+			<dependency>
+				<groupId>mx.infotec.dads.kukulkan</groupId>
+				<artifactId>kukulkan-grammar</artifactId>
+				<version>0.0.1-SNAPSHOT</version>
+			</dependency>
+			<dependency>
+				<groupId>mx.infotec.dads.kukulkan</groupId>
+				<artifactId>kukulkan-engine</artifactId>
 				<version>0.0.1-SNAPSHOT</version>
 			</dependency>
 		</dependencies>

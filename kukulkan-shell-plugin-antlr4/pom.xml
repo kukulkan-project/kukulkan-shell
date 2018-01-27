@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+	<artifactId>kukulkan-shell-plugin-antlr4</artifactId>
+	<packaging>jar</packaging>
+
+	<name>kukulkan-shell-plugin-generator-antlr4</name>
+	<description>The kukulkan generator for antlr4</description>
+
+	<parent>
+		<groupId>mx.infotec.dads.kukulkan</groupId>
+		<artifactId>kukulkan-shell</artifactId>
+		<version>0.0.1-SNAPSHOT</version>
+	</parent>
+
+	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+		<mongobee.version>0.12</mongobee.version>
+		<logback.loglevel>DEBUG</logback.loglevel>
+		<maven-resources-plugin.version>3.0.1</maven-resources-plugin.version>
+		<java.version>1.8</java.version>
+	</properties>
+
+	<dependencies>
+		<dependency>
+			<groupId>org.springframework.shell</groupId>
+			<artifactId>spring-shell-starter</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>com.beust</groupId>
+			<artifactId>jcommander</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-test</artifactId>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>mx.infotec.dads.kukulkan</groupId>
+			<artifactId>kukulkan-metamodel</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>mx.infotec.dads.kukulkan</groupId>
+			<artifactId>kukulkan-shell-kernel</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-freemarker</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>mx.infotec.dads.kukulkan</groupId>
+			<artifactId>kukulkan-grammar</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>mx.infotec.dads.kukulkan</groupId>
+			<artifactId>kukulkan-engine</artifactId>
+		</dependency>
+	</dependencies>
+	<repositories>
+		<repository>
+			<id>spring-milestones</id>
+			<name>Spring Milestones</name>
+			<url>https://repo.spring.io/milestone</url>
+			<snapshots>
+				<enabled>false</enabled>
+			</snapshots>
+		</repository>
+	</repositories>
+</project>
