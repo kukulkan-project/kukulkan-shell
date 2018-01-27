@@ -24,6 +24,7 @@
 package mx.infotec.dads.kukulkan.shell.commands.antlr4;
 
 import java.io.Serializable;
+import java.nio.file.Path;
 
 /**
  * Antlr4Context
@@ -31,13 +32,16 @@ import java.io.Serializable;
  * @author Daniel Cortes Pichardo
  *
  */
-public class Antlr4Context implements Serializable {
+public class Antlr4Params implements Serializable {
 
     private static final long serialVersionUID = 1L;
-
+    /** The id. */
+    private String id;
     private String grammarName;
     private String grammarExtension;
-
+    private Path outputDir;
+    /** The packaging. */
+    private String packaging;
     public String getGrammarName() {
         return grammarName;
     }
@@ -52,5 +56,29 @@ public class Antlr4Context implements Serializable {
 
     public void setGrammarExtension(String grammarExtension) {
         this.grammarExtension = grammarExtension;
+    }
+
+    public Path getOutputDir() {
+        return outputDir;
+    }
+
+    public void setOutputDir(Path outputDir) {
+        this.outputDir = outputDir;
+    }
+
+    public String getPackaging() {
+        return packaging;
+    }
+
+    public void setPackaging(String packaging) {
+        this.packaging = packaging;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
     }
 }

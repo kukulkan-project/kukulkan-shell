@@ -1,4 +1,4 @@
-grammar ${grammar.name};
+grammar ${project.grammarName};
 
 start
 :

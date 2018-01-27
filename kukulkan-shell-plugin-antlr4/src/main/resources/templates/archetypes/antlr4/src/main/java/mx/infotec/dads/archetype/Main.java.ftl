@@ -1,13 +1,13 @@
 
-package mx.dads.infotec.archetype;
+package ${project.packaging};
 
 import java.io.IOException;
 
 import org.antlr.v4.runtime.ANTLRFileStream;
 import org.antlr.v4.runtime.CommonTokenStream;
 
-import mx.dads.infotec.${project.id}.${grammar.name}Lexer;
-import mx.dads.infotec.${project.id}.${grammar.name}Parser;
+import mx.dads.infotec.${project.id}.${project.grammarName}Lexer;
+import mx.dads.infotec.${project.id}.${project.grammarName}Parser;
 
 /**
  * This main class is for grammar testing
@@ -17,20 +17,20 @@ import mx.dads.infotec.${project.id}.${grammar.name}Parser;
  */
 public class Main {
 
-    private static final String EXTENSION = "${grammar.extension}";
+    private static final String EXTENSION = "${project.grammarExtension}";
 
     public static void main(String[] args) throws IOException {
         String program = args.length > 1 ? args[1] : "test/test." + EXTENSION;
 
         System.out.println("Interpreting file " + program);
 
-        ${grammar.name}Lexer lexer = new ${grammar.name}Lexer(new ANTLRFileStream(program));
+        ${project.grammarName}Lexer lexer = new ${project.grammarName}Lexer(new ANTLRFileStream(program));
         CommonTokenStream tokens = new CommonTokenStream(lexer);
-        ${grammar.name}Parser parser = new ${grammar.name}Parser(tokens);
+        ${project.grammarName}Parser parser = new ${project.grammarName}Parser(tokens);
 
-        ${grammar.name}Parser.StartContext tree = parser.start();
+        ${project.grammarName}Parser.StartContext tree = parser.start();
 
-        ${grammar.name}CustomVisitor visitor = new ${grammar.name}CustomVisitor();
+        ${project.grammarName}CustomVisitor visitor = new ${project.grammarName}CustomVisitor();
         visitor.visit(tree);
 
         System.out.println("Interpretation finished");
