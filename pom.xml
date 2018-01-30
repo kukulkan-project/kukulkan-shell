@@ -107,12 +107,12 @@
 			</dependency>
 			<dependency>
 				<groupId>mx.infotec.dads.kukulkan</groupId>
-				<artifactId>kukulkan-grammar</artifactId>
+				<artifactId>kukulkan-shell-plugin-antlr4</artifactId>
 				<version>0.0.1-SNAPSHOT</version>
 			</dependency>
 			<dependency>
 				<groupId>mx.infotec.dads.kukulkan</groupId>
-				<artifactId>kukulkan-engine</artifactId>
+				<artifactId>kukulkan-grammar</artifactId>
 				<version>0.0.1-SNAPSHOT</version>
 			</dependency>
 		</dependencies>

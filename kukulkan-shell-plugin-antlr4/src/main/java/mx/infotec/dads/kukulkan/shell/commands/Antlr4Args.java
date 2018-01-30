@@ -21,10 +21,12 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package mx.infotec.dads.kukulkan.shell.commands.antlr4;
+package mx.infotec.dads.kukulkan.shell.commands;
 
 import java.io.Serializable;
 import java.nio.file.Path;
+
+import com.beust.jcommander.Parameter;
 
 /**
  * Antlr4Context
@@ -32,16 +34,24 @@ import java.nio.file.Path;
  * @author Daniel Cortes Pichardo
  *
  */
-public class Antlr4Params implements Serializable {
+public class Antlr4Args implements Serializable {
 
     private static final long serialVersionUID = 1L;
-    /** The id. */
+
+    @Parameter(names = { "id" }, description = "the project name")
     private String id;
+
+    @Parameter(names = { "grammarName" }, description = "the name of the grammar")
     private String grammarName;
+
+    @Parameter(names = { "grammarExtension" }, description = "the grammar Extension")
     private String grammarExtension;
-    private Path outputDir;
-    /** The packaging. */
+
+    private transient Path outputDir;
+
+    @Parameter(names = { "packaging" }, description = "the package name of the project")
     private String packaging;
+
     public String getGrammarName() {
         return grammarName;
     }
@@ -80,5 +90,11 @@ public class Antlr4Params implements Serializable {
 
     public void setId(String id) {
         this.id = id;
+    }
+
+    @Override
+    public String toString() {
+        return "Args{" + "projectName=" + id + ", grammarExtension=" + grammarExtension + ", grammarName='"
+                + grammarName + '\'' + ", packageName=" + packaging + '}';
     }
 }

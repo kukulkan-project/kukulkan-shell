@@ -47,6 +47,10 @@
 		</dependency>
 		<dependency>
 			<groupId>mx.infotec.dads.kukulkan</groupId>
+			<artifactId>kukulkan-shell-plugin-antlr4</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>mx.infotec.dads.kukulkan</groupId>
 			<artifactId>kukulkan-shell-plugin-chatbot</artifactId>
 		</dependency>
 		<dependency>
