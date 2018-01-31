@@ -1,7 +1,7 @@
 /*
  *  
  * The MIT License (MIT)
- * Copyright (c) 2016 Daniel Cortes Pichardo
+ * Copyright (c) 2018 Roberto Villarejo Martínez
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -23,35 +23,44 @@
  */
 package mx.infotec.dads.kukulkan.shell.commands.chatbot;
 
-import java.util.ArrayList;
-import java.util.List;
+import javax.validation.Valid;
 
-import org.jline.utils.AttributedString;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.shell.standard.ShellComponent;
 import org.springframework.shell.standard.ShellMethod;
+import org.springframework.shell.standard.ShellOption;
 
+import mx.infotec.dads.kukulkan.metamodel.context.GeneratorContext;
 import mx.infotec.dads.kukulkan.shell.commands.AbstractCommand;
-import mx.infotec.dads.kukulkan.shell.util.TextFormatter;
+import mx.infotec.dads.kukulkan.shell.commands.util.Mapper;
+import mx.infotec.dads.kukulkan.shell.generator.ChatbotContext;
+import mx.infotec.dads.kukulkan.shell.generator.ChatbotGenerator;
 
 @ShellComponent
 public class ChatbotGeneration extends AbstractCommand {
 
-    /** The Constant LOGGER. */
-    private static final Logger LOGGER = LoggerFactory.getLogger(ChatbotGeneration.class);
+	@Autowired
+	private ChatbotGenerator generator;
 
-    /**
-     * Command Shell that show the current project configuration applied to the
-     * current context.
-     *
-     * @return List<AttributedString>
-     */
-    @ShellMethod("Adding a chatbot")
-    public List<AttributedString> addChatbot() {
-        List<AttributedString> attrList = new ArrayList<>();
-        attrList.add(TextFormatter.formatLikeGlossary("AppName", "infot-chatbot"));
-        return attrList;
-    }
+	/** The Constant LOGGER. */
+	private static final Logger LOGGER = LoggerFactory.getLogger(ChatbotGeneration.class);
+
+	/**
+	 * Command Shell that show the current project configuration applied to the
+	 * current context.
+	 *
+	 * @return List<AttributedString>
+	 */
+	@ShellMethod("Generate a chatbot broker")
+	public void addChatbot(@ShellOption(optOut = true) @Valid ChatbotArgs params) {
+		ChatbotContext chatbotContext = Mapper.to(params);
+		chatbotContext.setOutputDir(navigator.getCurrentPath());
+		GeneratorContext genContext = new GeneratorContext();
+		genContext.put(ChatbotContext.class, chatbotContext);
+		generator.process(genContext);
+//		commandService.exec(new ShellCommand("npm").addArg("install"));
+	}
 
 }
