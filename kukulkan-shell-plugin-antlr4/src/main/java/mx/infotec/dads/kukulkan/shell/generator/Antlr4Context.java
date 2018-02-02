@@ -23,78 +23,70 @@
  */
 package mx.infotec.dads.kukulkan.shell.generator;
 
-import java.io.Serializable;
-import java.nio.file.Path;
-
-import com.beust.jcommander.Parameter;
+import mx.infotec.dads.kukulkan.metamodel.context.BaseContext;
 
 /**
- * Antlr4Context
- * 
- * @author Daniel Cortes Pichardo
+ * Antlr4Context.
  *
+ * @author Daniel Cortes Pichardo
  */
-public class Antlr4Context implements Serializable {
+public class Antlr4Context extends BaseContext {
 
+    /** The Constant serialVersionUID. */
     private static final long serialVersionUID = 1L;
 
-    @Parameter(names = { "id" }, description = "the project name")
-    private String id;
-
-    @Parameter(names = { "grammarName" }, description = "the name of the grammar")
+    /** The grammar name. */
     private String grammarName;
 
-    @Parameter(names = { "grammarExtension" }, description = "the grammar Extension")
+    /** The grammar extension. */
     private String grammarExtension;
 
-    private transient Path outputDir;
-
-    @Parameter(names = { "packaging" }, description = "the package name of the project")
-    private String packaging;
-
+    /**
+     * Gets the grammar name.
+     *
+     * @return the grammar name
+     */
     public String getGrammarName() {
         return grammarName;
     }
 
+    /**
+     * Sets the grammar name.
+     *
+     * @param grammarName
+     *            the new grammar name
+     */
     public void setGrammarName(String grammarName) {
         this.grammarName = grammarName;
     }
 
+    /**
+     * Gets the grammar extension.
+     *
+     * @return the grammar extension
+     */
     public String getGrammarExtension() {
         return grammarExtension;
     }
 
+    /**
+     * Sets the grammar extension.
+     *
+     * @param grammarExtension
+     *            the new grammar extension
+     */
     public void setGrammarExtension(String grammarExtension) {
         this.grammarExtension = grammarExtension;
     }
 
-    public Path getOutputDir() {
-        return outputDir;
-    }
-
-    public void setOutputDir(Path outputDir) {
-        this.outputDir = outputDir;
-    }
-
-    public String getPackaging() {
-        return packaging;
-    }
-
-    public void setPackaging(String packaging) {
-        this.packaging = packaging;
-    }
-
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
-    }
-
+    /*
+     * (non-Javadoc)
+     * 
+     * @see java.lang.Object#toString()
+     */
     @Override
     public String toString() {
-        return "Args{" + "projectName=" + id + ", grammarExtension=" + grammarExtension + ", grammarName='"
-                + grammarName + '\'' + ", packageName=" + packaging + '}';
+        return "Args{" + "projectName=" + this.getId() + ", grammarExtension=" + grammarExtension + ", grammarName='"
+                + grammarName + '\'' + ", packageName=" + this.getPackaging() + '}';
     }
 }

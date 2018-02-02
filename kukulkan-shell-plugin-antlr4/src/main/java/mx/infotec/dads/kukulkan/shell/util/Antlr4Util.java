@@ -23,20 +23,6 @@
  */
 package mx.infotec.dads.kukulkan.shell.util;
 
-import static mx.infotec.dads.kukulkan.metamodel.util.Validator.requiredNotEmpty;
-
-import java.io.Serializable;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
-
-import mx.infotec.dads.kukulkan.metamodel.context.GeneratorContext;
-import mx.infotec.dads.kukulkan.metamodel.template.Template;
-import mx.infotec.dads.kukulkan.metamodel.template.TemplateType;
-import mx.infotec.dads.kukulkan.shell.generator.Antlr4Context;
-
 /**
  * Antlr4Context
  * 
@@ -48,47 +34,4 @@ public class Antlr4Util {
     private Antlr4Util() {
 
     }
-
-    public static Path createToSavePath(GeneratorContext context, Template template, Path outputPath) {
-        Antlr4Context pConf = requiredNotEmpty(context.get(Antlr4Context.class));
-        return createPath(template, pConf.getPackaging(), pConf.getId(), outputPath);
-    }
-
-    public static Path createPath(Template template, String packaging, String projectid, Path outputPath) {
-        String newPackaging = packaging.replaceAll("\\.", "/");
-        Path temp = Paths.get(template.getName());
-        Path parent = temp.getParent();
-        String newTemplate = createTemplatePath(projectid, newPackaging, parent, outputPath, template);
-        Path targetPath = Paths.get(newTemplate, temp.getFileName().toString().replaceAll(".ftl", ""));
-        return createOutputPath(projectid, targetPath);
-    }
-
-    public static String createTemplatePath(String projectid, String newPackaging, Path parent, Path outputPath,
-            Template template) {
-        return parent.toString().replaceAll(template.getType().getTemplatePath(), outputPath + "/" + projectid)
-                .replaceAll("package", newPackaging);
-    }
-
-    public static Path createOutputPath(String projectid, Path targetPath) {
-        Objects.requireNonNull(projectid, "project id cannot be null");
-        Objects.requireNonNull(targetPath, "targetPath cannot be null");
-        if (targetPath.getFileName().toString().contains("MyGrammar.g4")) {
-            String output = projectid.substring(0, 1).toUpperCase() + projectid.substring(1);
-            return Paths.get(targetPath.getParent().toString(), output + ".g4");
-        } else if (targetPath.getFileName().toString().contains("MyGrammarCustomVisitor")) {
-            String output = projectid.substring(0, 1).toUpperCase() + projectid.substring(1);
-            return Paths.get(targetPath.getParent().toString(), output + "CustomVisitor.java");
-        } else {
-            return targetPath;
-        }
-    }
-
-    public static List<Template> convertTemplate(TemplateType type, List<String> from) {
-        List<Template> to = new ArrayList<>();
-        for (String template : from) {
-            to.add(new Template(type, template));
-        }
-        return to;
-    }
-
 }

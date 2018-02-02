@@ -15,7 +15,7 @@ public class Mapper {
 
     }
 
-    public static Antlr4Context to(Antlr4Args params) {
+    public static Antlr4Context toContext(Antlr4Args params) {
         Antlr4Context context = new Antlr4Context();
         context.setId(params.getId());
         context.setGrammarExtension(params.getGrammarExtension());

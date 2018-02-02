@@ -24,7 +24,8 @@
 package mx.infotec.dads.kukulkan.shell.commands;
 
 import java.io.Serializable;
-import java.nio.file.Path;
+import java.util.ArrayList;
+import java.util.List;
 
 import com.beust.jcommander.Parameter;
 
@@ -37,6 +38,9 @@ import com.beust.jcommander.Parameter;
 public class Antlr4Args implements Serializable {
 
     private static final long serialVersionUID = 1L;
+    
+    @Parameter
+    private List<String> parameters = new ArrayList<>();
 
     @Parameter(names = { "id" }, description = "the project name")
     private String id;
@@ -46,8 +50,6 @@ public class Antlr4Args implements Serializable {
 
     @Parameter(names = { "grammarExtension" }, description = "the grammar Extension")
     private String grammarExtension;
-
-    private transient Path outputDir;
 
     @Parameter(names = { "packaging" }, description = "the package name of the project")
     private String packaging;
@@ -66,14 +68,6 @@ public class Antlr4Args implements Serializable {
 
     public void setGrammarExtension(String grammarExtension) {
         this.grammarExtension = grammarExtension;
-    }
-
-    public Path getOutputDir() {
-        return outputDir;
-    }
-
-    public void setOutputDir(Path outputDir) {
-        this.outputDir = outputDir;
     }
 
     public String getPackaging() {
