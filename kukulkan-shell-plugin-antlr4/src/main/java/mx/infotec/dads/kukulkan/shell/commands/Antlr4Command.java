@@ -58,9 +58,10 @@ public class Antlr4Command extends AbstractCommand {
      *
      * @return List<AttributedString>
      */
-    @ShellMethod("Adding a chatbot")
+    @ShellMethod("Creates an ANTLR4-project")
     public void antlr4CreateApp(@ShellOption(optOut = true) @Valid Antlr4Args params) {
-        Antlr4Context antlr4Context = Mapper.to(params);
+        LOGGER.info("Creating Antlr Project...");
+        Antlr4Context antlr4Context = Mapper.toContext(params);
         antlr4Context.setOutputDir(navigator.getCurrentPath());
         GeneratorContext genCtx = new GeneratorContext();
         genCtx.put(Antlr4Context.class, antlr4Context);

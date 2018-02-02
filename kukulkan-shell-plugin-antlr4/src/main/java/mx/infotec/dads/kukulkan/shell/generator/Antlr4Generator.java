@@ -26,26 +26,20 @@ package mx.infotec.dads.kukulkan.shell.generator;
 import static mx.infotec.dads.kukulkan.metamodel.util.Validator.requiredNotEmpty;
 
 import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
 import mx.infotec.dads.kukulkan.engine.templating.service.TemplateService;
+import mx.infotec.dads.kukulkan.engine.util.TemplateUtil;
 import mx.infotec.dads.kukulkan.metamodel.annotation.GeneratorComponent;
 import mx.infotec.dads.kukulkan.metamodel.context.GeneratorContext;
 import mx.infotec.dads.kukulkan.metamodel.generator.Generator;
-import mx.infotec.dads.kukulkan.metamodel.generator.Layer;
-import mx.infotec.dads.kukulkan.metamodel.template.Template;
+import mx.infotec.dads.kukulkan.metamodel.template.TemplateInfo;
 import mx.infotec.dads.kukulkan.metamodel.template.TemplateType;
 import mx.infotec.dads.kukulkan.metamodel.util.FileUtil;
 import mx.infotec.dads.kukulkan.shell.template.TemplateFactory;
-import mx.infotec.dads.kukulkan.shell.util.Antlr4Util;
 
 /**
  * Generator for Angular 1.5.8, Spring boot and Spring Data
@@ -60,35 +54,9 @@ public class Antlr4Generator implements Generator {
     @Autowired
     private TemplateService templateService;
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see mx.infotec.dads.kukulkan.metamodel.generator.Generator#getName()
-     */
     @Override
     public String getName() {
         return "antlr4";
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see mx.infotec.dads.kukulkan.metamodel.generator.Generator#getVersion()
-     */
-    @Override
-    public String getVersion() {
-        return "1.0.0";
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see
-     * mx.infotec.dads.kukulkan.metamodel.generator.Generator#getDescription()
-     */
-    @Override
-    public String getDescription() {
-        return "Angular 1.5.8 and Spring boot application";
     }
 
     @Override
@@ -96,18 +64,12 @@ public class Antlr4Generator implements Generator {
         Antlr4Context antlrContext = requiredNotEmpty(context.get(Antlr4Context.class));
         Map<String, Object> model = new HashMap<>();
         model.put("project", requiredNotEmpty(context.get(Antlr4Context.class)));
-        for (Template template : Antlr4Util.convertTemplate(TemplateType.ANTLR4,
+        for (TemplateInfo template : TemplateUtil.convertToTemplateInfoList(TemplateType.ANTLR4,
                 TemplateFactory.ANTLR4_TEMPLATE_LIST)) {
-            Path toSave = Antlr4Util.createToSavePath(context, template, antlrContext.getOutputDir());
+            Path toSave = TemplateUtil.createToSavePath(antlrContext, template);
             String content = templateService.fillTemplate(template.getName(), model);
             FileUtil.saveToFile(toSave, content);
         }
-    }
-
-    @Override
-    public Collection<? extends Layer> getLayers() {
-        // this is goint to be deleted
-        return null;
     }
 
 }
