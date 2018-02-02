@@ -71,5 +71,4 @@ public class Antlr4Generator implements Generator {
             FileUtil.saveToFile(toSave, content);
         }
     }
-
 }
