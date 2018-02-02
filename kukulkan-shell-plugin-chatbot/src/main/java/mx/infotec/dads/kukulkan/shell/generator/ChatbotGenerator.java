@@ -65,26 +65,6 @@ public class ChatbotGenerator implements Generator {
 		return "chatbot-generator";
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see mx.infotec.dads.kukulkan.metamodel.generator.Generator#getVersion()
-	 */
-	@Override
-	public String getVersion() {
-		return "1.0.0";
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see mx.infotec.dads.kukulkan.metamodel.generator.Generator#getDescription()
-	 */
-	@Override
-	public String getDescription() {
-		return "Chatbot broker application";
-	}
-
 	@Override
 	public void process(GeneratorContext context) {
 		ChatbotContext chatbotCtx = requiredNotEmpty(context.get(ChatbotContext.class));
@@ -97,12 +77,6 @@ public class ChatbotGenerator implements Generator {
 			FileUtil.saveToFile(toSave, content);
 		}
 
-	}
-
-	@Override
-	public Collection<? extends Layer> getLayers() {
-		// this is going to be deleted
-		return Collections.emptyList();
 	}
 
 }
