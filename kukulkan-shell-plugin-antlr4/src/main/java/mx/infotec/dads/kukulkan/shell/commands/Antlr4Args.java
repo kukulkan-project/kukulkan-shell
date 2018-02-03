@@ -42,16 +42,16 @@ public class Antlr4Args implements Serializable {
     @Parameter
     private List<String> parameters = new ArrayList<>();
 
-    @Parameter(names = { "id" }, description = "the project name")
+    @Parameter(names = { "--id" }, description = "the project name")
     private String id;
 
-    @Parameter(names = { "grammarName" }, description = "the name of the grammar")
+    @Parameter(names = { "--grammar-name" }, description = "the name of the grammar")
     private String grammarName;
 
-    @Parameter(names = { "grammarExtension" }, description = "the grammar Extension")
+    @Parameter(names = { "--grammar-extension" }, description = "the grammar Extension")
     private String grammarExtension;
 
-    @Parameter(names = { "packaging" }, description = "the package name of the project")
+    @Parameter(names = { "--package-name" }, description = "the package name of the project")
     private String packaging;
 
     public String getGrammarName() {
