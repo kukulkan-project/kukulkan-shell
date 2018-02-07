@@ -42,6 +42,11 @@
 			<groupId>mx.infotec.dads.kukulkan</groupId>
 			<artifactId>kukulkan-shell-kernel</artifactId>
 		</dependency>
+		<dependency>
+			<groupId>commons-io</groupId>
+			<artifactId>commons-io</artifactId>
+			<version>2.6</version>
+		</dependency>
 	</dependencies>
 	<repositories>
 		<repository>
