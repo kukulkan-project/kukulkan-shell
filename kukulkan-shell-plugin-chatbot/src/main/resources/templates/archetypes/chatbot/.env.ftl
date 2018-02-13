@@ -12,8 +12,8 @@ DIALOGFLOW_DEVELOPER_TOKEN=
 ACCESS_TOKEN=
 VERIFY_TOKEN=
 </#if>
-PORT=${project.port}
+PORT=${project.port?string.computer}
 FULFILLMENT_ENDPOINT=${project.webhookConfig.endpoint}
-WEB_BOT_PORT:3000
+WEB_BOT_PORT=3000
 
 # note: .env is a shell file so there can’t be spaces around =

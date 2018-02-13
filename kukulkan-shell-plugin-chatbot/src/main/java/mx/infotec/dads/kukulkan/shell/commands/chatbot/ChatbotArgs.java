@@ -75,7 +75,7 @@ public class ChatbotArgs implements Serializable {
 	private String appPage = "https://github.com/kukulkan-project";
 
 	@Parameter(names = { "--nlp-service" }, description = "The NLP service which manages the conversation")
-	private NlpService nlpService = NlpService.DIALOGFLOW;
+	private NlpService nlpService = NlpService.NONE;
 
 	@Parameter(names = { "--dialogflow-client-token",
 			"--df-client-token" }, description = "The DialogFlow client token")

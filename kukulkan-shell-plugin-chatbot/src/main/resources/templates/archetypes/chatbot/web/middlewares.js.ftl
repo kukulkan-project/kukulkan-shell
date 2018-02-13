@@ -18,6 +18,7 @@ module.exports = function (controller) {
         next();
     });
 
+	<#if project.nlpService == "DIALOGFLOW">
     //Init NLP module (dialogflow)
     debug('Configuring dialogflow middleware');
     var dialogflowMiddleware = require('botkit-middleware-dialogflow')({
@@ -25,6 +26,7 @@ module.exports = function (controller) {
     });
     //Analyze with DialogFlow every message received
     controller.middleware.receive.use(dialogflowMiddleware.receive);
+    </#if>
 
     //Every Facebook reply defined in DialogFlow 
     //ready to send to Facebook

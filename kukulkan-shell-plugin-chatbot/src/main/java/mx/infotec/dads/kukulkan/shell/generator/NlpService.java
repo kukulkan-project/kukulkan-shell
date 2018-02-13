@@ -25,6 +25,7 @@ package mx.infotec.dads.kukulkan.shell.generator;
 
 public enum NlpService {
 	
-	DIALOGFLOW
+	DIALOGFLOW,
+	NONE
 
 }
