@@ -54,7 +54,7 @@ public class ChatbotGeneration extends AbstractCommand {
 	 * @return List<AttributedString>
 	 */
 	@ShellMethod("Generate a chatbot broker")
-	public void addChatbot(@ShellOption(optOut = true) @Valid ChatbotArgs params) {
+	public void createChatbot(@ShellOption(optOut = true) @Valid ChatbotArgs params) {
 		ChatbotContext chatbotContext = Mapper.to(params);
 		chatbotContext.setOutputDir(navigator.getCurrentPath());
 		GeneratorContext genContext = new GeneratorContext();

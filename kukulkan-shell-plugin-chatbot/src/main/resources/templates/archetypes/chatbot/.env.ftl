@@ -5,12 +5,12 @@
 # reference these in your code with process.env.SECRET
 
 <#if project.nlpService == "DIALOGFLOW">
-DIALOGFLOW_CLIENT_TOKEN=
-DIALOGFLOW_DEVELOPER_TOKEN=
+DIALOGFLOW_CLIENT_TOKEN=${project.dialogflowConfig.clientToken}
+DIALOGFLOW_DEVELOPER_TOKEN=${project.dialogflowConfig.developerToken}
 </#if>
 <#if project.facebookBot>
-ACCESS_TOKEN=
-VERIFY_TOKEN=
+ACCESS_TOKEN=${project.facebookBotConfig.accessToken}
+VERIFY_TOKEN=${project.facebookBotConfig.verifyToken}
 </#if>
 PORT=${project.port?string.computer}
 FULFILLMENT_ENDPOINT=${project.webhookConfig.endpoint}

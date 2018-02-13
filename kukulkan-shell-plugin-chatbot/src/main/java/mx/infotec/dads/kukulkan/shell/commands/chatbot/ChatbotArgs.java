@@ -59,8 +59,8 @@ public class ChatbotArgs implements Serializable {
 	@Parameter(names = { "--no-web" }, arity = 0, description = "Disable the support for Web")
 	private boolean noWebBot;
 
-	@Parameter(names = { "--no-facebook" }, arity = 0, description = "Disable the support for Facebook")
-	private boolean noFacebookBot;
+	@Parameter(names = { "--facebook" }, arity = 0, description = "Enable the support for Facebook")
+	private boolean facebookBot;
 
 	@Parameter(names = { "--no-fb-menu" }, arity = 0, description = "Disable the menu creation in Facebook chat")
 	private boolean noFbMenu;
@@ -202,12 +202,12 @@ public class ChatbotArgs implements Serializable {
 		this.license = license;
 	}
 
-	public boolean isNoFacebookBot() {
-		return noFacebookBot;
+	public boolean isFacebookBot() {
+		return facebookBot;
 	}
 
-	public void setNoFacebookBot(boolean noFacebookBot) {
-		this.noFacebookBot = noFacebookBot;
+	public void setFacebookBot(boolean facebookBot) {
+		this.facebookBot = facebookBot;
 	}
 
 	public boolean isNoFbMenu() {

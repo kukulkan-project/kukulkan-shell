@@ -46,6 +46,14 @@ public class ChatbotTemplateFactory {
 
 	public static List<String> getChatbotTemplates() {
 		List<String> templates = new ArrayList<>();
+		templates.addAll(getCommonChatbotTemplates());
+		templates.addAll(getFacebookChatbotTemplates());
+		templates.addAll(getWebChatbotTemplates());
+		return templates;
+	}
+
+	public static List<String> getCommonChatbotTemplates() {
+		List<String> templates = new ArrayList<>();
 		templates.add(CHATBOT_TEMPLATE + "/index.js.ftl");
 		templates.add(CHATBOT_TEMPLATE + "/README.md.ftl");
 		templates.add(CHATBOT_TEMPLATE + "/LICENSE.ftl");
@@ -54,24 +62,40 @@ public class ChatbotTemplateFactory {
 		templates.add(CHATBOT_TEMPLATE + "/README.md.ftl");
 		templates.add(CHATBOT_TEMPLATE + "/.env.ftl");
 		templates.add(CHATBOT_TEMPLATE + "/.gitignore.ftl");
+		templates.add(CHATBOT_TEMPLATE + "/fulfillment/webhook-fulfillment-middleware.js.ftl");
 		templates.add(CHATBOT_TEMPLATE + "/conversation/create-conversation.js.ftl");
 		templates.add(CHATBOT_TEMPLATE + "/conversation/starter-conversation.js.ftl");
+		templates.add(CHATBOT_TEMPLATE + "/web-server/express-server.js.ftl");
+		templates.add(CHATBOT_TEMPLATE + "/web-server/routes.js.ftl");
+		return templates;
+	}
+
+	public static List<String> getWebhookChatbotTemplates() {
+		List<String> templates = new ArrayList<>();
+		templates.add(CHATBOT_TEMPLATE + "/fulfillment/webhook-fulfillment-middleware.js.ftl");
+		return templates;
+	}
+
+	public static List<String> getFacebookChatbotTemplates() {
+		List<String> templates = new ArrayList<>();
 		templates.add(CHATBOT_TEMPLATE + "/facebook/bot.js.ftl");
 		templates.add(CHATBOT_TEMPLATE + "/facebook/menu.js.ftl");
 		templates.add(CHATBOT_TEMPLATE + "/facebook/middlewares.js.ftl");
 		templates.add(CHATBOT_TEMPLATE + "/facebook/skills.js.ftl");
-		templates.add(CHATBOT_TEMPLATE + "/fulfillment/webhook-fulfillment-middleware.js.ftl");
+		return templates;
+	}
+
+	public static List<String> getWebChatbotTemplates() {
+		List<String> templates = new ArrayList<>();
 		templates.add(CHATBOT_TEMPLATE + "/web/public/css/styles.css");
-		//templates.add(CHATBOT_TEMPLATE + "/web/public/botkit_icon.png");
+		// templates.add(CHATBOT_TEMPLATE + "/web/public/botkit_icon.png");
 		templates.add(CHATBOT_TEMPLATE + "/web/public/chat.html");
 		templates.add(CHATBOT_TEMPLATE + "/web/public/client.js");
-		//templates.add(CHATBOT_TEMPLATE + "/web/public/infotec_logo.jpg");
+		// templates.add(CHATBOT_TEMPLATE + "/web/public/infotec_logo.jpg");
 		templates.add(CHATBOT_TEMPLATE + "/web/bot.js.ftl");
 		templates.add(CHATBOT_TEMPLATE + "/web/middlewares.js.ftl");
 		templates.add(CHATBOT_TEMPLATE + "/web/routes.js.ftl");
 		templates.add(CHATBOT_TEMPLATE + "/web/skills.js.ftl");
-		templates.add(CHATBOT_TEMPLATE + "/web-server/express-server.js.ftl");
-		templates.add(CHATBOT_TEMPLATE + "/web-server/routes.js.ftl");
 		return templates;
 	}
 

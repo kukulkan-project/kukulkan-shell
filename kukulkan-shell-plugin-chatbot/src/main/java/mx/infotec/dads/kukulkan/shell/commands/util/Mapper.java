@@ -41,7 +41,7 @@ public class Mapper {
 		ctx.setAuthor(params.getAuthor());
 		ctx.setDescription(params.getDescription());
 		ctx.setDialogflowConfig(toDialogFlowConfig(params));
-		ctx.setFacebookBot(!params.isNoFacebookBot());
+		ctx.setFacebookBot(params.isFacebookBot());
 		ctx.setFacebookBotConfig(toFacebookBotConfig(params));
 		ctx.setWebBot(!params.isNoWebBot());
 		ctx.setGitRepository(params.getGitRepository());
