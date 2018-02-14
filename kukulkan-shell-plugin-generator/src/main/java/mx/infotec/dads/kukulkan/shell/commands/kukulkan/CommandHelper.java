@@ -40,7 +40,6 @@ import mx.infotec.dads.kukulkan.metamodel.foundation.DomainModelGroup;
 import mx.infotec.dads.kukulkan.metamodel.foundation.JavaDomainModel;
 import mx.infotec.dads.kukulkan.metamodel.foundation.ProjectConfiguration;
 import mx.infotec.dads.kukulkan.metamodel.util.PKGenerationStrategy;
-import mx.infotec.dads.kukulkan.shell.commands.util.ProjectUtil;
 
 /**
  * Command Helper, It is used for encapsulate common operation performed in the

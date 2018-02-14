@@ -52,8 +52,8 @@ import mx.infotec.dads.kukulkan.metamodel.foundation.ProjectConfiguration;
 import mx.infotec.dads.kukulkan.metamodel.util.FileUtil;
 import mx.infotec.dads.kukulkan.metamodel.util.PKGenerationStrategy;
 import mx.infotec.dads.kukulkan.shell.commands.AbstractCommand;
-import mx.infotec.dads.kukulkan.shell.commands.util.ProjectUtil;
 import mx.infotec.dads.kukulkan.shell.commands.valueprovided.KukulkanFilesProvider;
+import mx.infotec.dads.kukulkan.shell.util.ProjectUtil;
 import mx.infotec.dads.kukulkan.shell.util.TextFormatter;
 
 /**

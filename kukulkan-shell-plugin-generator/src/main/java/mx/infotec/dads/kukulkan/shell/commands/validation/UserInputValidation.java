@@ -26,7 +26,8 @@ package mx.infotec.dads.kukulkan.shell.commands.validation;
 import java.util.Objects;
 import java.util.regex.Pattern;
 
-import mx.infotec.dads.kukulkan.shell.commands.exception.GeneratorException;
+import mx.infotec.dads.kukulkan.shell.util.GeneratorException;
+
 
 /**
  * User Input Validation.

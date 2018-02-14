@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package mx.infotec.dads.kukulkan.shell.commands.exception;
+package mx.infotec.dads.kukulkan.shell.util;
 
 /**
  * Runtime Exception of the Applicaton.
