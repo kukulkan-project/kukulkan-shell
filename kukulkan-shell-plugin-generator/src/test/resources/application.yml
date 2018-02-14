@@ -1,0 +1,11 @@
+spring:
+  main:
+    banner-mode: "off"
+  application:
+    name: kukulkancraftsman
+logging:
+  level:
+    root: INFO
+    org.springframework.web: ERROR
+    org.hibernate: ERROR
+    org.hibernate.SQL: ERROR
