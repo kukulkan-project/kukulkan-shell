@@ -12,15 +12,15 @@ import org.jline.utils.AttributedString;
  * @author Daniel Cortes Pichardo
  *
  */
-public class AbstractChangeLocationAwareness implements ChangeLocationAwareness {
+public abstract class AbstractChangeLocationAwareness implements ChangeLocationAwareness {
 
     @Override
-    public Optional<AttributedString> addPrompt(Path currentLocation) {
+    public Optional<AttributedString> createPrompt(Path currentLocation) {
         return Optional.empty();
     }
 
     @Override
-    public void doActivity(Path currentLocation) {
-        // Do nothing, in the implementation must be specified
+    public void doAction(Path currentLocation) {
+        // must be implemented in subclass
     }
 }

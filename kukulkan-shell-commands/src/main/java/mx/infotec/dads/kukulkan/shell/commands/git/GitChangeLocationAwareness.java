@@ -13,7 +13,6 @@ import org.springframework.stereotype.Component;
 
 import mx.infotec.dads.kukulkan.shell.domain.ShellCommand;
 import mx.infotec.dads.kukulkan.shell.prompt.event.AbstractChangeLocationAwareness;
-import mx.infotec.dads.kukulkan.shell.prompt.event.ChangeLocationAwareness;
 import mx.infotec.dads.kukulkan.shell.services.impl.CommandServiceImpl;
 import mx.infotec.dads.kukulkan.shell.util.FilesCommons;
 
@@ -25,19 +24,19 @@ public class GitChangeLocationAwareness extends AbstractChangeLocationAwareness 
     private CommandServiceImpl commandService;
 
     @Override
-    public Optional<AttributedString> addPrompt(Path currentLocation) {
-        if (FilesCommons.hasGitFiles(currentLocation)) {
-            List<CharSequence> result = commandService.exec(currentLocation,
-                    new ShellCommand(GIT_COMMAND).addArg("rev-parse").addArg("--abbrev-ref").addArg("HEAD"),
-                    line -> Optional.ofNullable(new AttributedString(line)));
-            AttributedString dirPrompt = AttributedString.join(new AttributedString(""),
-                    new AttributedString("@", AttributedStyle.BOLD.foreground(AttributedStyle.YELLOW)),
-                    new AttributedString("git/" + result.get(0).toString(),
-                            AttributedStyle.BOLD_OFF.foreground(AttributedStyle.YELLOW)));
-            return Optional.of(dirPrompt);
-        } else {
-            return Optional.empty();
-        }
+    public Optional<AttributedString> createPrompt(Path currentLocation) {
+        List<CharSequence> result = commandService.exec(currentLocation,
+                new ShellCommand(GIT_COMMAND).addArg("rev-parse").addArg("--abbrev-ref").addArg("HEAD"),
+                line -> Optional.ofNullable(new AttributedString(line)));
+        AttributedString dirPrompt = AttributedString.join(new AttributedString(""),
+                new AttributedString("@", AttributedStyle.BOLD.foreground(AttributedStyle.YELLOW)),
+                new AttributedString("git/" + result.get(0).toString(),
+                        AttributedStyle.BOLD_OFF.foreground(AttributedStyle.YELLOW)));
+        return Optional.of(dirPrompt);
     }
 
+    @Override
+    public boolean isProccesable(Path currentLocation) {
+        return FilesCommons.hasGitFiles(currentLocation);
+    }
 }

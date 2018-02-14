@@ -28,14 +28,9 @@ import static mx.infotec.dads.kukulkan.shell.commands.kukulkan.CommandHelper.cre
 import static mx.infotec.dads.kukulkan.shell.commands.validation.UserInputValidation.validateProjectParams;
 
 import java.io.File;
-import java.lang.reflect.Field;
-import java.lang.reflect.Modifier;
-import java.util.ArrayList;
-import java.util.List;
 
 import javax.validation.constraints.NotNull;
 
-import org.jline.utils.AttributedString;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.shell.standard.ShellComponent;
@@ -54,7 +49,6 @@ import mx.infotec.dads.kukulkan.metamodel.util.PKGenerationStrategy;
 import mx.infotec.dads.kukulkan.shell.commands.AbstractCommand;
 import mx.infotec.dads.kukulkan.shell.commands.valueprovided.KukulkanFilesProvider;
 import mx.infotec.dads.kukulkan.shell.util.ProjectUtil;
-import mx.infotec.dads.kukulkan.shell.util.TextFormatter;
 
 /**
  * Generator Command.
@@ -114,7 +108,7 @@ public class KukulkanGeneration extends AbstractCommand {
      * current context.
      *
      * @return List<AttributedString>
-     * @throws JsonProcessingException 
+     * @throws JsonProcessingException
      */
     @ShellMethod("Show the current project configuration applied to the current context")
     public String showFileConfiguration() throws JsonProcessingException {
