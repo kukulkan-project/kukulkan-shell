@@ -1,4 +1,4 @@
-# kukulcan
+# kukulkan
 
 ## Project description
 
