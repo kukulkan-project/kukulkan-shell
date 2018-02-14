@@ -44,14 +44,14 @@ En esta vista, se exponen dos modelos para la representación de la arquitectura
 ### Modelo Lógico del Generador
 
 La estructura del código para el generador, se representa en la siguiente imagen:
-
-<img src="https://github.com/kukulkan-project/resources/blob/master/plugin-source-code.png" width="500" height="500" title="Código del generador">
+/plugin-resources.png
+<img src="https://raw.githubusercontent.com/kukulkan-project/resources/master/plugin-source-code.png" width="500" height="500" title="Código del generador">
 
 ### Modelo de Plantillas del Generador
 
 La estructura en dónde se guardan las plantillas de un generador, muestra en la siguiente imagen: 
  
-![login-model](https://github.com/kukulkan-project/resources/blob/master/plugin-resources.png)
+![login-model](https://raw.githubusercontent.com/kukulkan-project/resources/master/plugin-resources.png)
 
 ### Arquitectura Física del generador
 
