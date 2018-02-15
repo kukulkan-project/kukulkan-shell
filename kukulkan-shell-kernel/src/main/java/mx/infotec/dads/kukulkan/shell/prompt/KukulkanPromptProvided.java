@@ -56,7 +56,7 @@ public class KukulkanPromptProvided implements PromptProvider {
     private Navigator nav;
 
     @Autowired
-    private List<ChangeLocationAwareness> tasksList;
+    private List<ChangeLocationAwareness> changeLocationAwarenessList;
     /** The prompt. */
     private AttributedString prompt;
 
@@ -95,25 +95,21 @@ public class KukulkanPromptProvided implements PromptProvider {
     @EventListener
     public void handle(LocationUpdatedEvent event) {
         if (EventType.FILE_NAVIGATION.equals(event.getEventType())) {
-            addPromptDecoration();
-            doActivities();
+            changeLocationAwarenessActions();
         }
     }
 
-    private void doActivities() {
-        for (ChangeLocationAwareness task : tasksList) {
-            task.doActivity(nav.getCurrentPath());
-        }
-    }
-
-    private void addPromptDecoration() {
+    private void changeLocationAwarenessActions() {
         AttributedString currentPrompt = new AttributedString("");
-        for (ChangeLocationAwareness task : tasksList) {
-            Optional<AttributedString> newPrompt = task.addPrompt(nav.getCurrentPath());
-            if (newPrompt.isPresent()) {
-                currentPrompt = AttributedString.join(new AttributedString(" "), currentPrompt, newPrompt.get());
+        for (ChangeLocationAwareness changeLocationAwareness : changeLocationAwarenessList) {
+            if (changeLocationAwareness.isProccesable(nav.getCurrentPath())) {
+                changeLocationAwareness.doAction(nav.getCurrentPath());
+                Optional<AttributedString> newPrompt = changeLocationAwareness.createPrompt(nav.getCurrentPath());
+                if (newPrompt.isPresent()) {
+                    currentPrompt = AttributedString.join(new AttributedString(" "), currentPrompt, newPrompt.get());
+                }
             }
-            prompt = AttributedString.join(new AttributedString(""), basePrompt, currentPrompt, endPrompt);
         }
+        prompt = AttributedString.join(new AttributedString(""), basePrompt, currentPrompt, endPrompt);
     }
 }

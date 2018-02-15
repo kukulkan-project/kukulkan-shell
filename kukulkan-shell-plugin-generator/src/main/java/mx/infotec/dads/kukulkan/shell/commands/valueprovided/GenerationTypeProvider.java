@@ -40,9 +40,13 @@ import mx.infotec.dads.kukulkan.metamodel.util.PKGenerationStrategy;
  */
 @Component
 public class GenerationTypeProvider extends ValueProviderSupport {
-    
-    /* (non-Javadoc)
-     * @see org.springframework.shell.standard.ValueProvider#complete(org.springframework.core.MethodParameter, org.springframework.shell.CompletionContext, java.lang.String[])
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.springframework.shell.standard.ValueProvider#complete(org.
+     * springframework.core.MethodParameter,
+     * org.springframework.shell.CompletionContext, java.lang.String[])
      */
     @Override
     public List<CompletionProposal> complete(MethodParameter parameter, CompletionContext completionContext,

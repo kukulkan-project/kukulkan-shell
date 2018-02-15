@@ -1,4 +1,4 @@
-package mx.infotec.dads.kukulkan.shell.commands.kukulkan;
+package mx.infotec.dads.kukulkan.shell.commands;
 
 import java.nio.file.Path;
 import java.util.Optional;
@@ -21,7 +21,7 @@ import mx.infotec.dads.kukulkan.shell.util.ProjectUtil;
  *
  */
 @Component
-public class KukulkanChangeLocationAwareness extends AbstractChangeLocationAwareness {
+public class Antlr4ChangeLocationAwareness extends AbstractChangeLocationAwareness {
 
     @Autowired
     private KukulkanShellContext context;

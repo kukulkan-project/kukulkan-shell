@@ -14,8 +14,10 @@ import org.jline.utils.AttributedString;
  */
 public interface ChangeLocationAwareness {
 
-    Optional<AttributedString> addPrompt(Path currentLocation);
+    boolean isProccesable(Path currentLocation);
 
-    void doActivity(Path currentLocation);
+    void doAction(Path currentLocation);
+
+    Optional<AttributedString> createPrompt(Path currentLocation);
 
 }
