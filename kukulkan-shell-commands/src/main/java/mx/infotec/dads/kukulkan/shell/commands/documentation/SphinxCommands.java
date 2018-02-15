@@ -1,3 +1,27 @@
+/*
+ *  
+ * The MIT License (MIT)
+ * Copyright (c) 2018 Roberto Villarejo Martínez <robertovillarejom@gmail.com>
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ */
+
 package mx.infotec.dads.kukulkan.shell.commands.documentation;
 
 import java.io.File;
@@ -21,6 +45,12 @@ import mx.infotec.dads.kukulkan.shell.domain.NativeCommandContext;
 import mx.infotec.dads.kukulkan.shell.domain.ShellCommand;
 import mx.infotec.dads.kukulkan.shell.services.CommandService;
 
+/**
+ * SphinxCommands
+ * 
+ * @author Roberto Villarejo Martínez <robertovillarejom@gmail.com>
+ *
+ */
 @ShellComponent
 public class SphinxCommands {
 
@@ -46,12 +76,16 @@ public class SphinxCommands {
 		copyResources();
 		ShellCommand command = prepareCommand(project, author, version, release, lang);
 		commandService.exec(command);
-		commandService.exec(new ShellCommand("make").addArg("--directory").addArg("docs").addArg("html"));
+		commandService.exec(new ShellCommand("make", "--directory", "docs", "html"));
+		LOGGER.info("Your docs site has been generated in docs/build/html");
+		LOGGER.info("Use your favorite browser to open the index.html file");
+		LOGGER.info("Edit the Markdown files (.md) placed in /docs/source ");
+		LOGGER.info("Run `make html` in docs folder every time you edit the contents");
 	}
 
 	@ShellMethodAvailability({ "initDocs" })
 	public Availability sphinxAvailability() {
-		NativeCommand sphinxCmd = projectContext.getAvailableCommands().get(SPHINX_COMMAND + " -v");
+		NativeCommand sphinxCmd = projectContext.getAvailableCommands().get(SPHINX_COMMAND);
 		if (sphinxCmd != null && sphinxCmd.isActive()) {
 			return Availability.available();
 		} else {
@@ -60,13 +94,10 @@ public class SphinxCommands {
 	}
 
 	private ShellCommand prepareCommand(String project, String author, Float version, Float release, String lang) {
-		ShellCommand command = new ShellCommand(SPHINX_COMMAND);
-		command.addArg("--quiet").addArg("--sep").addArg("--project").addArg(project).addArg("--author").addArg(author)
-				.addArg("-v").addArg(version.toString()).addArg("--release").addArg(release.toString())
-				.addArg("--language").addArg(lang).addArg("--makefile").addArg("--batchfile").addArg("-t")
-				.addArg(nav.getCurrentPath().toString() + "/docs/template-DADS")
-				.addArg(nav.getCurrentPath().toString() + "/docs");
-		return command;
+		return new ShellCommand(SPHINX_COMMAND, "--quiet", "--sep", "--project", project, "--author", author, "-v",
+				version.toString(), "--release", release.toString(), "--language", lang, "--makefile", "--batchfile",
+				"-t", nav.getCurrentPath().toString() + "/docs/template-DADS",
+				nav.getCurrentPath().toString() + "/docs");
 	}
 
 	private void copyResources() {

@@ -89,4 +89,13 @@ public class NativeCommandConfig {
     public NativeCommandProvided kukulkanCommand() {
         return () -> Optional.of(new DefaultNativeCommand("kukulkan", "kukulkan -version"));
     }
+    
+    /**
+     * 
+     * @return
+     */
+    @Bean
+    public NativeCommandProvided sphinxQuickstartCommand() {
+        return () -> Optional.of(new DefaultNativeCommand("sphinx-quickstart", "sphinx-quickstart --version"));
+    }
 }
