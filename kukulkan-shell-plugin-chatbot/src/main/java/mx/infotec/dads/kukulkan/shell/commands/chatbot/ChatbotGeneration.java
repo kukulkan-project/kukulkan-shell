@@ -48,19 +48,16 @@ public class ChatbotGeneration extends AbstractCommand {
 	private static final Logger LOGGER = LoggerFactory.getLogger(ChatbotGeneration.class);
 
 	/**
-	 * Command Shell that show the current project configuration applied to the
-	 * current context.
-	 *
-	 * @return List<AttributedString>
+	 * 
+	 * @param ChatbotArgs
 	 */
 	@ShellMethod("Generate a chatbot broker")
 	public void createChatbot(@ShellOption(optOut = true) @Valid ChatbotArgs params) {
-		ChatbotContext chatbotContext = Mapper.to(params);
+		ChatbotContext chatbotContext = Mapper.toContext(params);
 		chatbotContext.setOutputDir(navigator.getCurrentPath());
 		GeneratorContext genContext = new GeneratorContext();
 		genContext.put(ChatbotContext.class, chatbotContext);
 		generator.process(genContext);
-//		commandService.exec(new ShellCommand("npm").addArg("install"));
 	}
 
 }

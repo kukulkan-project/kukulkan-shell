@@ -30,6 +30,11 @@ import com.beust.jcommander.Parameter;
 import mx.infotec.dads.kukulkan.shell.generator.License;
 import mx.infotec.dads.kukulkan.shell.generator.NlpService;
 
+/**
+ * The arguments read from console
+ * @author Roberto Villarejo Martínez <robertovillarejom@gmail.com>
+ *
+ */
 public class ChatbotArgs implements Serializable {
 
 	private static final long serialVersionUID = 1L;

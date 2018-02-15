@@ -28,12 +28,19 @@ import java.util.List;
 
 import com.google.common.collect.ImmutableList;
 
+/**
+ * The chatbot template factory
+ * 
+ * @author Roberto Villarejo Martínez <robertovillarejom@gmail.com>
+ *
+ */
 public class ChatbotTemplateFactory {
 
-	/** The Constant CHATBOT_TEMPLATE_LIST. */
+	/** The whole list of chatbot templates */
 	public static final List<String> CHATBOT_TEMPLATE_LIST;
 
 	public static final String CHATBOT_TEMPLATE = "archetypes/chatbot";
+
 	static {
 		CHATBOT_TEMPLATE_LIST = ImmutableList.copyOf(getChatbotTemplates());
 	}
@@ -44,6 +51,10 @@ public class ChatbotTemplateFactory {
 	private ChatbotTemplateFactory() {
 	}
 
+	/**
+	 * 
+	 * @return the whole list of chatbot templates
+	 */
 	public static List<String> getChatbotTemplates() {
 		List<String> templates = new ArrayList<>();
 		templates.addAll(getCommonChatbotTemplates());
@@ -52,6 +63,10 @@ public class ChatbotTemplateFactory {
 		return templates;
 	}
 
+	/**
+	 * 
+	 * @return the common chatbot templates 
+	 */
 	public static List<String> getCommonChatbotTemplates() {
 		List<String> templates = new ArrayList<>();
 		templates.add(CHATBOT_TEMPLATE + "/index.js.ftl");
@@ -69,12 +84,20 @@ public class ChatbotTemplateFactory {
 		return templates;
 	}
 
+	/**
+	 * 
+	 * @return the webhook chatbot templates
+	 */
 	public static List<String> getWebhookChatbotTemplates() {
 		List<String> templates = new ArrayList<>();
 		templates.add(CHATBOT_TEMPLATE + "/fulfillment/webhook-fulfillment-middleware.js.ftl");
 		return templates;
 	}
 
+	/**
+	 * 
+	 * @return the facebook chatbot templates
+	 */
 	public static List<String> getFacebookChatbotTemplates() {
 		List<String> templates = new ArrayList<>();
 		templates.add(CHATBOT_TEMPLATE + "/facebook/bot.js.ftl");
@@ -84,6 +107,10 @@ public class ChatbotTemplateFactory {
 		return templates;
 	}
 
+	/**
+	 * 
+	 * @return the web chatbot templates
+	 */
 	public static List<String> getWebChatbotTemplates() {
 		List<String> templates = new ArrayList<>();
 		templates.add(CHATBOT_TEMPLATE + "/web/public/css/styles.css");

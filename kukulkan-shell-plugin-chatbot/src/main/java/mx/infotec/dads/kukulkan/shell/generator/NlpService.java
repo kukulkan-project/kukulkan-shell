@@ -23,6 +23,11 @@
  */
 package mx.infotec.dads.kukulkan.shell.generator;
 
+/**
+ * The NLP service
+ * @author Roberto Villarejo Martínez <robertovillarejom@gmail.com>
+ *
+ */
 public enum NlpService {
 	
 	DIALOGFLOW,
