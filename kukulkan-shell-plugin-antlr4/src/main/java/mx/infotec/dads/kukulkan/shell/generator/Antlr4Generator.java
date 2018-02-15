@@ -39,6 +39,7 @@ import mx.infotec.dads.kukulkan.metamodel.generator.Generator;
 import mx.infotec.dads.kukulkan.metamodel.template.TemplateInfo;
 import mx.infotec.dads.kukulkan.metamodel.template.TemplateType;
 import mx.infotec.dads.kukulkan.metamodel.util.FileUtil;
+import mx.infotec.dads.kukulkan.shell.component.Navigator;
 import mx.infotec.dads.kukulkan.shell.template.TemplateFactory;
 
 /**
@@ -53,6 +54,9 @@ public class Antlr4Generator implements Generator {
     /** The template service. */
     @Autowired
     private TemplateService templateService;
+    
+    @Autowired
+    private Navigator nav;
 
     @Override
     public String getName() {
@@ -62,6 +66,7 @@ public class Antlr4Generator implements Generator {
     @Override
     public void process(GeneratorContext context) {
         Antlr4Context antlrContext = requiredNotEmpty(context.get(Antlr4Context.class));
+        antlrContext.setOutputDir(nav.getCurrentPath());
         Map<String, Object> model = new HashMap<>();
         model.put("project", requiredNotEmpty(context.get(Antlr4Context.class)));
         for (TemplateInfo template : TemplateUtil.convertToTemplateInfoList(TemplateType.ANTLR4,
