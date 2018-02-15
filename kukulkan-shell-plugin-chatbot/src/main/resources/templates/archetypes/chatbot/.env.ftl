@@ -13,7 +13,12 @@ ACCESS_TOKEN=${project.facebookBotConfig.accessToken}
 VERIFY_TOKEN=${project.facebookBotConfig.verifyToken}
 </#if>
 PORT=${project.port?string.computer}
+<#if project.webhook>
 FULFILLMENT_ENDPOINT=${project.webhookConfig.endpoint}
+</#if>
+<#if project.webBot>
 WEB_BOT_PORT=3000
+</#if>
+TOKEN_FULFILLMENT=
 
 # note: .env is a shell file so there can’t be spaces around =

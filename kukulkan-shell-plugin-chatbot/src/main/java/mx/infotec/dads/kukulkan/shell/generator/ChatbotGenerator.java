@@ -27,7 +27,6 @@ import static mx.infotec.dads.kukulkan.metamodel.util.Validator.requiredNotEmpty
 
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.text.AttributedString;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -92,7 +91,7 @@ public class ChatbotGenerator implements Generator {
 					template.replaceAll(ChatbotTemplateFactory.CHATBOT_TEMPLATE, "").replaceAll(".ftl", ""));
 			FileUtil.saveToFile(toSave, content);
 		}
-		
+
 		LOGGER.info("Finished!");
 		LOGGER.info("Run `npm install` to install dependencies");
 		LOGGER.info("Run `npm start` to run the project");

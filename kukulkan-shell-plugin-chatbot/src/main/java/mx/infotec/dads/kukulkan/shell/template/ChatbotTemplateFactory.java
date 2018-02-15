@@ -56,13 +56,12 @@ public class ChatbotTemplateFactory {
 		List<String> templates = new ArrayList<>();
 		templates.add(CHATBOT_TEMPLATE + "/index.js.ftl");
 		templates.add(CHATBOT_TEMPLATE + "/README.md.ftl");
-		templates.add(CHATBOT_TEMPLATE + "/LICENSE.ftl");
+		templates.add(CHATBOT_TEMPLATE + "/Procfile");
 		templates.add(CHATBOT_TEMPLATE + "/package.json.ftl");
 		templates.add(CHATBOT_TEMPLATE + "/package-lock.json.ftl");
 		templates.add(CHATBOT_TEMPLATE + "/README.md.ftl");
 		templates.add(CHATBOT_TEMPLATE + "/.env.ftl");
 		templates.add(CHATBOT_TEMPLATE + "/.gitignore.ftl");
-		templates.add(CHATBOT_TEMPLATE + "/fulfillment/webhook-fulfillment-middleware.js.ftl");
 		templates.add(CHATBOT_TEMPLATE + "/conversation/create-conversation.js.ftl");
 		templates.add(CHATBOT_TEMPLATE + "/conversation/starter-conversation.js.ftl");
 		templates.add(CHATBOT_TEMPLATE + "/web-server/express-server.js.ftl");
@@ -88,10 +87,8 @@ public class ChatbotTemplateFactory {
 	public static List<String> getWebChatbotTemplates() {
 		List<String> templates = new ArrayList<>();
 		templates.add(CHATBOT_TEMPLATE + "/web/public/css/styles.css");
-		// templates.add(CHATBOT_TEMPLATE + "/web/public/botkit_icon.png");
 		templates.add(CHATBOT_TEMPLATE + "/web/public/chat.html");
 		templates.add(CHATBOT_TEMPLATE + "/web/public/client.js");
-		// templates.add(CHATBOT_TEMPLATE + "/web/public/infotec_logo.jpg");
 		templates.add(CHATBOT_TEMPLATE + "/web/bot.js.ftl");
 		templates.add(CHATBOT_TEMPLATE + "/web/middlewares.js.ftl");
 		templates.add(CHATBOT_TEMPLATE + "/web/routes.js.ftl");

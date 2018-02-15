@@ -4,11 +4,12 @@
   "description": "${project.description}",
   "main": "index.js",
   "scripts": {
-    "start": "if-env NODE_ENV=production ?? npm run start:prod || npm run start:dev",
-    "start:dev": "DEBUG=${project.name}:* nodenv -f .",
-    "start:prod": "node .",
+    "start": "nf start",
+    "start:dev": "DEBUG=${project.name}:* nf start",
     "test": "echo \"Error: no test specified\" && exit 1",
+    <#if project.nlpService == "DIALOGFLOW">
     "conversation-create": "node conversation/create-conversation.js"
+    </#if>
   },
   "repository": {
     "type": "git",
@@ -29,13 +30,9 @@
     </#if>
     "botkit-storage-mongo": "^1.0.7",
     "debug": "^3.1.0",
-    <#if project.webBot>
-    "dialogflow-facebook-to-web-middleware": "git+https://github.com/robertovillarejo/dialogflow-facebook-to-web-middleware.git",
-    </#if>
-    <#if project.facebookBot>
-    "dialogflow-to-facebook-middleware": "git+https://github.com/robertovillarejo/dialogflow-to-facebook-middleware.git",
-    </#if>
+    "replies-converter-botkit-middlewares": "git+https://github.com/robertovillarejo/replies-converter-botkit-middlewares.git",
     "express": "^4.16.2",
+    "foreman": "2.0.0",
     "helmet": "^3.10.0",
     "http": "0.0.0",
     "if-env": "^1.0.4",

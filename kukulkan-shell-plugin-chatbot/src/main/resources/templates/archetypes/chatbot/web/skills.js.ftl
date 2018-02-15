@@ -15,7 +15,7 @@ module.exports = function (controller) {
             });
         }
     });
-    
+
     controller.on('hello,welcome_back', (bot, message) => {
         bot.startConversation(message, (err, convo) => {
             if (!err) {
