@@ -23,12 +23,26 @@
  */
 package mx.infotec.dads.kukulkan.shell.generator;
 
+/**
+ * The configuration for connecting to Facebook
+ * @author Roberto Villarejo Martínez <robertovillarejom@gmail.com>
+ *
+ */
 public class FacebookBotConfig {
 	
+	/**
+	 * Enables the creation of menu in chat
+	 */
 	private boolean menu;
 	
+	/**
+	 * The page access token
+	 */
 	private String accessToken;
 	
+	/**
+	 * The webhook verify token
+	 */
 	private String verifyToken;
 
 	public boolean isMenu() {

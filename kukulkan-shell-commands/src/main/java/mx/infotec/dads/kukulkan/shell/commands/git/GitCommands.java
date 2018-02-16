@@ -28,6 +28,8 @@ import java.util.List;
 import javax.validation.constraints.NotNull;
 
 import org.jline.utils.AttributedString;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.shell.Availability;
@@ -52,123 +54,136 @@ import mx.infotec.dads.kukulkan.shell.util.TextFormatter;
 @ShellComponent
 public class GitCommands {
 
-    /** The command service. */
-    @Autowired
-    CommandService commandService;
+	private static final Logger LOGGER = LoggerFactory.getLogger(GitCommands.class);
 
-    /** The Constant GIT_COMMAND. */
-    public static final String GIT_COMMAND = "git";
+	/** The command service. */
+	@Autowired
+	CommandService commandService;
 
-    /** The project context. */
-    @Autowired
-    NativeCommandContext projectContext;
+	/** The Constant GIT_COMMAND. */
+	public static final String GIT_COMMAND = "git";
 
-    /** The nav. */
-    @Autowired
-    Navigator nav;
+	private static final String DEVELOP_BRANCH = "develop";
 
-    /** The publisher. */
-    @Autowired
-    private ApplicationEventPublisher publisher;
+	private static final String FEATURE_PREFIX = "feature-";
 
-    /**
-     * Git status.
-     *
-     * @return the list
-     */
-    @ShellMethod("Show the status of the current git project")
-    public List<AttributedString> gitStatus() {
-        List<CharSequence> exec = commandService.exec(new ShellCommand(GIT_COMMAND, "status"));
-        publisher.publishEvent(new LocationUpdatedEvent(EventType.FILE_NAVIGATION));
-        return TextFormatter.formatToGitOutput(exec);
-    }
+	private static final String RELEASE_PREFIX = "release-";
 
-    /**
-     * Git create feature.
-     *
-     * @param name the name
-     */
-    @ShellMethod("Create a new Feature")
-    public void gitCreateFeature(@NotNull String name) {
-        commandService.exec(nav.getCurrentPath(),
-                new ShellCommand(GIT_COMMAND, "checkout", "-b", "feature-" + name, "develop"));
-        publisher.publishEvent(new LocationUpdatedEvent(EventType.FILE_NAVIGATION));
-    }
+	private static final String CHECKOUT = "checkout";
 
-    /**
-     * Git terminate feature.
-     *
-     * @param name the name
-     */
-    @ShellMethod("Terminate a Feature")
-    public void gitTerminateFeature(@NotNull String name) {
-        commandService.exec(nav.getCurrentPath(), new ShellCommand(GIT_COMMAND, "checkout", "develop"));
-        commandService.exec(nav.getCurrentPath(),
-                new ShellCommand(GIT_COMMAND, GIT_COMMAND, "merge", "--no-f", "name"));
-        commandService.exec(nav.getCurrentPath(), new ShellCommand(GIT_COMMAND, GIT_COMMAND, "branch", "-d", "name"));
-        publisher.publishEvent(new LocationUpdatedEvent(EventType.FILE_NAVIGATION));
-    }
+	/** The project context. */
+	@Autowired
+	NativeCommandContext projectContext;
 
-    /**
-     * Git publish feature.
-     *
-     * @param name the name
-     */
-    @ShellMethod("Publish a Feature to a remote server")
-    public void gitPublishFeature(@NotNull String name) {
-        commandService.exec(nav.getCurrentPath(), new ShellCommand(GIT_COMMAND, "push", "origin", "develop"));
-        publisher.publishEvent(new LocationUpdatedEvent(EventType.FILE_NAVIGATION));
-    }
+	/** The nav. */
+	@Autowired
+	Navigator nav;
 
-    /**
-     * Git create release.
-     *
-     * @param name the name
-     */
-    @ShellMethod("Create a new Release")
-    public void gitCreateRelease(@NotNull String name) {
-        commandService.exec(nav.getCurrentPath(),
-                new ShellCommand(GIT_COMMAND, "checkout", "-b", "release-" + name, "develop"));
-        publisher.publishEvent(new LocationUpdatedEvent(EventType.FILE_NAVIGATION));
-    }
+	/** The publisher. */
+	@Autowired
+	private ApplicationEventPublisher publisher;
 
-    /**
-     * Git terminate release.
-     *
-     * @param name the name
-     */
-    @ShellMethod("Terminate a Release")
-    public void gitTerminateRelease(@NotNull String name) {
-        commandService.exec(nav.getCurrentPath(), new ShellCommand(GIT_COMMAND, "checkout", "develop"));
-        commandService.exec(nav.getCurrentPath(), new ShellCommand(GIT_COMMAND, "merge", "--no-f", "name"));
-        commandService.exec(nav.getCurrentPath(), new ShellCommand(GIT_COMMAND, "branch", "-d", "name"));
-        publisher.publishEvent(new LocationUpdatedEvent(EventType.FILE_NAVIGATION));
-    }
+	/**
+	 * Git status.
+	 *
+	 * @return the list
+	 */
+	@ShellMethod("Show the status of the current git project")
+	public List<AttributedString> gitStatus() {
+		List<CharSequence> exec = commandService.exec(new ShellCommand(GIT_COMMAND, "status"));
+		publisher.publishEvent(new LocationUpdatedEvent(EventType.FILE_NAVIGATION));
+		return TextFormatter.formatToGitOutput(exec);
+	}
 
-    /**
-     * Git publish release.
-     *
-     * @param name the name
-     */
-    @ShellMethod("Publish a Release to a remote server")
-    public void gitPublishRelease(@NotNull String name) {
-        commandService.exec(nav.getCurrentPath(), new ShellCommand(GIT_COMMAND, "push", "origin", "develop"));
-        publisher.publishEvent(new LocationUpdatedEvent(EventType.FILE_NAVIGATION));
-    }
+	/**
+	 * Git create feature.
+	 *
+	 * @param name
+	 *            the name
+	 */
+	@ShellMethod("Create a new Feature")
+	public void gitCreateFeature(@NotNull String name) {
+		commandService.exec(new ShellCommand(GIT_COMMAND, CHECKOUT, "-b", FEATURE_PREFIX + name, DEVELOP_BRANCH));
+		publisher.publishEvent(new LocationUpdatedEvent(EventType.FILE_NAVIGATION));
+	}
 
-    /**
-     * Docker show running process availability.
-     *
-     * @return the availability
-     */
-    @ShellMethodAvailability({ "gitCreateFeature", "gitTerminateFeature", "gitPublishFeature", "gitCreateRelease",
-            "gitTerminateRelease", "gitPublishRelease" })
-    public Availability dockerShowRunningProcessAvailability() {
-        NativeCommand gitCmd = projectContext.getAvailableCommands().get(GIT_COMMAND);
-        if (gitCmd != null && gitCmd.isActive()) {
-            return Availability.available();
-        } else {
-            return Availability.unavailable("you must install git");
-        }
-    }
+	/**
+	 * Git terminate feature.
+	 *
+	 * @param name
+	 *            the name
+	 */
+	@ShellMethod("Terminate a Feature")
+	public void gitTerminateFeature(@NotNull String name) {
+		commandService.exec(new ShellCommand(GIT_COMMAND, CHECKOUT, DEVELOP_BRANCH));
+		commandService.exec(new ShellCommand(GIT_COMMAND, "merge", "--no-ff", name));
+		commandService.exec(new ShellCommand(GIT_COMMAND, "branch", "-d", FEATURE_PREFIX + name));
+		publisher.publishEvent(new LocationUpdatedEvent(EventType.FILE_NAVIGATION));
+	}
+
+	/**
+	 * Git publish feature.
+	 *
+	 * @param name
+	 *            the name
+	 */
+	@ShellMethod("Publish a Feature to a remote server")
+	public void gitPublishFeature(@NotNull String name) {
+		commandService.exec(new ShellCommand(GIT_COMMAND, "push", "origin", FEATURE_PREFIX + name));
+		publisher.publishEvent(new LocationUpdatedEvent(EventType.FILE_NAVIGATION));
+	}
+
+	/**
+	 * Git create release.
+	 *
+	 * @param name
+	 *            the name
+	 */
+	@ShellMethod("Create a new Release")
+	public void gitCreateRelease(@NotNull String name) {
+		commandService.exec(new ShellCommand(GIT_COMMAND, CHECKOUT, "-b", RELEASE_PREFIX + name, DEVELOP_BRANCH));
+		publisher.publishEvent(new LocationUpdatedEvent(EventType.FILE_NAVIGATION));
+	}
+
+	/**
+	 * Git terminate release.
+	 *
+	 * @param name
+	 *            the name
+	 */
+	@ShellMethod("Terminate a Release")
+	public void gitTerminateRelease(@NotNull String name) {
+		commandService.exec(new ShellCommand(GIT_COMMAND, CHECKOUT, DEVELOP_BRANCH));
+		commandService.exec(new ShellCommand(GIT_COMMAND, "merge", "--no-ff", RELEASE_PREFIX + name));
+		commandService.exec(new ShellCommand(GIT_COMMAND, "branch", "-d", RELEASE_PREFIX + name));
+		publisher.publishEvent(new LocationUpdatedEvent(EventType.FILE_NAVIGATION));
+	}
+
+	/**
+	 * Git publish release.
+	 *
+	 * @param name
+	 *            the name
+	 */
+	@ShellMethod("Publish a Release to a remote server")
+	public void gitPublishRelease(@NotNull String name) {
+		commandService.exec(new ShellCommand(GIT_COMMAND, "push", "origin", DEVELOP_BRANCH));
+		publisher.publishEvent(new LocationUpdatedEvent(EventType.FILE_NAVIGATION));
+	}
+
+	/**
+	 * Docker show running process availability.
+	 *
+	 * @return the availability
+	 */
+	@ShellMethodAvailability({ "gitCreateFeature", "gitTerminateFeature", "gitPublishFeature", "gitCreateRelease",
+			"gitTerminateRelease", "gitPublishRelease" })
+	public Availability dockerShowRunningProcessAvailability() {
+		NativeCommand gitCmd = projectContext.getAvailableCommands().get(GIT_COMMAND);
+		if (gitCmd != null && gitCmd.isActive()) {
+			return Availability.available();
+		} else {
+			return Availability.unavailable("you must install git");
+		}
+	}
 }

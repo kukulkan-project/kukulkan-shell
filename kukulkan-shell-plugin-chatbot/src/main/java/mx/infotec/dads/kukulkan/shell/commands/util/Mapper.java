@@ -29,12 +29,22 @@ import mx.infotec.dads.kukulkan.shell.generator.DialogFlowConfig;
 import mx.infotec.dads.kukulkan.shell.generator.FacebookBotConfig;
 import mx.infotec.dads.kukulkan.shell.generator.WebhookConfig;
 
+/**
+ * Mapper from ChatbotArgs to ChatbotContext
+ * @author Roberto Villarejo Martínez <robertovillarejom@gmail.com>
+ *
+ */
 public class Mapper {
 	
 	private Mapper() {
 	}
 
-	public static ChatbotContext to(ChatbotArgs params) {
+	/**
+	 * 
+	 * @param The args read from console
+	 * @return The ChatbotContext
+	 */
+	public static ChatbotContext toContext(ChatbotArgs params) {
 		ChatbotContext ctx = new ChatbotContext();
 		ctx.setName(params.getAppName());
 		ctx.setPage(params.getAppPage());
@@ -53,14 +63,14 @@ public class Mapper {
 		return ctx;
 	}
 
-	public static DialogFlowConfig toDialogFlowConfig(ChatbotArgs params) {
+	private static DialogFlowConfig toDialogFlowConfig(ChatbotArgs params) {
 		DialogFlowConfig dialogflowConfig = new DialogFlowConfig();
 		dialogflowConfig.setClientToken(params.getDfClientToken());
 		dialogflowConfig.setDeveloperToken(params.getDfDeveloperToken());
 		return dialogflowConfig;
 	}
 
-	public static FacebookBotConfig toFacebookBotConfig(ChatbotArgs params) {
+	private static FacebookBotConfig toFacebookBotConfig(ChatbotArgs params) {
 		FacebookBotConfig fbBotConfig = new FacebookBotConfig();
 		fbBotConfig.setAccessToken(params.getFbAccessToken());
 		fbBotConfig.setVerifyToken(params.getFbVerifyToken());
@@ -68,7 +78,7 @@ public class Mapper {
 		return fbBotConfig;
 	}
 
-	public static WebhookConfig toWebhookConfig(ChatbotArgs params) {
+	private static WebhookConfig toWebhookConfig(ChatbotArgs params) {
 		WebhookConfig webhookConfig = new WebhookConfig();
 		webhookConfig.setEndpoint(params.getEndpointWebhook());
 		return webhookConfig;
