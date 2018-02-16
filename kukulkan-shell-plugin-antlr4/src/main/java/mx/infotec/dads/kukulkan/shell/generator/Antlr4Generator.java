@@ -67,7 +67,7 @@ public class Antlr4Generator implements Generator {
         for (TemplateInfo template : TemplateUtil.convertToTemplateInfoList(TemplateType.ANTLR4,
                 TemplateFactory.ANTLR4_TEMPLATE_LIST)) {
             Path toSave = TemplateUtil.createToSavePath(antlrContext, template);
-            String content = templateService.fillTemplate(template.getName(), model);
+            String content = templateService.fillTemplate(template.getStringPath(), model);
             FileUtil.saveToFile(toSave, content);
         }
     }
