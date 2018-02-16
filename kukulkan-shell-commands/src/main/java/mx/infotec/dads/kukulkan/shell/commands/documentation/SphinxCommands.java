@@ -24,13 +24,15 @@
 
 package mx.infotec.dads.kukulkan.shell.commands.documentation;
 
-import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 
 import javax.validation.constraints.NotNull;
 
-import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,7 +40,9 @@ import org.springframework.shell.Availability;
 import org.springframework.shell.standard.ShellComponent;
 import org.springframework.shell.standard.ShellMethod;
 import org.springframework.shell.standard.ShellMethodAvailability;
+import org.springframework.shell.standard.ShellOption;
 
+import mx.infotec.dads.kukulkan.metamodel.util.FileUtil;
 import mx.infotec.dads.kukulkan.shell.component.Navigator;
 import mx.infotec.dads.kukulkan.shell.domain.NativeCommand;
 import mx.infotec.dads.kukulkan.shell.domain.NativeCommandContext;
@@ -72,15 +76,22 @@ public class SphinxCommands {
 	Navigator nav;
 
 	@ShellMethod("Generate a documentation static site")
-	public void initDocs(@NotNull String project, @NotNull String author, Float version, Float release, String lang) {
-		copyResources();
-		ShellCommand command = prepareCommand(project, author, version, release, lang);
-		commandService.exec(command);
-		commandService.exec(new ShellCommand("make", "--directory", "docs", "html"));
-		LOGGER.info("Your docs site has been generated in docs/build/html");
-		LOGGER.info("Use your favorite browser to open the index.html file");
-		LOGGER.info("Edit the Markdown files (.md) placed in /docs/source ");
-		LOGGER.info("Run `make html` in docs folder every time you edit the contents");
+	public void initDocs(@NotNull @ShellOption(defaultValue = "KukulkanProject") String project,
+			@ShellOption(defaultValue = "Kukulkan") @NotNull String author,
+			@ShellOption(defaultValue = "1.0") Float version, @ShellOption(defaultValue = "1.0") Float release,
+			@ShellOption(defaultValue = "es") String lang) {
+		if (copyResources()) {
+			ShellCommand command = prepareCommand(project, author, version, release, lang);
+			commandService.exec(command);
+			commandService.exec(new ShellCommand("make", "--directory", "docs", "html"));
+			LOGGER.info("Your docs site has been generated in docs/build/html");
+			LOGGER.info("Use your favorite browser to open the index.html file");
+			LOGGER.info("Edit the Markdown files (.md) placed in /docs/source ");
+			LOGGER.info("Run `make html` in docs folder every time you edit the contents");
+		} else {
+			LOGGER.error("Error while copying resources");
+		}
+
 	}
 
 	@ShellMethodAvailability({ "initDocs" })
@@ -100,14 +111,18 @@ public class SphinxCommands {
 				nav.getCurrentPath().toString() + "/docs");
 	}
 
-	private void copyResources() {
-		File src = new File(
-				Paths.get("/home/roberto/git/kukulkan-shell/kukulkan-shell-commands/src/main/resources/docs").toUri());
-		try {
-			FileUtils.copyDirectory(src, Paths.get(nav.getCurrentPath().toString(), "/docs").toFile());
-		} catch (IOException e) {
-			LOGGER.error("Failed to copy the docs resources");
+	private boolean copyResources() {
+		for (String template : TemplateDocs.DOCS_TEMPLATE_LIST) {
+			LOGGER.info("Template: {}", template);
+			try (InputStream in = getClass().getClassLoader().getResourceAsStream(template)) {
+				Path target = Paths.get(nav.getCurrentPath().toString(), template);
+				FileUtil.createDirectories(target);
+				Files.copy(in, target, StandardCopyOption.REPLACE_EXISTING);
+			} catch (IOException e) {
+				return false;
+			}
 		}
+		return true;
 	}
 
 }
