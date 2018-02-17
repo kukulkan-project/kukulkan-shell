@@ -20,7 +20,7 @@ public class KukulkanShellApplicationTests {
 
     @Autowired
     private Antlr4Generator generator;
-    
+
     @Test
     public void generate() throws IOException {
         Antlr4Context pConf = new Antlr4Context();
