@@ -1,11 +1,10 @@
 package mx.infotec.dads.kukulkan.shell.kukulkanshell;
 
-import java.io.File;
 import java.io.IOException;
 import java.nio.file.FileSystem;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.regex.Matcher;
+import java.nio.file.Paths;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -18,6 +17,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 import com.github.marschall.memoryfilesystem.MemoryFileSystemBuilder;
 
 import mx.infotec.dads.kukulkan.metamodel.context.GeneratorContext;
+import mx.infotec.dads.kukulkan.metamodel.util.PathProcessor;
 import mx.infotec.dads.kukulkan.metamodel.util.StringFormater;
 import mx.infotec.dads.kukulkan.shell.commands.Antlr4Args;
 import mx.infotec.dads.kukulkan.shell.generator.Antlr4Context;
@@ -55,10 +55,19 @@ public class KukulkanShellApplicationTests {
     public static void main(String[] args) throws IOException {
         try (FileSystem fileSystem = MemoryFileSystemBuilder.newWindows().build()) {
             Path p = fileSystem.getPath("hola/mundo/file.txt");
-            String pathToRegExp = StringFormater.pathToRegExp(p);
             System.out.println(StringFormater.pathToRegExp(p));
-            System.out.println(
-                    p.toString().replace(fileSystem.getPath("hola/mundo").toString(), ""));
+            System.out.println(p.toString().replace(fileSystem.getPath("hola/mundo").toString(), ""));
         }
+
+        Path path = Paths.get("template/archetype/src/main/java/package/controller/JavaApp.java.ftl");
+        Path home = Paths.get(System.getProperty("user.home"));
+        Path path3 = PathProcessor.forPath(path).replaceRegExp("template[\\/]archetype", "").joinBefore("asterix")
+                .joinBefore(home).getAbsolutePath();
+        System.out.println(path3);
+
+        Path newPath = PathProcessor.forPath(path).replaceRegExp("template[\\/]archetype", "").joinBefore("asterix")
+                .joinBefore("/home/daniel/archetypes").replaceLiteral("package", "mx/danimani/software")
+                .replaceRegExp(".ftl", "").getRelativePath();
+        System.out.println(newPath);
     }
 }

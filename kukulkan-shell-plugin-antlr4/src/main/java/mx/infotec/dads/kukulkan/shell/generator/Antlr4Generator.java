@@ -23,10 +23,10 @@ package mx.infotec.dads.kukulkan.shell.generator;
  * SOFTWARE.
  */
 
+import static mx.infotec.dads.kukulkan.metamodel.util.StringFormater.replaceDotByFileSeparator;
 import static mx.infotec.dads.kukulkan.metamodel.util.Validator.requiredNotEmpty;
 
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -40,6 +40,7 @@ import mx.infotec.dads.kukulkan.metamodel.generator.Generator;
 import mx.infotec.dads.kukulkan.metamodel.template.TemplateInfo;
 import mx.infotec.dads.kukulkan.metamodel.template.TemplateType;
 import mx.infotec.dads.kukulkan.metamodel.util.FileUtil;
+import mx.infotec.dads.kukulkan.metamodel.util.PathProcessor;
 import mx.infotec.dads.kukulkan.shell.template.TemplateFactory;
 
 /**
@@ -68,13 +69,18 @@ public class Antlr4Generator implements Generator {
         for (TemplateInfo template : TemplateUtil.convertToTemplateInfoList(TemplateType.ANTLR4,
                 TemplateFactory.ANTLR4_TEMPLATE_LIST)) {
             String content = templateService.fillTemplate(template.getStringPath(), model);
-            // create output path
-            // - format packaging 
-            // - format format current template path and remove contextual path 
-            // - format replate ".ftl" for ""
-            // - format replace package by realPackaging
-            Path toSave = TemplateUtil.createToSavePath(antlrContext, template);
-            FileUtil.saveToFile(toSave, content);
+            FileUtil.saveToFile(createOutputPath(antlrContext, template), content);
         }
+    }
+
+    /**
+     * @param antlrContext
+     * @param template
+     */
+    private Path createOutputPath(Antlr4Context antlrContext, TemplateInfo template) {
+        return PathProcessor.forPath(template.getStringPath()).replaceRegExp("archetypes[\\/]antlr4", "")
+                .joinBefore(antlrContext.getId()).joinBefore(antlrContext.getOutputDir())
+                .replaceLiteral("package", replaceDotByFileSeparator(antlrContext.getPackaging()))
+                .replaceRegExp(".ftl", "").getAbsolutePath();
     }
 }
