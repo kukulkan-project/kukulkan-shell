@@ -5,6 +5,8 @@ import java.nio.file.FileSystem;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -12,20 +14,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.FilterType;
+import org.springframework.context.annotation.Import;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import com.github.marschall.memoryfilesystem.MemoryFileSystemBuilder;
-
 import mx.infotec.dads.kukulkan.metamodel.context.GeneratorContext;
-import mx.infotec.dads.kukulkan.metamodel.util.PathProcessor;
-import mx.infotec.dads.kukulkan.metamodel.util.StringFormater;
 import mx.infotec.dads.kukulkan.shell.commands.Antlr4Args;
 import mx.infotec.dads.kukulkan.shell.generator.Antlr4Context;
 import mx.infotec.dads.kukulkan.shell.generator.Antlr4Generator;
 import mx.infotec.dads.kukulkan.shell.util.Mapper;
-
-import org.springframework.context.annotation.FilterType;
-import org.springframework.context.annotation.Import;
 
 @RunWith(SpringRunner.class)
 @EnableAutoConfiguration
@@ -50,24 +47,5 @@ public class KukulkanShellApplicationTests {
         GeneratorContext genCtx = new GeneratorContext();
         genCtx.put(Antlr4Context.class, antlr4Context);
         generator.process(genCtx);
-    }
-
-    public static void main(String[] args) throws IOException {
-        try (FileSystem fileSystem = MemoryFileSystemBuilder.newWindows().build()) {
-            Path p = fileSystem.getPath("hola/mundo/file.txt");
-            System.out.println(StringFormater.pathToRegExp(p));
-            System.out.println(p.toString().replace(fileSystem.getPath("hola/mundo").toString(), ""));
-        }
-
-        Path path = Paths.get("template/archetype/src/main/java/package/controller/JavaApp.java.ftl");
-        Path home = Paths.get(System.getProperty("user.home"));
-        Path path3 = PathProcessor.forPath(path).replaceRegExp("template[\\/]archetype", "").joinBefore("asterix")
-                .joinBefore(home).getAbsolutePath();
-        System.out.println(path3);
-
-        Path newPath = PathProcessor.forPath(path).replaceRegExp("template[\\/]archetype", "").joinBefore("asterix")
-                .joinBefore("/home/daniel/archetypes").replaceLiteral("package", "mx/danimani/software")
-                .replaceRegExp(".ftl", "").getRelativePath();
-        System.out.println(newPath);
     }
 }
