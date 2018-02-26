@@ -21,38 +21,37 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package mx.infotec.dads.kukulkan.shell.commands.valueprovided;
+package mx.infotec.dads.kukulkan.shell.config;
 
-import java.util.Arrays;
-import java.util.List;
-import java.util.stream.Collectors;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 
-import org.springframework.core.MethodParameter;
-import org.springframework.shell.CompletionContext;
-import org.springframework.shell.CompletionProposal;
-import org.springframework.shell.standard.ValueProviderSupport;
-import org.springframework.stereotype.Component;
-
+import mx.infotec.dads.kukulkan.metamodel.foundation.Database;
+import mx.infotec.dads.kukulkan.metamodel.foundation.DatabaseType;
+import mx.infotec.dads.kukulkan.metamodel.foundation.ProjectConfiguration;
 import mx.infotec.dads.kukulkan.metamodel.util.PKGenerationStrategy;
+import mx.infotec.dads.kukulkan.shell.domain.KukulkanShellContext;
 
 /**
- * The Class GenerationTypeProvider.
+ * The Class ProjectContextConfiguration.
  */
-@Component
-public class GenerationTypeProvider extends ValueProviderSupport {
+@Configuration
+public class AntlrContextConfiguration {
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.springframework.shell.standard.ValueProvider#complete(org.
-     * springframework.core.MethodParameter,
-     * org.springframework.shell.CompletionContext, java.lang.String[])
+    /**
+     * Config project context.
+     *
+     * @return the project configuration
      */
-    @Override
-    public List<CompletionProposal> complete(MethodParameter parameter, CompletionContext completionContext,
-            String[] hints) {
-        return Arrays.stream(PKGenerationStrategy.values())
-                .filter(pkStrategy -> !pkStrategy.equals(PKGenerationStrategy.NULL))
-                .map(pkStrategy -> new CompletionProposal(pkStrategy.toString())).collect(Collectors.toList());
+    @Bean
+    public KukulkanShellContext configProjectContext() {
+        ProjectConfiguration pConf = new ProjectConfiguration();
+        pConf.setId("default");
+        pConf.setVersion("1.0.0");
+        pConf.setPackaging("mx.infotec.dads.default");
+        pConf.setYear("2018");
+        pConf.setAuthor("KUKULKAN");
+        pConf.setDatabase(new Database(DatabaseType.SQL_MYSQL, PKGenerationStrategy.AUTO));
+        return new KukulkanShellContext(pConf);
     }
 }

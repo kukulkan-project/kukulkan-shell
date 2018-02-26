@@ -28,12 +28,19 @@ import java.util.List;
 
 import com.google.common.collect.ImmutableList;
 
+/**
+ * The chatbot template factory
+ * 
+ * @author Roberto Villarejo Martínez <robertovillarejom@gmail.com>
+ *
+ */
 public class ChatbotTemplateFactory {
 
-	/** The Constant CHATBOT_TEMPLATE_LIST. */
+	/** The whole list of chatbot templates */
 	public static final List<String> CHATBOT_TEMPLATE_LIST;
 
 	public static final String CHATBOT_TEMPLATE = "archetypes/chatbot";
+
 	static {
 		CHATBOT_TEMPLATE_LIST = ImmutableList.copyOf(getChatbotTemplates());
 	}
@@ -44,11 +51,27 @@ public class ChatbotTemplateFactory {
 	private ChatbotTemplateFactory() {
 	}
 
+	/**
+	 * 
+	 * @return the whole list of chatbot templates
+	 */
 	public static List<String> getChatbotTemplates() {
+		List<String> templates = new ArrayList<>();
+		templates.addAll(getCommonChatbotTemplates());
+		templates.addAll(getFacebookChatbotTemplates());
+		templates.addAll(getWebChatbotTemplates());
+		return templates;
+	}
+
+	/**
+	 * 
+	 * @return the common chatbot templates 
+	 */
+	public static List<String> getCommonChatbotTemplates() {
 		List<String> templates = new ArrayList<>();
 		templates.add(CHATBOT_TEMPLATE + "/index.js.ftl");
 		templates.add(CHATBOT_TEMPLATE + "/README.md.ftl");
-		templates.add(CHATBOT_TEMPLATE + "/LICENSE.ftl");
+		templates.add(CHATBOT_TEMPLATE + "/Procfile");
 		templates.add(CHATBOT_TEMPLATE + "/package.json.ftl");
 		templates.add(CHATBOT_TEMPLATE + "/package-lock.json.ftl");
 		templates.add(CHATBOT_TEMPLATE + "/README.md.ftl");
@@ -56,22 +79,47 @@ public class ChatbotTemplateFactory {
 		templates.add(CHATBOT_TEMPLATE + "/.gitignore.ftl");
 		templates.add(CHATBOT_TEMPLATE + "/conversation/create-conversation.js.ftl");
 		templates.add(CHATBOT_TEMPLATE + "/conversation/starter-conversation.js.ftl");
+		templates.add(CHATBOT_TEMPLATE + "/web-server/express-server.js.ftl");
+		templates.add(CHATBOT_TEMPLATE + "/web-server/routes.js.ftl");
+		return templates;
+	}
+
+	/**
+	 * 
+	 * @return the webhook chatbot templates
+	 */
+	public static List<String> getWebhookChatbotTemplates() {
+		List<String> templates = new ArrayList<>();
+		templates.add(CHATBOT_TEMPLATE + "/fulfillment/webhook-fulfillment-middleware.js.ftl");
+		return templates;
+	}
+
+	/**
+	 * 
+	 * @return the facebook chatbot templates
+	 */
+	public static List<String> getFacebookChatbotTemplates() {
+		List<String> templates = new ArrayList<>();
 		templates.add(CHATBOT_TEMPLATE + "/facebook/bot.js.ftl");
 		templates.add(CHATBOT_TEMPLATE + "/facebook/menu.js.ftl");
 		templates.add(CHATBOT_TEMPLATE + "/facebook/middlewares.js.ftl");
 		templates.add(CHATBOT_TEMPLATE + "/facebook/skills.js.ftl");
-		templates.add(CHATBOT_TEMPLATE + "/fulfillment/webhook-fulfillment-middleware.js.ftl");
+		return templates;
+	}
+
+	/**
+	 * 
+	 * @return the web chatbot templates
+	 */
+	public static List<String> getWebChatbotTemplates() {
+		List<String> templates = new ArrayList<>();
 		templates.add(CHATBOT_TEMPLATE + "/web/public/css/styles.css");
-		//templates.add(CHATBOT_TEMPLATE + "/web/public/botkit_icon.png");
 		templates.add(CHATBOT_TEMPLATE + "/web/public/chat.html");
 		templates.add(CHATBOT_TEMPLATE + "/web/public/client.js");
-		//templates.add(CHATBOT_TEMPLATE + "/web/public/infotec_logo.jpg");
 		templates.add(CHATBOT_TEMPLATE + "/web/bot.js.ftl");
 		templates.add(CHATBOT_TEMPLATE + "/web/middlewares.js.ftl");
 		templates.add(CHATBOT_TEMPLATE + "/web/routes.js.ftl");
 		templates.add(CHATBOT_TEMPLATE + "/web/skills.js.ftl");
-		templates.add(CHATBOT_TEMPLATE + "/web-server/express-server.js.ftl");
-		templates.add(CHATBOT_TEMPLATE + "/web-server/routes.js.ftl");
 		return templates;
 	}
 

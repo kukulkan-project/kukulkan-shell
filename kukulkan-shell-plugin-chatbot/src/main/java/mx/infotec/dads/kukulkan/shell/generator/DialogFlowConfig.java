@@ -23,10 +23,21 @@
  */
 package mx.infotec.dads.kukulkan.shell.generator;
 
+/**
+ * The configuration for DialogFlow NLP service
+ * @author Roberto Villarejo Martínez <robertovillarejom@gmail.com>
+ *
+ */
 public class DialogFlowConfig {
 
+	/**
+	 * The developer token
+	 */
 	private String developerToken;
 
+	/**
+	 * The client token
+	 */
 	private String clientToken;
 
 	public String getDeveloperToken() {

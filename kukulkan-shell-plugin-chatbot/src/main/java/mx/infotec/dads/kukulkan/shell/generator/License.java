@@ -23,6 +23,11 @@
  */
 package mx.infotec.dads.kukulkan.shell.generator;
 
+/**
+ * The License
+ * @author Roberto Villarejo Martínez <robertovillarejom@gmail.com>
+ *
+ */
 public enum License {
 	
 	MIT

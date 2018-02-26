@@ -23,29 +23,30 @@
  */
 package mx.infotec.dads.kukulkan.shell.generator;
 
-import java.nio.file.Path;
 import static mx.infotec.dads.kukulkan.metamodel.util.Validator.requiredNotEmpty;
 
+import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.Collection;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import edu.emory.mathcs.backport.java.util.Collections;
 import mx.infotec.dads.kukulkan.engine.templating.service.TemplateService;
 import mx.infotec.dads.kukulkan.metamodel.annotation.GeneratorComponent;
 import mx.infotec.dads.kukulkan.metamodel.context.GeneratorContext;
 import mx.infotec.dads.kukulkan.metamodel.generator.Generator;
-import mx.infotec.dads.kukulkan.metamodel.generator.Layer;
 import mx.infotec.dads.kukulkan.metamodel.util.FileUtil;
 import mx.infotec.dads.kukulkan.shell.template.ChatbotTemplateFactory;
 
 /**
- * Generator for Angular 1.5.8, Spring boot and Spring Data
+ * Generator for Chatbot
  * 
- * @author Daniel Cortes Pichardo
+ * @author Roberto Villarejo Martínez
  *
  */
 @GeneratorComponent
@@ -54,6 +55,8 @@ public class ChatbotGenerator implements Generator {
 	/** The template service. */
 	@Autowired
 	private TemplateService templateService;
+
+	private static final Logger LOGGER = LoggerFactory.getLogger(ChatbotGenerator.class);
 
 	/*
 	 * (non-Javadoc)
@@ -70,13 +73,28 @@ public class ChatbotGenerator implements Generator {
 		ChatbotContext chatbotCtx = requiredNotEmpty(context.get(ChatbotContext.class));
 		Map<String, Object> model = new HashMap<>();
 		model.put("project", chatbotCtx);
-		for (String template : ChatbotTemplateFactory.CHATBOT_TEMPLATE_LIST) {
+		List<String> templates = new ArrayList<>();
+		templates.addAll(ChatbotTemplateFactory.getCommonChatbotTemplates());
+		if (chatbotCtx.isFacebookBot())
+			templates.addAll(ChatbotTemplateFactory.getFacebookChatbotTemplates());
+
+		if (chatbotCtx.isWebBot())
+			templates.addAll(ChatbotTemplateFactory.getWebChatbotTemplates());
+
+		if (chatbotCtx.isWebhook())
+			templates.addAll(ChatbotTemplateFactory.getWebhookChatbotTemplates());
+
+		LOGGER.info("Generating chatbot project...");
+		for (String template : templates) {
 			String content = templateService.fillTemplate(template, model);
 			Path toSave = Paths.get(chatbotCtx.getOutputDir().toString(),
 					template.replaceAll(ChatbotTemplateFactory.CHATBOT_TEMPLATE, "").replaceAll(".ftl", ""));
 			FileUtil.saveToFile(toSave, content);
 		}
 
+		LOGGER.info("Finished!");
+		LOGGER.info("Run `npm install` to install dependencies");
+		LOGGER.info("Run `npm start` to run the project");
 	}
 
 }

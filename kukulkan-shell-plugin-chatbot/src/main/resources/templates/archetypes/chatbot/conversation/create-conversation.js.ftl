@@ -28,7 +28,7 @@ intents.forEach(element => {
         auth: {
             bearer: DEVELOPER_TOKEN
         }
-    }, function (error, response, body) {
+    }, function error, response, body => {
         if(!error && response.statusCode === 200 ) {
             console.log(element.name + ' intent successfully added!');
         } else {

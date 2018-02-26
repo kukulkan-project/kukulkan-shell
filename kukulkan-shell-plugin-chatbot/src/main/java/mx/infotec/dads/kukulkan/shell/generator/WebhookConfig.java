@@ -23,8 +23,16 @@
  */
 package mx.infotec.dads.kukulkan.shell.generator;
 
+/**
+ * The webhook configuration
+ * @author Roberto Villarejo Martínez <robertovillarejom@gmail.com>
+ *
+ */
 public class WebhookConfig {
 	
+	/**
+	 * The url to send the POST request
+	 */
 	private String endpoint;
 
 	public String getEndpoint() {

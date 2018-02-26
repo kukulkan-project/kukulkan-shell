@@ -25,36 +25,87 @@ package mx.infotec.dads.kukulkan.shell.generator;
 
 import java.nio.file.Path;
 
+/**
+ * The ChatbotContext for generator
+ * 
+ * @author Roberto Villarejo Martínez <robertovillarejom@gmail.com>
+ *
+ */
 public class ChatbotContext {
-	
+
+	/**
+	 * The directory where project will be generated
+	 */
 	private Path outputDir;
 
+	/**
+	 * The project name
+	 */
 	private String name;
 
+	/**
+	 * The project description
+	 */
 	private String description;
 
+	/**
+	 * The author name (individual or company)
+	 */
 	private String author;
 
+	/**
+	 * The port to be exposed
+	 */
 	private int port;
 
+	/**
+	 * Enables webhook support for fulfillment
+	 */
 	private boolean webhook;
 
+	/**
+	 * The webhook configuration if enabled
+	 */
 	private WebhookConfig webhookConfig;
 
+	/**
+	 * Enables facebook support
+	 */
 	private boolean facebookBot;
 
+	/**
+	 * The facebook configuration if enabled
+	 */
 	private FacebookBotConfig facebookBotConfig;
-	
+
+	/**
+	 * Enables the web support
+	 */
 	private boolean webBot;
 
+	/**
+	 * The project page
+	 */
 	private String page;
 
+	/**
+	 * The NLP service
+	 */
 	private NlpService nlpService;
 
+	/**
+	 * The configuration for DialogFlow if nlpService is "DIALOGFLOW"
+	 */
 	private DialogFlowConfig dialogflowConfig;
 
+	/**
+	 * The git repository
+	 */
 	private String gitRepository;
 
+	/**
+	 * The license
+	 */
 	private License license;
 
 	public Path getOutputDir() {
@@ -168,7 +219,7 @@ public class ChatbotContext {
 	public void setLicense(License license) {
 		this.license = license;
 	}
-	
+
 	public boolean isWebBot() {
 		return webBot;
 	}
@@ -179,23 +230,13 @@ public class ChatbotContext {
 
 	@Override
 	public String toString() {
-		return "ChatbotContext{" +
-	            "appName='" + name + '\'' +
-	            ", description='" + description + '\'' +
-	            ", author='" + author + '\'' +
-	            ", port='" + port + '\'' +
-	            ", webhook='" + webhook + '\'' +
-	            ", webhookConfig='" + webhookConfig + '\'' +
-	            ", facebookBot='" + facebookBot + '\'' +
-	            ", facebookBotConfig='" + facebookBotConfig + '\'' +
-	            ", webBot='" + webBot + '\'' +
-	            ", appPage='" + page + '\'' +
-	            ", nlpService='" + nlpService + '\'' +
-	            ", dialogflowConfig='" + dialogflowConfig + '\'' +
-	            ", gitRepository='" + gitRepository + '\'' +
-	            ", license='" + license + '\'' +
-	            ", outputDir='" + outputDir + '\'' +
-	            "}";
+		return "ChatbotContext{" + "appName='" + name + '\'' + ", description='" + description + '\'' + ", author='"
+				+ author + '\'' + ", port='" + port + '\'' + ", webhook='" + webhook + '\'' + ", webhookConfig='"
+				+ webhookConfig + '\'' + ", facebookBot='" + facebookBot + '\'' + ", facebookBotConfig='"
+				+ facebookBotConfig + '\'' + ", webBot='" + webBot + '\'' + ", appPage='" + page + '\''
+				+ ", nlpService='" + nlpService + '\'' + ", dialogflowConfig='" + dialogflowConfig + '\''
+				+ ", gitRepository='" + gitRepository + '\'' + ", license='" + license + '\'' + ", outputDir='"
+				+ outputDir + '\'' + "}";
 	}
 
 }

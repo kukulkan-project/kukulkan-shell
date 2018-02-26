@@ -23,6 +23,7 @@
  */
 package mx.infotec.dads.kukulkan.shell.template;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -35,10 +36,10 @@ import com.google.common.collect.ImmutableList;
  */
 public class TemplateFactory {
 
-    /** The Constant MONGO_TEMPLATE_LIST. */
+    /** The Constant ANTLR4_TEMPLATE_LIST. */
     public static final List<String> ANTLR4_TEMPLATE_LIST;
 
-    public static final String ANTLR4_TEMPLATE = "archetypes/antlr4";
+    public static final String ANTLR4_TEMPLATE = "archetypes" + File.separator + "antlr4";
     static {
         ANTLR4_TEMPLATE_LIST = ImmutableList.copyOf(getAntrl4Templates());
     }
