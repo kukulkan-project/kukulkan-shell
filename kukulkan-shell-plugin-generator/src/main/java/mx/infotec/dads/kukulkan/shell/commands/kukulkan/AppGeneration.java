@@ -28,6 +28,7 @@ import static mx.infotec.dads.kukulkan.shell.commands.kukulkan.CommandHelper.cre
 import static mx.infotec.dads.kukulkan.shell.commands.validation.UserInputValidation.validateProjectParams;
 
 import java.io.File;
+import java.nio.file.Paths;
 
 import javax.validation.constraints.NotNull;
 
@@ -56,10 +57,10 @@ import mx.infotec.dads.kukulkan.shell.util.ProjectUtil;
  * @author Daniel Cortes Pichardo
  */
 @ShellComponent
-public class KukulkanGeneration extends AbstractCommand {
+public class AppGeneration extends AbstractCommand {
 
     /** The Constant LOGGER. */
-    private static final Logger LOGGER = LoggerFactory.getLogger(KukulkanGeneration.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(AppGeneration.class);
 
     /**
      * Command Shell for Generate all the entities that come from a file with .3
@@ -69,7 +70,8 @@ public class KukulkanGeneration extends AbstractCommand {
      *            the file
      */
     @ShellMethod("Generate all the entities that come from a file with .3k or .kukulkan extension")
-    public void scaffoldingFromFile(@ShellOption(valueProvider = KukulkanFilesProvider.class) File file) {
+    public void appGenerateCrud(@ShellOption(valueProvider = KukulkanFilesProvider.class) String fileName) {
+        File file = Paths.get(navigator.getCurrentPath().toString(), fileName).toFile();
         shellContext.setConfiguration(ProjectUtil.readKukulkanFile(navigator.getCurrentPath()));
         GeneratorContext genCtx = createGeneratorContext(shellContext.getConfiguration(), file);
         generationService.findGeneratorByName("angularJs-spring").ifPresent(generator -> {
@@ -87,7 +89,7 @@ public class KukulkanGeneration extends AbstractCommand {
      *            the packaging
      */
     @ShellMethod("Generate a Project from an Archetype Catalog")
-    public void generateProject(@NotNull String appName, @NotNull String packaging,
+    public void appGenerateProject(@NotNull String appName, @NotNull String packaging,
             @ShellOption(defaultValue = "NO_SQL_MONGODB") DatabaseType databaseType,
             @ShellOption(defaultValue = "NULL") PKGenerationStrategy pkGenerationType) {
         LOGGER.info("Generating Project...");
