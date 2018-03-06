@@ -34,4 +34,13 @@ spring-*/src/main/java/META-INF/MANIFEST.MF
 *.iws
 .idea/*
 rebel.xml
-/nbactions.xml
+
+# Netbeans artifacts
+nbactions.xml
+nb-configuration.xml
+nbproject/private/
+build/
+nbbuild/
+dist/
+nbdist/
+.nb-gradle/
