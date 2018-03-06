@@ -21,7 +21,7 @@ import mx.infotec.dads.kukulkan.shell.util.ProjectUtil;
  *
  */
 @Component
-public class KukulkanChangeLocationAwareness extends AbstractChangeLocationAwareness {
+public class AppChangeLocationAwareness extends AbstractChangeLocationAwareness {
 
     @Autowired
     private KukulkanShellContext context;

@@ -31,7 +31,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import mx.infotec.dads.kukulkan.engine.translator.dsl.GrammarMapping;
-import mx.infotec.dads.kukulkan.engine.translator.dsl.KukulkanVisitor;
+import mx.infotec.dads.kukulkan.engine.translator.dsl.GrammarSemanticAnalyzer;
 import mx.infotec.dads.kukulkan.metamodel.context.GeneratorContext;
 import mx.infotec.dads.kukulkan.metamodel.foundation.Database;
 import mx.infotec.dads.kukulkan.metamodel.foundation.DatabaseType;
@@ -71,7 +71,7 @@ public class CommandHelper {
      */
     public static GeneratorContext createGeneratorContext(ProjectConfiguration projectConfiguration, File file) {
         DomainModel domainModel = new JavaDomainModel();
-        KukulkanVisitor semanticAnalyzer = new KukulkanVisitor();
+        GrammarSemanticAnalyzer semanticAnalyzer = new GrammarSemanticAnalyzer(projectConfiguration);
         List<DomainModelGroup> dmgList = GrammarMapping.createSingleDataModelGroupList(semanticAnalyzer, file);
         domainModel.setDomainModelGroup(dmgList);
         LOGGER.info("Processing File...");
