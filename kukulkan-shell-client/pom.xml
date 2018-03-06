@@ -6,7 +6,7 @@
 	<artifactId>kukulkan-shell-client</artifactId>
 	<packaging>jar</packaging>
 
-	<name>kukulkan-shell-client</name>
+	<name>Kukulkan Shell :: client</name>
 	<description>Project with rest client capabilities</description>
 
 	<parent>

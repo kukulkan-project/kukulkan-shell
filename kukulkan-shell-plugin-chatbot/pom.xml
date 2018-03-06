@@ -6,7 +6,7 @@
 	<artifactId>kukulkan-shell-plugin-chatbot</artifactId>
 	<packaging>jar</packaging>
 
-	<name>kukulkan-shell-plugin-generator-chatbot</name>
+	<name>Kukulkan Shell :: plugin chatbot</name>
 	<description>The kukulkan generator for chatbot</description>
 
 	<parent>

@@ -6,7 +6,7 @@
 	<artifactId>kukulkan-shell-commands</artifactId>
 	<packaging>jar</packaging>
 
-	<name>kukulkan-shell-commands</name>
+	<name>Kukulkan Shell :: commands</name>
 	<description>The kukulkan shell</description>
 
 	<parent>

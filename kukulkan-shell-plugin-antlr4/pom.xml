@@ -6,7 +6,7 @@
 	<artifactId>kukulkan-shell-plugin-antlr4</artifactId>
 	<packaging>jar</packaging>
 
-	<name>kukulkan-shell-plugin-generator-antlr4</name>
+	<name>Kukulkan Shell :: plugin antlr4</name>
 	<description>The kukulkan generator for antlr4</description>
 
 	<parent>

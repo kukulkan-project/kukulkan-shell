@@ -6,7 +6,7 @@
 	<artifactId>kukulkan-shell-kernel</artifactId>
 	<packaging>jar</packaging>
 
-	<name>kukulkan-shell-kernel</name>
+	<name>Kukulkan Shell :: kernel</name>
 	<description>Kernel of the shell</description>
 
 	<parent>

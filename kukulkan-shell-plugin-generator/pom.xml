@@ -6,7 +6,7 @@
 	<artifactId>kukulkan-shell-plugin-generator</artifactId>
 	<packaging>jar</packaging>
 
-	<name>kukulkan-shell-plugin-generator</name>
+	<name>Kukulkan Shell :: plugin generator</name>
 	<description>The kukulkan generator</description>
 
 	<parent>

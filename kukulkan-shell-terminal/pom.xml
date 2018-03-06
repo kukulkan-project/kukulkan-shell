@@ -5,9 +5,10 @@
 	<artifactId>kukulkan-shell-terminal</artifactId>
 	<packaging>jar</packaging>
 
-	<name>kukulkan-shell-terminal</name>
+	<name>Kukulkan Shell :: terminal</name>
 	<description>The kukulkan shell</description>
-	<parent>
+
+        <parent>
 		<groupId>mx.infotec.dads.kukulkan</groupId>
 		<artifactId>kukulkan-shell</artifactId>
 		<version>0.0.1-SNAPSHOT</version>
