@@ -50,9 +50,11 @@
         <!-- Kukulkan Modules dependencies -->
         <kukulkan.metamodel.version></kukulkan.metamodel.version>
         <kukulkan.shell.commands></kukulkan.shell.commands>
+        <kukulkan.version>0.0.1-SNAPSHOT</kukulkan.version>
     </properties>
 
     <modules>
+        <module>kukulkan-shell-test-config</module>
         <module>kukulkan-shell-client</module>
         <module>kukulkan-shell-kernel</module>
         <module>kukulkan-shell-plugin-generator</module>
@@ -77,47 +79,53 @@
             <dependency>
                 <groupId>mx.infotec.dads.kukulkan</groupId>
                 <artifactId>kukulkan-metamodel</artifactId>
-                <version>0.0.1-SNAPSHOT</version>
+                <version>${kukulkan.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>mx.infotec.dads.kukulkan</groupId>
+                <artifactId>kukulkan-shell-test-config</artifactId>
+                <version>${kukulkan.version}</version>
+                <scope>test</scope>
             </dependency>
             <dependency>
                 <groupId>mx.infotec.dads.kukulkan</groupId>
                 <artifactId>kukulkan-shell-plugin-generator</artifactId>
-                <version>0.0.1-SNAPSHOT</version>
+                <version>${kukulkan.version}</version>
             </dependency>
             <dependency>
                 <groupId>mx.infotec.dads.kukulkan</groupId>
                 <artifactId>kukulkan-shell-kernel</artifactId>
-                <version>0.0.1-SNAPSHOT</version>
+                <version>${kukulkan.version}</version>
             </dependency>
             <dependency>
                 <groupId>mx.infotec.dads.kukulkan</groupId>
                 <artifactId>kukulkan-shell-commands</artifactId>
-                <version>0.0.1-SNAPSHOT</version>
+                <version>${kukulkan.version}</version>
             </dependency>
             <dependency>
                 <groupId>mx.infotec.dads.kukulkan</groupId>
                 <artifactId>kukulkan-engine</artifactId>
-                <version>0.0.1-SNAPSHOT</version>
+                <version>${kukulkan.version}</version>
             </dependency>
             <dependency>
                 <groupId>mx.infotec.dads.kukulkan</groupId>
                 <artifactId>kukulkan-generator-angularjs</artifactId>
-                <version>0.0.1-SNAPSHOT</version>
+                <version>${kukulkan.version}</version>
             </dependency>
             <dependency>
                 <groupId>mx.infotec.dads.kukulkan</groupId>
                 <artifactId>kukulkan-shell-plugin-chatbot</artifactId>
-                <version>0.0.1-SNAPSHOT</version>
+                <version>${kukulkan.version}</version>
             </dependency>
             <dependency>
                 <groupId>mx.infotec.dads.kukulkan</groupId>
                 <artifactId>kukulkan-shell-plugin-antlr4</artifactId>
-                <version>0.0.1-SNAPSHOT</version>
+                <version>${kukulkan.version}</version>
             </dependency>
             <dependency>
                 <groupId>mx.infotec.dads.kukulkan</groupId>
                 <artifactId>kukulkan-grammar</artifactId>
-                <version>0.0.1-SNAPSHOT</version>
+                <version>${kukulkan.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
