@@ -71,7 +71,7 @@ public class CommandHelper {
      */
     public static GeneratorContext createGeneratorContext(ProjectConfiguration projectConfiguration, File file) {
         DomainModel domainModel = new JavaDomainModel();
-        GrammarSemanticAnalyzer semanticAnalyzer = new GrammarSemanticAnalyzer();
+        GrammarSemanticAnalyzer semanticAnalyzer = new GrammarSemanticAnalyzer(projectConfiguration);
         List<DomainModelGroup> dmgList = GrammarMapping.createSingleDataModelGroupList(semanticAnalyzer, file);
         domainModel.setDomainModelGroup(dmgList);
         LOGGER.info("Processing File...");
