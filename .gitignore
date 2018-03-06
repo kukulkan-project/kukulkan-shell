@@ -27,9 +27,11 @@ file:/
 .springBeans
 spring-*/src/main/java/META-INF/MANIFEST.MF
 
+
 # IDEA artifacts and output dirs
 *.iml
 *.ipr
 *.iws
 .idea/*
 rebel.xml
+/nbactions.xml
