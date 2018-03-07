@@ -24,8 +24,6 @@ pipeline {
             steps {
                withSonarQubeEnv('SonarQube') {
                 sh 'mvn sonar:sonar'
-                def props = getProperties("target/sonar/report-task.txt")
-                env.SONAR_CE_TASK_URL = props.getProperty('ceTaskUrl')
                }
             }
         }
