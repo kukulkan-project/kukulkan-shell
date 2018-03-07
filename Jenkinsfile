@@ -16,6 +16,11 @@ pipeline {
 
         stage ('Sonar') {
             steps {
+                sh 'mvn clean package -DskipTests'
+            }
+        }
+        stage ('Sonar') {
+            steps {
                withSonarQubeEnv('SonarQube') {
                 sh 'mvn sonar:sonar' 
                }
