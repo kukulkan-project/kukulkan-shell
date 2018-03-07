@@ -3,6 +3,7 @@ pipeline {
     tools {
         maven 'Maven 3.3.9'
         jdk 'jdk8'
+        sonarQube 'SonarQube Scanner 3.0'
     }
     stages {
         stage ('Initialize') {
@@ -26,7 +27,7 @@ pipeline {
         }
 
         stage ('Sonar') {
-            steps {
+            withSonarQubeEnv('SonarQube Scanner') {
                 sh 'mvn sonar:sonar' 
             }
         }
