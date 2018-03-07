@@ -28,7 +28,7 @@ pipeline {
 
         stage ('Sonar') {
             tools {
-                sonarQube 'SonarQube Scanner 3.0'
+                hudson.plugins.sonar.SonarRunnerInstallation 'SonarQube Scanner 3.0'
             }
             steps {
                withSonarQubeEnv('SonarQube Scanner') {
