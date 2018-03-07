@@ -20,13 +20,13 @@ pipeline {
             }
             post {
                 success {
-                    junit 'target/surefire-reports/**/*.xml' 
+                    junit '**/target/surefire-reports/**/*.xml' 
                 }
             }
         }
 
         stage ('Sonar') {
-            steps {
+            withSonarQubeEnv('Sonar') {
                 sh 'mvn sonar:sonar' 
             }
         }
