@@ -27,9 +27,6 @@ pipeline {
         }
 
         stage ('Sonar') {
-            tools {
-                hudson.plugins.sonar.SonarRunnerInstallation 'SonarQube Scanner 3.0'
-            }
             steps {
                withSonarQubeEnv('SonarQube Scanner') {
                 sh 'mvn sonar:sonar' 
