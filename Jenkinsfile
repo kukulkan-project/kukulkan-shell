@@ -26,16 +26,19 @@ pipeline {
         }
 
         stage ('Sonar') {
-            steps {
+            node {
                withSonarQubeEnv('SonarQube') {
                 sh 'mvn sonar:sonar' 
                }
             }
         }
 
-        stage('publish') {
-            steps {
-                waitForQualityGate()
+        stage('Quality Gate') {
+            timeout(time: 1, unit: 'HOURS') {
+                def qg = waitForQualityGate()
+                if (qg.status != 'OK') {
+                  error "Pipeline aborted due to quality gate failure: ${qg.status}"
+                }
             }
         }
     }
