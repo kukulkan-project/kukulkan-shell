@@ -33,7 +33,7 @@ pipeline {
         stage('Quality Gate') {
             steps {
                 withSonarQubeEnv('SonarQube') {
-                    sh 'curl -u $SONAR_AUTH_TOKEN $SONAR_CE_TASK_URL'
+                    sh 'curl -u $SONAR_AUTH_TOKEN $SONAR_HOST_URL/api/user_tokens/search'
                     waitForQualityGate()
                 }
             }
