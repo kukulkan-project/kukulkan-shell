@@ -25,9 +25,11 @@ package mx.infotec.dads.kukulkan.shell.commands.valueprovided;
 
 import java.io.IOException;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.MethodParameter;
@@ -37,6 +39,8 @@ import org.springframework.shell.standard.ValueProviderSupport;
 import org.springframework.stereotype.Component;
 
 import mx.infotec.dads.kukulkan.shell.component.Navigator;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * The Class KukulkanFilesProvider.
@@ -44,8 +48,12 @@ import mx.infotec.dads.kukulkan.shell.component.Navigator;
 @Component
 public class KukulkanFilesProvider extends ValueProviderSupport {
 
-    /** The Constant KUKULKAN_FILE_PATTERN. */
+    /**
+     * The Constant KUKULKAN_FILE_PATTERN.
+     */
     private static final String KUKULKAN_FILE_PATTERN = "^[^!]*\\.(3k|kukulkan)$";
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(KukulkanFilesProvider.class);
 
     @Autowired
     private Navigator navigator;
@@ -60,11 +68,11 @@ public class KukulkanFilesProvider extends ValueProviderSupport {
     @Override
     public List<CompletionProposal> complete(MethodParameter parameter, CompletionContext completionContext,
             String[] hints) {
-        try {
-            return Files.list(navigator.getCurrentPath())
-                    .filter(path -> path.getFileName().toString().matches(KUKULKAN_FILE_PATTERN))
+        try (Stream<Path> paths = Files.list(navigator.getCurrentPath())) {
+            return paths.filter(path -> path.getFileName().toString().matches(KUKULKAN_FILE_PATTERN))
                     .map(path -> new CompletionProposal(path.getFileName().toString())).collect(Collectors.toList());
         } catch (IOException e) {
+            LOGGER.warn("Cant read paths", e);
             List<CompletionProposal> defaultList = new ArrayList<>();
             defaultList.add(new CompletionProposal("[No Files Found with .3K or .kukulkan extension]"));
             return defaultList;

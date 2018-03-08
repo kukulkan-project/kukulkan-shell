@@ -24,6 +24,7 @@
 package mx.infotec.dads.kukulkan.shell.commands.linux;
 
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStreamReader;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,6 +33,8 @@ import org.springframework.shell.standard.ShellMethod;
 
 import mx.infotec.dads.kukulkan.shell.services.CommandService;
 import mx.infotec.dads.kukulkan.shell.util.AnsiConstants;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Util Commands.
@@ -41,9 +44,11 @@ import mx.infotec.dads.kukulkan.shell.util.AnsiConstants;
 @ShellComponent
 public class LinuxCommands {
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(LinuxCommands.class);
+    
     /** The command service. */
     @Autowired
-    CommandService commandService;
+    private CommandService commandService;
 
     /**
      * Ping.
@@ -55,7 +60,7 @@ public class LinuxCommands {
     @ShellMethod("make a ping to a host")
     public String ping(String host) {
         String command = "ping -c 3 " + host;
-        StringBuffer output = new StringBuffer();
+        StringBuilder output = new StringBuilder();
 
         Process p;
         try {
@@ -63,13 +68,14 @@ public class LinuxCommands {
             p.waitFor();
             BufferedReader reader = new BufferedReader(new InputStreamReader(p.getInputStream()));
 
-            String line = "";
+            String line;
+            
             while ((line = reader.readLine()) != null) {
-                output.append(line + "\n");
+                output.append(line).append("\n");
             }
 
-        } catch (Exception e) {
-            e.printStackTrace();
+        } catch (IOException | InterruptedException ex) {
+            LOGGER.error("Error at excecute ping", ex);
         }
 
         return output.toString();
