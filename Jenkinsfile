@@ -26,9 +26,6 @@ pipeline {
         }
 
         stage ('Sonar') {
-#            when {
-#                branch 'master'
-#            }
             steps {
                withSonarQubeEnv('SonarQube') {
                 sh 'mvn sonar:sonar -Dsonar.projectVersion=0.0.1-${BUILD_NUMBER}-${GIT_BRANCH}'
@@ -37,9 +34,6 @@ pipeline {
         }
 
         stage('Quality Gate') {
-#            when {
-#                branch 'master'
-#            }
             steps {
                 withSonarQubeEnv('SonarQube') {
                     sh 'curl -u $SONAR_AUTH_TOKEN $SONAR_HOST_URL/api/user_tokens/search'
