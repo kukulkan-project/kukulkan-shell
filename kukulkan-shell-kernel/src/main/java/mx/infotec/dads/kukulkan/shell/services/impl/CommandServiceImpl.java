@@ -63,6 +63,8 @@ public class CommandServiceImpl implements CommandService {
      */
     private static final Logger LOGGER = LoggerFactory.getLogger(CommandServiceImpl.class);
 
+    private static final String GENERIC_ERROR_MSG = "Errot at exec command";
+    
     /**
      * The terminal.
      */
@@ -124,7 +126,7 @@ public class CommandServiceImpl implements CommandService {
                 processor.process(line).ifPresent(lines::add);
             }
         } catch (Exception e) {
-            LOGGER.debug("Errot at exec command", e);
+            LOGGER.debug(GENERIC_ERROR_MSG, e);
             printf(String.format("The command [%s] could not be executed", command));
         }
         return lines;
@@ -174,7 +176,7 @@ public class CommandServiceImpl implements CommandService {
                 processor.process(line).ifPresent(lines::add);
             }
         } catch (Exception e) {
-            LOGGER.debug("Errot at exec command", e);
+            LOGGER.debug(GENERIC_ERROR_MSG, e);
             lines.add(e.getMessage());
         }
         return lines;
@@ -202,7 +204,7 @@ public class CommandServiceImpl implements CommandService {
             nc.setInfoMessage(output.toString());
             nc.setActive(true);
         } catch (Exception e) {
-            LOGGER.debug("Errot at exec command", e);
+            LOGGER.debug(GENERIC_ERROR_MSG, e);
             LOGGER.warn("[{}] is not installed", nc.getCommand());
             nc.setErrorMessage(String.format("You must install the command [%s]", nc.getCommand()));
         }
