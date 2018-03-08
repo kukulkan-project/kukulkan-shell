@@ -10,6 +10,12 @@
     <name>Kukulkan Shell</name>
     <packaging>pom</packaging>
 
+    <url>http://kukulkan.com</url>
+
+    <scm>
+        <url>https://github.com/kukulkan-project/kukulkan-shell</url>
+    </scm>
+
     <organization>
         <name>Agnostic</name>
         <url>http://kukulkan.com</url>
