@@ -31,7 +31,7 @@ pipeline {
             }
             steps {
                withSonarQubeEnv('SonarQube') {
-                sh 'mvn sonar:sonar'
+                sh 'mvn sonar:sonar -Dsonar.version=0.0.1-${BUILD_NUMBER}'
                }
             }
         }
