@@ -46,6 +46,7 @@ public class NativeCommandServiceImpl implements NativeCommandService {
     /* (non-Javadoc)
      * @see mx.infotec.dads.kukulkan.shell.services.NativeCommandService#isPresent(mx.infotec.dads.kukulkan.shell.domain.NativeCommand)
      */
+    @Override
     public boolean isPresent(NativeCommand cmd) {
         commandService.testNativeCommand(cmd);
         return cmd.isActive();

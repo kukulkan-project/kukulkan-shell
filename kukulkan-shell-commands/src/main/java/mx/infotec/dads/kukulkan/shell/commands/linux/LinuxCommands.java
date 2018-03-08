@@ -45,16 +45,17 @@ import org.slf4j.LoggerFactory;
 public class LinuxCommands {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(LinuxCommands.class);
-    
-    /** The command service. */
+
+    /**
+     * The command service.
+     */
     @Autowired
     private CommandService commandService;
 
     /**
      * Ping.
      *
-     * @param host
-     *            the host
+     * @param host the host
      * @return the string
      */
     @ShellMethod("make a ping to a host")
@@ -69,7 +70,7 @@ public class LinuxCommands {
             BufferedReader reader = new BufferedReader(new InputStreamReader(p.getInputStream()));
 
             String line;
-            
+
             while ((line = reader.readLine()) != null) {
                 output.append(line).append("\n");
             }

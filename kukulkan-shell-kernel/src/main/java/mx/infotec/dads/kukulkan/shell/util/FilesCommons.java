@@ -37,14 +37,18 @@ import org.jline.utils.AttributedStyle;
 import org.springframework.shell.CompletionProposal;
 
 import mx.infotec.dads.kukulkan.shell.domain.ShellCompletionProposal;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * FilesCommon operations.
  *
  * @author Daniel Cortes Pichardo
  */
-public class FilesCommons {
+public final class FilesCommons {
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(FilesCommons.class);
+    
     /**
      * Instantiates a new files commons.
      */
@@ -69,6 +73,7 @@ public class FilesCommons {
                 }
             }
         } catch (IOException e) {
+            LOGGER.debug("Error at filter files", e);
         }
         return completionProposal;
     }
@@ -102,6 +107,7 @@ public class FilesCommons {
                 }
             }
         } catch (IOException e) {
+            LOGGER.debug("Error at show files", e);
         }
         fileList.add(new AttributedString(""));
         return fileList;
@@ -123,6 +129,7 @@ public class FilesCommons {
                 }
             }
         } catch (IOException e) {
+            LOGGER.debug("Error at filter dir", e);
         }
         return completionProposal;
     }
@@ -142,6 +149,7 @@ public class FilesCommons {
                 }
             }
         } catch (IOException e) {
+            LOGGER.debug("Error at get git files", e);
         }
         return false;
     }

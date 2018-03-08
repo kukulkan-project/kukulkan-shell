@@ -39,7 +39,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import mx.infotec.dads.kukulkan.shell.component.Navigator;
@@ -59,24 +58,30 @@ import mx.infotec.dads.kukulkan.shell.util.TextFormatter;
 @Service
 public class CommandServiceImpl implements CommandService {
 
-    /** The Constant LOGGER. */
+    /**
+     * The Constant LOGGER.
+     */
     private static final Logger LOGGER = LoggerFactory.getLogger(CommandServiceImpl.class);
 
-    /** The terminal. */
+    /**
+     * The terminal.
+     */
     @Autowired
     @Lazy
-    Terminal terminal;
+    private Terminal terminal;
 
-    /** The nav. */
+    /**
+     * The nav.
+     */
     @Autowired
-    Navigator nav;
+    private Navigator nav;
 
     /**
      * Printf.
      *
-     * @param text
-     *            the text
+     * @param text the text
      * @deprecated prefered use TextFormatter class
+     * @see TextFormatter
      */
     @Override
     @Deprecated
@@ -88,11 +93,10 @@ public class CommandServiceImpl implements CommandService {
     /**
      * Printf.
      *
-     * @param key
-     *            the key
-     * @param message
-     *            the message
+     * @param key the key
+     * @param message the message
      * @deprecated prefered use TextFormatter class
+     * @see TextFormatter
      */
     @Override
     @Deprecated
@@ -109,17 +113,19 @@ public class CommandServiceImpl implements CommandService {
      * dads.kukulkan.shell.domain.ShellCommand,
      * mx.infotec.dads.kukulkan.shell.util.LineValuedProcessor)
      */
+    @Override
     public List<Line> exec(final ShellCommand command, LineValuedProcessor processor) {
         List<Line> lines = new ArrayList<>();
         try {
             Process p = Runtime.getRuntime().exec(command.getExecutableCommand(), null, nav.getCurrentPath().toFile());
             BufferedReader reader = new BufferedReader(new InputStreamReader(p.getInputStream()));
-            String line = "";
+            String line;
             while ((line = reader.readLine()) != null) {
                 processor.process(line).ifPresent(lines::add);
             }
         } catch (Exception e) {
-            printf("The command [" + command + "]" + " could not be executed");
+            LOGGER.debug("Errot at exec command", e);
+            printf(String.format("The command [%s] could not be executed", command));
         }
         return lines;
     }
@@ -163,11 +169,12 @@ public class CommandServiceImpl implements CommandService {
             Process p = Runtime.getRuntime().exec(command.getExecutableCommand(), null, workingDirectory.toFile());
             p.waitFor();
             BufferedReader reader = new BufferedReader(new InputStreamReader(p.getInputStream()));
-            String line = "";
+            String line;
             while ((line = reader.readLine()) != null) {
                 processor.process(line).ifPresent(lines::add);
             }
         } catch (Exception e) {
+            LOGGER.debug("Errot at exec command", e);
             lines.add(e.getMessage());
         }
         return lines;
@@ -187,16 +194,17 @@ public class CommandServiceImpl implements CommandService {
             Process p = Runtime.getRuntime().exec(nc.getTestCommand());
             p.waitFor();
             BufferedReader reader = new BufferedReader(new InputStreamReader(p.getInputStream()));
-            String line = "";
+            String line;
             while ((line = reader.readLine()) != null) {
-                output.append(line + "\n");
+                output.append(line).append("\n");
             }
-            LOGGER.info("[" + nc.getCommand() + "]" + " is installed");
+            LOGGER.info("[{}] is installed", nc.getCommand());
             nc.setInfoMessage(output.toString());
             nc.setActive(true);
         } catch (Exception e) {
-            LOGGER.warn("[" + nc.getCommand() + "]" + " is not installed");
-            nc.setErrorMessage("You must install the command [" + nc.getCommand() + "]");
+            LOGGER.debug("Errot at exec command", e);
+            LOGGER.warn("[{}] is not installed", nc.getCommand());
+            nc.setErrorMessage(String.format("You must install the command [%s]", nc.getCommand()));
         }
     }
 }
