@@ -24,8 +24,11 @@
 package mx.infotec.dads.kukulkan.shell.commands.linux;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.ArrayList;
+import mx.infotec.dads.kukulkan.shell.component.Navigator;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.shell.standard.ShellComponent;
@@ -35,6 +38,7 @@ import mx.infotec.dads.kukulkan.shell.services.CommandService;
 import mx.infotec.dads.kukulkan.shell.util.AnsiConstants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.shell.standard.ShellOption;
 
 /**
  * Util Commands.
@@ -53,34 +57,83 @@ public class LinuxCommands {
     private CommandService commandService;
 
     /**
+     * The navigator service.
+     */
+    @Autowired
+    private Navigator nav;    
+    
+    /**
      * Ping.
      *
      * @param host the host
-     * @return the string
      */
     @ShellMethod("make a ping to a host")
-    public String ping(String host) {
-        String command = "ping -c 3 " + host;
-        StringBuilder output = new StringBuilder();
+    public void ping(String host) {
+        ProcessBuilder ps = new ProcessBuilder("ping", "-c", "3", host);
 
-        Process p;
+        execCommnad(ps);
+    }
+
+    /**
+     * Make df of dir; if dir is not present, make df in all partitions.
+     *
+     * @param dir
+     */
+    @ShellMethod("shows the used space of all partitions; if the directory parameter is specified, it shows the information of its partition")
+    public void df(@ShellOption(defaultValue = "") String dir) {
+        ProcessBuilder ps;
+
+        if (dir == null || dir.isEmpty()) {
+            ps = new ProcessBuilder("df", "-h");
+        } else {
+            ps = new ProcessBuilder("df", "-h", dir);
+        }
+
+        execCommnad(ps);
+    }
+    
+    @ShellMethod("shows the used space of all files and directories; if the directory parameter is specified, it shows only this directory")
+    public void du(@ShellOption(defaultValue = "") String dir) {
+        ProcessBuilder ps;
+
+        if (dir == null || dir.isEmpty()) {
+            File currentDir = nav.getCurrentPath().toFile();
+            ArrayList<String> list = new ArrayList<>();
+            
+            list.add("du");
+            list.add("-shc");
+
+            for (File f : currentDir.listFiles()) {
+                list.add(f.getName());
+            }
+            
+            ps = new ProcessBuilder(list);
+        } else {
+            ps = new ProcessBuilder("du", "-sh", dir);
+        }
+
+        execCommnad(ps);        
+    }
+    
+    private void execCommnad(ProcessBuilder ps) {
+        ps.redirectErrorStream(true);
+
         try {
-            p = Runtime.getRuntime().exec(command);
-            p.waitFor();
-            BufferedReader reader = new BufferedReader(new InputStreamReader(p.getInputStream()));
+            Process pr = ps.start();
 
-            String line;
+            try (BufferedReader in = new BufferedReader(new InputStreamReader(pr.getInputStream()))) {
+                String line;
+                while ((line = in.readLine()) != null) {
+                    commandService.printf(line);
+                }
 
-            while ((line = reader.readLine()) != null) {
-                output.append(line).append("\n");
+                pr.waitFor();
+                LOGGER.debug("End ping command");
             }
 
         } catch (IOException | InterruptedException ex) {
-            LOGGER.error("Error at excecute ping", ex);
+            LOGGER.error("Error at excecute " +  ps.toString() + " commad", ex);
         }
-
-        return output.toString();
-
     }
 
     @ShellMethod("showColors")
