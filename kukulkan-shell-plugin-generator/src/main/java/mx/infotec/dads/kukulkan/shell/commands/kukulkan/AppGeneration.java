@@ -102,6 +102,10 @@ public class AppGeneration extends AbstractCommand {
     public void appGenerateProject(@NotNull String appName, @NotNull String packaging,
             @ShellOption(defaultValue = "NO_SQL_MONGODB") DatabaseType databaseType,
             @ShellOption(defaultValue = "NULL") PKGenerationStrategy pkGenerationType) {
+        
+        if(databaseType.equals(DatabaseType.SQL_MYSQL)){
+            
+        }
         LOGGER.info("Generating Project...");
         validateProjectParams(appName, packaging);
         configProjectConfiguration(shellContext.getConfiguration(), appName, packaging, navigator.getCurrentPath(),
