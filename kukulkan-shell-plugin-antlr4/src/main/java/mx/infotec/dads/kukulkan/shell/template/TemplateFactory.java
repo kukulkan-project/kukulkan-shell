@@ -29,6 +29,8 @@ import java.util.List;
 
 import com.google.common.collect.ImmutableList;
 
+import mx.infotec.dads.kukulkan.metamodel.template.TemplateInfo;
+
 /**
  * TemplateFactory for Immutable template list.
  *
@@ -37,7 +39,7 @@ import com.google.common.collect.ImmutableList;
 public class TemplateFactory {
 
     /** The Constant ANTLR4_TEMPLATE_LIST. */
-    public static final List<String> ANTLR4_TEMPLATE_LIST;
+    public static final List<TemplateInfo> ANTLR4_TEMPLATE_LIST;
 
     public static final String ANTLR4_TEMPLATE = "archetypes" + File.separator + "antlr4";
     static {
@@ -50,13 +52,13 @@ public class TemplateFactory {
     private TemplateFactory() {
     }
 
-    public static List<String> getAntrl4Templates() {
-        List<String> templates = new ArrayList<>();
-        templates.add(ANTLR4_TEMPLATE + "/src/main/antlr4/package/MyGrammar.g4.ftl");
-        templates.add(ANTLR4_TEMPLATE + "/src/main/java/package/Main.java.ftl");
-        templates.add(ANTLR4_TEMPLATE + "/src/main/java/package/MyGrammarCustomVisitor.java.ftl");
-        templates.add(ANTLR4_TEMPLATE + "/pom.xml.ftl");
-        templates.add(ANTLR4_TEMPLATE + "/test/test.MyExtension.ftl");
+    public static List<TemplateInfo> getAntrl4Templates() {
+        List<TemplateInfo> templates = new ArrayList<>();
+        templates.add(new TemplateInfo(ANTLR4_TEMPLATE, "src/main/antlr4/package/MyGrammar.g4.ftl"));
+        templates.add(new TemplateInfo(ANTLR4_TEMPLATE, "src/main/java/package/Main.java.ftl"));
+        templates.add(new TemplateInfo(ANTLR4_TEMPLATE, "src/main/java/package/MyGrammarCustomVisitor.java.ftl"));
+        templates.add(new TemplateInfo(ANTLR4_TEMPLATE, "pom.xml.ftl"));
+        templates.add(new TemplateInfo(ANTLR4_TEMPLATE, "test/test.MyExtension.ftl"));
         return templates;
     }
 

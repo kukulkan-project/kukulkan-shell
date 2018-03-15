@@ -66,9 +66,8 @@ public class Antlr4Generator implements Generator {
         Antlr4Context antlrContext = requiredNotEmpty(context.get(Antlr4Context.class));
         Map<String, Object> model = new HashMap<>();
         model.put("project", requiredNotEmpty(context.get(Antlr4Context.class)));
-        for (TemplateInfo template : TemplateUtil.convertToTemplateInfoList(TemplateType.ANTLR4,
-                TemplateFactory.ANTLR4_TEMPLATE_LIST)) {
-            String content = templateService.fillTemplate(template.getStringPath(), model);
+        for (TemplateInfo template : TemplateFactory.ANTLR4_TEMPLATE_LIST) {
+            String content = templateService.fillTemplate(template.getTemplatePath(), model);
             FileUtil.saveToFile(createOutputPath(antlrContext, template), content);
         }
     }
@@ -78,8 +77,7 @@ public class Antlr4Generator implements Generator {
      * @param template
      */
     private Path createOutputPath(Antlr4Context antlrContext, TemplateInfo template) {
-        return PathProcessor.forPath(template.getStringPath()).replaceRegExp("archetypes[\\\\/]antlr4[\\\\/]", "")
-                .joinBefore(antlrContext.getId())
+        return PathProcessor.forPath(template.getFilePath()).joinBefore(antlrContext.getId())
                 .replaceLiteral("package", replaceDotByFileSeparator(antlrContext.getPackaging()))
                 .replaceRegExp(".ftl", "").getAbsolutePath(antlrContext.getOutputDir());
     }
