@@ -46,6 +46,12 @@
 			<artifactId>spring-boot-starter-test</artifactId>
 			<scope>test</scope>
 		</dependency>
+		<dependency>
+			<groupId>mx.infotec.dads.nlp</groupId>
+			<artifactId>inflector</artifactId>
+			<version>1.0.0</version>
+			<scope>provided</scope>
+		</dependency>
 	</dependencies>
 	<repositories>
 		<repository>
