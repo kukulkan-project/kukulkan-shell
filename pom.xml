@@ -68,6 +68,7 @@
         <module>kukulkan-shell-commands</module>
         <module>kukulkan-shell-terminal</module>
         <module>kukulkan-shell-plugin-antlr4</module>
+        <module>kukulkan-shell-plugin-dsl</module>
     </modules>
 
     <dependencyManagement>
@@ -132,6 +133,11 @@
                 <groupId>mx.infotec.dads.kukulkan</groupId>
                 <artifactId>kukulkan-grammar</artifactId>
                 <version>${kukulkan.version}</version>
+            </dependency>
+            <dependency>
+            	<groupId>mx.infotec.dads.kukulkan</groupId>
+            	<artifactId>kukulkan-shell-plugin-dsl</artifactId>
+            	<version>0.0.1-SNAPSHOT</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
