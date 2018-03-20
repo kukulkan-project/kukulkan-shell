@@ -18,11 +18,21 @@ Install yarn.
     
 ## Quick Start
 
-
-    cd ${project.name}-extension && yarn install
+    //Generate the XText artifacts
+    cd ${project.name}.parent && ./gradlew
+    //Generate the Language Server and package into jar
+    ./gradlew shadowJar
+    //Install extension dependencies
     cd ..
+    cd ${project.name}-extension && yarn install
+    //Copy Language Server jar into extension
+    yarn copy-ls 
+    cd ..
+    //Install dependencies
     yarn install
+    //Recompile for electron
     yarn rebuild
+    //Start the project
     yarn start
 
 
@@ -42,38 +52,5 @@ This will generate:
 - Add the environment variable `VCTargetsPath=C:\Program Files (x86)\MSBuild\Microsoft.Cpp\v4.0\v140` or the path where `Microsoft.Cpp.Default.props`
 - Run `npm install --global --production windows-build-tools` as administrator
 - Run `npm config set msvs_version 2017 --global`
- 
-
-## Creating the grammar
-Create a XText project in root folder using the XText Eclipse plugin.
-
-Follow this guidelines:
-- Project name: `<YOUR PACKAGE>.${project.name}
-- Location: <THIS FOLDER>`
-- Name: `<YOUR PACKAGE>.${project.name}.${project.name?cap_first}`. Example: mx.infotec.dads.kukulkan.Kukulkan
-- Extensions: ${project.extension}
-
-**Click next**  
-
-- Facets: 
-- [x] Generic IDE Support
-- [x] Testing Support
-
-- Preferred Build System: **Gradle**
-- Build Language Server: **Fat Jar**
-- Source Layout: **Maven/Gradle**  
-
-**Click Finish**
-
-## Generating the language server
-
-    cd <YOUR XText PROJECT>
-    ./gradlew shadowJar
-
-A jar will be generated in `<YOUR XText PROJECT>/<YOUR XText PROJECT>.ide/build/libs`.  
-
-- Copy the relative jar path in the copy-ls script in `${project.name}-extension/package.json`
-
-- Copy the relative jar path in `${project.name}-extension/node/${project.name}-backend-module.ts`
 
 <% } %>

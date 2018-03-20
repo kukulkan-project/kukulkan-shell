@@ -28,14 +28,13 @@ import static mx.infotec.dads.kukulkan.metamodel.util.Validator.requiredNotEmpty
 
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.StringUtils;
 
 import mx.infotec.dads.kukulkan.engine.templating.service.TemplateService;
 import mx.infotec.dads.kukulkan.metamodel.annotation.GeneratorComponent;
@@ -85,7 +84,28 @@ public class DslProjectGenerator implements Generator {
 		// Copying resources
 		for (String resource : DslProjectTemplateFactory.getDslProjectResources()) {
 			FileUtil.copyFromJar(resource, Paths.get(dslContext.getOutputDir().toString(),
-					resource.replaceAll(DslProjectTemplateFactory.DSL_TEMPLATE, "")));
+					resource.replaceAll("templates/" + DslProjectTemplateFactory.DSL_TEMPLATE, "")));
+		}
+
+		// Copying XText project templates
+		for (String template : DslProjectTemplateFactory.getXTextProjectTemplates()) {
+			String content = templateService.fillTemplate(template, model);
+			Path toSave = Paths.get(dslContext.getOutputDir().toString(),
+					template.replaceAll("package", dslContext.getBasePackage())
+					.replaceAll("name", dslContext.getName())
+					.replaceAll("qualified", dslContext.getBasePackage().replaceAll("\\.", "/") + "/" + dslContext.getName())
+							.replaceAll("Name", StringUtils.capitalize(dslContext.getName()))
+							.replaceAll(DslProjectTemplateFactory.DSL_TEMPLATE, "").replaceAll(".ftl", ""));
+			FileUtil.saveToFile(toSave, content);
+		}
+
+		// Copying XText project resources
+		for (String resource : DslProjectTemplateFactory.getXTextProjectResources()) {
+			FileUtil.copyFromJar(resource,
+					Paths.get(dslContext.getOutputDir().toString(),
+							resource.replaceAll("templates/" + DslProjectTemplateFactory.DSL_TEMPLATE, "")
+									.replaceAll("package", dslContext.getBasePackage())
+									.replaceAll("name", dslContext.getName())));
 		}
 	}
 

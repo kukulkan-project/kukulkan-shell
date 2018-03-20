@@ -30,3 +30,5 @@ subprojects {
 		exclude group: 'asm'
 	}
 }
+
+defaultTasks 'generateXtext'

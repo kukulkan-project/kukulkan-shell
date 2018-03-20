@@ -10,7 +10,7 @@ Workflow {
 	component = XtextGenerator {
 		configuration = {
 			project = StandardProjectConfig {
-				baseName = "${project.basePackage}"
+				baseName = "${project.basePackage}.${project.name}"
 				rootPath = rootPath
 				runtimeTest = {
 					enabled = true

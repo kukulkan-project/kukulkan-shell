@@ -28,10 +28,10 @@ import java.io.Serializable;
 
 import com.beust.jcommander.Parameter;
 
-public class DslProjectArgs implements Serializable{
-	
+public class DslProjectArgs implements Serializable {
+
 	private static final long serialVersionUID = 1L;
-	
+
 	@Parameter(names = { "--name" }, description = "The project name", required = true)
 	private String name;
 
@@ -49,6 +49,9 @@ public class DslProjectArgs implements Serializable{
 
 	@Parameter(names = { "--extension" }, description = "The extension associated to the DSL")
 	private String extension;
+
+	@Parameter(names = { "--basePackage" }, description = "The base package", required = true)
+	private String basePackage;
 
 	public String getName() {
 		return name;
@@ -96,6 +99,14 @@ public class DslProjectArgs implements Serializable{
 
 	public void setExtension(String extension) {
 		this.extension = extension;
+	}
+
+	public String getBasePackage() {
+		return basePackage;
+	}
+
+	public void setBasePackage(String basePackage) {
+		this.basePackage = basePackage;
 	}
 
 }

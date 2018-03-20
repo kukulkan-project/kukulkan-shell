@@ -32,7 +32,7 @@
   },
   "scripts": {
     "prepare": "yarn run clean && yarn run build",
-    "copy-ls": "rm -rf ./build && mkdir build && cp ../XTEXT-PROJECT/dsl-ls.jar ./build/dsl-ls.jar",
+    "copy-ls": "rm -rf ./build && mkdir build && cp ../${project.basePackage}.${project.name}.parent/${project.basePackage}.${project.name}.ide/build/libs/* ./build/dsl-ls.jar",
     "clean": "rimraf lib",
     "build": "tsc",
     "watch": "tsc -w"

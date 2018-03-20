@@ -46,6 +46,8 @@ public class DslProjectContext {
 	private String githubUrl;
 
 	private String extension;
+	
+	private String basePackage;
 
 	public Path getOutputDir() {
 		return outputDir;
@@ -101,6 +103,14 @@ public class DslProjectContext {
 
 	public void setExtension(String extension) {
 		this.extension = extension;
+	}
+
+	public String getBasePackage() {
+		return basePackage;
+	}
+
+	public void setBasePackage(String basePackage) {
+		this.basePackage = basePackage;
 	}
 
 }

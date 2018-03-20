@@ -28,11 +28,11 @@ import mx.infotec.dads.kukulkan.shell.commands.dsl.DslProjectArgs;
 import mx.infotec.dads.kukulkan.shell.generator.DslProjectContext;
 
 public class DslContextMapper {
-	
+
 	private DslContextMapper() {
-		
+
 	}
-	
+
 	public static DslProjectContext toDslContext(DslProjectArgs params) {
 		DslProjectContext context = new DslProjectContext();
 		context.setExtension(params.getExtension());
@@ -41,6 +41,7 @@ public class DslContextMapper {
 		context.setName(params.getName());
 		context.setTheiaVersion(params.getTheiaVersion());
 		context.setVersion(params.getVersion());
+		context.setBasePackage(params.getBasePackage());
 		return context;
 	}
 

@@ -76,12 +76,34 @@ public class DslProjectTemplateFactory {
 
 	public static List<String> getDslProjectResources() {
 		List<String> resources = new ArrayList<>();
-		resources.add(DSL_TEMPLATE + "/resources/icons/512x512.png");
-		resources.add(DSL_TEMPLATE + "/resources/dmgInstaller.tiff");
-		resources.add(DSL_TEMPLATE + "/resources/icon.icns");
-		resources.add(DSL_TEMPLATE + "/resources/icon.ico");
-		resources.add(DSL_TEMPLATE + "/resources/icon.png");
-		resources.add(DSL_TEMPLATE + "/resources/installerSidebar.bmp");
+		resources.add("templates/" + DSL_TEMPLATE + "/resources/icons/512x512.png");
+		resources.add("templates/" + DSL_TEMPLATE + "/resources/dmgInstaller.tiff");
+		resources.add("templates/" + DSL_TEMPLATE + "/resources/icon.icns");
+		resources.add("templates/" + DSL_TEMPLATE + "/resources/icon.ico");
+		resources.add("templates/" + DSL_TEMPLATE + "/resources/Icon.png");
+		resources.add("templates/" + DSL_TEMPLATE + "/resources/installerSidebar.bmp");
+		return resources;
+	}
+	
+	public static List<String> getXTextProjectTemplates() {
+		List<String> templates = new ArrayList<>();
+		templates.add(DSL_TEMPLATE + "/package.name.parent/build.gradle.ftl");
+		templates.add(DSL_TEMPLATE + "/package.name.parent/settings.gradle.ftl");
+		templates.add(DSL_TEMPLATE + "/package.name.parent/package.name/build.gradle.ftl");
+		templates.add(DSL_TEMPLATE + "/package.name.parent/package.name/src/main/java/qualified/GenerateName.mwe2.ftl");
+		templates.add(DSL_TEMPLATE + "/package.name.parent/package.name/src/main/java/qualified/Name.xtext.ftl");
+		templates.add(DSL_TEMPLATE + "/package.name.parent/package.name.ide/build.gradle.ftl");
+		return templates;
+	}
+	
+	public static List<String> getXTextProjectResources() {
+		List<String> resources = new ArrayList<>();
+		resources.add("templates/" + DSL_TEMPLATE + "/package.name.parent/gradle/maven-deployment.gradle");
+		resources.add("templates/" + DSL_TEMPLATE + "/package.name.parent/gradle/source-layout.gradle");
+		resources.add("templates/" + DSL_TEMPLATE + "/package.name.parent/gradle/wrapper/gradle-wrapper.jar");
+		resources.add("templates/" + DSL_TEMPLATE + "/package.name.parent/gradle/wrapper/gradle-wrapper.properties");
+		resources.add("templates/" + DSL_TEMPLATE + "/package.name.parent/gradlew");
+		resources.add("templates/" + DSL_TEMPLATE + "/package.name.parent/gradlew.bat");
 		return resources;
 	}
 
