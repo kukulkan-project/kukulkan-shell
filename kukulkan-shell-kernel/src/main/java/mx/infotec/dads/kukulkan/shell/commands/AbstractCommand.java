@@ -26,7 +26,6 @@ package mx.infotec.dads.kukulkan.shell.commands;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import mx.infotec.dads.kukulkan.engine.service.GenerationService;
-import mx.infotec.dads.kukulkan.metamodel.foundation.ProjectConfiguration;
 import mx.infotec.dads.kukulkan.metamodel.util.KukulkanConfigurationProperties;
 import mx.infotec.dads.kukulkan.shell.component.Navigator;
 import mx.infotec.dads.kukulkan.shell.domain.KukulkanShellContext;
