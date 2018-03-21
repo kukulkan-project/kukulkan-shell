@@ -28,85 +28,43 @@ import java.io.Serializable;
 
 import com.beust.jcommander.Parameter;
 
-public class DslProjectArgs implements Serializable {
+import mx.infotec.dads.kukulkan.shell.domain.AbstractArgs;
 
-	private static final long serialVersionUID = 1L;
+public class DslProjectArgs extends AbstractArgs implements Serializable {
 
-	@Parameter(names = { "--name" }, description = "The project name", required = true)
-	private String name;
+    private static final long serialVersionUID = 1L;
 
-	@Parameter(names = { "--version" }, description = "The version of the project")
-	private String version = "0.0.1";
+    @Parameter(names = { "--theiaVersion" }, description = "The Theia version to use")
+    private String theiaVersion = "latest";
 
-	@Parameter(names = { "--theiaVersion" }, description = "The Theia version to use")
-	private String theiaVersion = "latest";
+    @Parameter(names = { "--githubUrl" }, description = "The github url ")
+    private String githubUrl;
 
-	@Parameter(names = { "--license" }, description = "The license")
-	private String license;
+    @Parameter(names = { "--extension" }, description = "The extension associated to the DSL")
+    private String extension;
 
-	@Parameter(names = { "--githubUrl" }, description = "The github url ")
-	private String githubUrl;
+    public String getTheiaVersion() {
+        return theiaVersion;
+    }
 
-	@Parameter(names = { "--extension" }, description = "The extension associated to the DSL")
-	private String extension;
+    public void setTheiaVersion(String theiaVersion) {
+        this.theiaVersion = theiaVersion;
+    }
 
-	@Parameter(names = { "--basePackage" }, description = "The base package", required = true)
-	private String basePackage;
+    public String getGithubUrl() {
+        return githubUrl;
+    }
 
-	public String getName() {
-		return name;
-	}
+    public void setGithubUrl(String githubUrl) {
+        this.githubUrl = githubUrl;
+    }
 
-	public void setName(String name) {
-		this.name = name;
-	}
+    public String getExtension() {
+        return extension;
+    }
 
-	public String getVersion() {
-		return version;
-	}
-
-	public void setVersion(String version) {
-		this.version = version;
-	}
-
-	public String getTheiaVersion() {
-		return theiaVersion;
-	}
-
-	public void setTheiaVersion(String theiaVersion) {
-		this.theiaVersion = theiaVersion;
-	}
-
-	public String getLicense() {
-		return license;
-	}
-
-	public void setLicense(String license) {
-		this.license = license;
-	}
-
-	public String getGithubUrl() {
-		return githubUrl;
-	}
-
-	public void setGithubUrl(String githubUrl) {
-		this.githubUrl = githubUrl;
-	}
-
-	public String getExtension() {
-		return extension;
-	}
-
-	public void setExtension(String extension) {
-		this.extension = extension;
-	}
-
-	public String getBasePackage() {
-		return basePackage;
-	}
-
-	public void setBasePackage(String basePackage) {
-		this.basePackage = basePackage;
-	}
+    public void setExtension(String extension) {
+        this.extension = extension;
+    }
 
 }

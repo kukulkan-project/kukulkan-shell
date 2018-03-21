@@ -52,5 +52,3 @@ This will generate:
 - Add the environment variable `VCTargetsPath=C:\Program Files (x86)\MSBuild\Microsoft.Cpp\v4.0\v140` or the path where `Microsoft.Cpp.Default.props`
 - Run `npm install --global --production windows-build-tools` as administrator
 - Run `npm config set msvs_version 2017 --global`
-
-<% } %>

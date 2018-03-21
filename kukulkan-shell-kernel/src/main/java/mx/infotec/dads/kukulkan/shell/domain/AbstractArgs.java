@@ -1,7 +1,7 @@
 /*
  *  
  * The MIT License (MIT)
- * Copyright (c) 2018 Roberto Villarejo Martínez <robertovillarejom@gmail.com>
+ * Copyright (c) 2018 Roberto Villarejo Martínez <roberto.villarejo@infotec.mx>
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -31,6 +31,11 @@ import com.beust.jcommander.Parameter;
 import mx.infotec.dads.kukulkan.metamodel.context.Person;
 import mx.infotec.dads.kukulkan.metamodel.context.Repository;
 
+/**
+ * Common args for CLI
+ * @author Roberto Villarejo Martínez <roberto.villarejo@infotec.mx>
+ *
+ */
 public abstract class AbstractArgs {
 
     @Parameter(names = { "--name" }, description = "The project name", required = true)
