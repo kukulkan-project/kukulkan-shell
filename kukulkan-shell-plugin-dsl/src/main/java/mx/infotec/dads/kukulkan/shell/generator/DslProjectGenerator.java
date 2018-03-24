@@ -1,7 +1,7 @@
 /*
  *  
  * The MIT License (MIT)
- * Copyright (c) 2018 Roberto Villarejo Martínez <robertovillarejom@gmail.com>
+ * Copyright (c) 2018 Roberto Villarejo Martínez <roberto.villarejo@infotec.mx>
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -26,87 +26,98 @@ package mx.infotec.dads.kukulkan.shell.generator;
 
 import static mx.infotec.dads.kukulkan.metamodel.util.Validator.requiredNotEmpty;
 
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.util.StringUtils;
 
-import mx.infotec.dads.kukulkan.engine.templating.service.TemplateService;
 import mx.infotec.dads.kukulkan.metamodel.annotation.GeneratorComponent;
 import mx.infotec.dads.kukulkan.metamodel.context.GeneratorContext;
 import mx.infotec.dads.kukulkan.metamodel.generator.Generator;
-import mx.infotec.dads.kukulkan.metamodel.util.FileUtil;
-import mx.infotec.dads.kukulkan.shell.template.DslProjectTemplateFactory;
+import mx.infotec.dads.kukulkan.shell.services.WriterService;
 
+/**
+ * 
+ * @author Roberto Villarejo Martínez <roberto.villarejo@infotec.mx>
+ *
+ */
 @GeneratorComponent
 public class DslProjectGenerator implements Generator {
 
-	/** The template service. */
-	@Autowired
-	private TemplateService templateService;
+    @Autowired
+    private WriterService writer;
 
-	private static final Logger LOGGER = LoggerFactory.getLogger(DslProjectGenerator.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(DslProjectGenerator.class);
 
-	@Override
-	public String getName() {
-		return "dsl-generator";
-	}
+    private static final String DIRECTORY = "archetypes/dsl-project/";
 
-	@Override
-	public void process(GeneratorContext context) {
-		DslProjectContext dslContext = requiredNotEmpty(context.get(DslProjectContext.class));
-		Map<String, Object> model = new HashMap<>();
-		model.put("project", dslContext);
-		LOGGER.info("Generating {} DSL project", dslContext.getName());
+    @Override
+    public String getName() {
+        return "dsl-generator";
+    }
 
-		// Filling extension templates and save
-		for (String template : DslProjectTemplateFactory.getExtensionTemplates()) {
-			String content = templateService.fillTemplate(template, model);
-			Path toSave = Paths.get(dslContext.getOutputDir().toString(),
-					template.replaceAll(DslProjectTemplateFactory.DSL_TEMPLATE, "").replaceAll(".ftl", "")
-							.replaceAll("name", dslContext.getName()));
-			FileUtil.saveToFile(toSave, content);
-		}
+    @Override
+    public void process(GeneratorContext context) {
+        DslProjectContext dslContext = requiredNotEmpty(context.get(DslProjectContext.class));
+        Map<String, Object> model = new HashMap<>();
+        model.put("project", dslContext);
 
-		// Filling root templates and save
-		for (String template : DslProjectTemplateFactory.getRootTemplates()) {
-			String content = templateService.fillTemplate(template, model);
-			Path toSave = Paths.get(dslContext.getOutputDir().toString(),
-					template.replaceAll(DslProjectTemplateFactory.DSL_TEMPLATE, "").replaceAll(".ftl", ""));
-			FileUtil.saveToFile(toSave, content);
-		}
+        LOGGER.info("Generating {} DSL project", dslContext.getName());
 
-		// Copying resources
-		for (String resource : DslProjectTemplateFactory.getDslProjectResources()) {
-			FileUtil.copyFromJar(resource, Paths.get(dslContext.getOutputDir().toString(),
-					resource.replaceAll("templates/" + DslProjectTemplateFactory.DSL_TEMPLATE, "")));
-		}
+        // Wirting Theia extension
+        writer.copyTemplate(DIRECTORY + "name-extension/package.json.ftl", "${project.name}-extension/package.json",
+                model);
+        writer.copy(DIRECTORY + "name-extension/tsconfig.json", "${project.name}-extension/tsconfig.json", model);
+        writer.copyTemplate(DIRECTORY + "name-extension/src/browser/language-contribution.ts.ftl",
+                "${project.name}-extension/src/browser/language-contribution.ts", model);
+        writer.copyTemplate(DIRECTORY + "name-extension/src/browser/monaco.d.ts.ftl",
+                "${project.name}-extension/src/browser/monaco.d.ts", model);
+        writer.copyTemplate(DIRECTORY + "name-extension/src/browser/name-frontend-module.ts.ftl",
+                "${project.name}-extension/src/browser/${project.name}-frontend-module.ts", model);
+        writer.copyTemplate(DIRECTORY + "name-extension/src/node/name-backend-module.ts.ftl",
+                "${project.name}-extension/src/node/${project.name}-backend-module.ts", model);
 
-		// Copying XText project templates
-		for (String template : DslProjectTemplateFactory.getXTextProjectTemplates()) {
-			String content = templateService.fillTemplate(template, model);
-			Path toSave = Paths.get(dslContext.getOutputDir().toString(),
-					template.replaceAll("package", dslContext.getBasePackage())
-					.replaceAll("name", dslContext.getName())
-					.replaceAll("qualified", dslContext.getBasePackage().replaceAll("\\.", "/") + "/" + dslContext.getName())
-							.replaceAll("Name", StringUtils.capitalize(dslContext.getName()))
-							.replaceAll(DslProjectTemplateFactory.DSL_TEMPLATE, "").replaceAll(".ftl", ""));
-			FileUtil.saveToFile(toSave, content);
-		}
+        // Writing root project
+        writer.copyTemplate(DIRECTORY + "electron-builder.yml.ftl", "electron-builder.yml", model);
+        writer.copyTemplate(DIRECTORY + "package.json.ftl", "package.json", model);
+        writer.copyTemplate(DIRECTORY + "README.md.ftl", "README.md", model);
 
-		// Copying XText project resources
-		for (String resource : DslProjectTemplateFactory.getXTextProjectResources()) {
-			FileUtil.copyFromJar(resource,
-					Paths.get(dslContext.getOutputDir().toString(),
-							resource.replaceAll("templates/" + DslProjectTemplateFactory.DSL_TEMPLATE, "")
-									.replaceAll("package", dslContext.getBasePackage())
-									.replaceAll("name", dslContext.getName())));
-		}
-	}
+        // Copying resources
+        writer.copyDir(DslProjectGenerator.class, "resources", "resources", model);
+
+        // Writing XText project
+        writer.copyTemplate(DIRECTORY + "package.name.parent/build.gradle.ftl",
+                "${project.basePackage}.${project.name}.parent/build.gradle", model);
+        writer.copyTemplate(DIRECTORY + "package.name.parent/settings.gradle.ftl",
+                "${project.basePackage}.${project.name}.parent/settings.gradle", model);
+        writer.copy(DIRECTORY + "package.name.parent/gradlew", "${project.basePackage}.${project.name}.parent/gradlew",
+                model);
+        writer.copy(DIRECTORY + "package.name.parent/gradlew.bat",
+                "${project.basePackage}.${project.name}.parent/gradlew.bat", model);
+
+        writer.copy(DIRECTORY + "package.name.parent/gradle/wrapper/gradle-wrapper.properties",
+                "${project.basePackage}.${project.name}.parent/gradle/wrapper/gradle-wrapper.properties", model);
+        writer.copy(DIRECTORY + "package.name.parent/gradle/maven-deployment.gradle",
+                "${project.basePackage}.${project.name}.parent/gradle/maven-deployment.gradle", model);
+        writer.copy(DIRECTORY + "package.name.parent/gradle/source-layout.gradle",
+                "${project.basePackage}.${project.name}.parent/gradle/source-layout.gradle", model);
+        writer.copy(DIRECTORY + "package.name.parent/gradle/wrapper/gradle-wrapper.jar",
+                "${project.basePackage}.${project.name}.parent/gradle/wrapper/gradle-wrapper.jar", model);
+        writer.copyTemplate(
+                DIRECTORY + "package.name.parent/package.name/src/main/java/qualified/GenerateName.mwe2.ftl",
+                "${project.basePackage}.${project.name}.parent/${project.basePackage}.${project.name}/src/main/java/${project.basePackage?replace(\".\", \"/\")}/${project.name}/Generate${project.name?cap_first}.mwe2",
+                model);
+        writer.copyTemplate(DIRECTORY + "package.name.parent/package.name/src/main/java/qualified/Name.xtext.ftl",
+                "${project.basePackage}.${project.name}.parent/${project.basePackage}.${project.name}/src/main/java/${project.basePackage?replace(\".\", \"/\")}/${project.name}/${project.name?cap_first}.xtext",
+                model);
+        writer.copyTemplate(DIRECTORY + "package.name.parent/package.name/build.gradle.ftl",
+                "${project.basePackage}.${project.name}.parent/${project.basePackage}.${project.name}/build.gradle",
+                model);
+        writer.copyTemplate(DIRECTORY + "package.name.parent/package.name.ide/build.gradle.ftl",
+                "${project.basePackage}.${project.name}.parent/${project.basePackage}.${project.name}.ide/build.gradle",
+                model);
+    }
 
 }

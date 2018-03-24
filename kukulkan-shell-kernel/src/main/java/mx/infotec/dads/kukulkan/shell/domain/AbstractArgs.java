@@ -24,8 +24,6 @@
 
 package mx.infotec.dads.kukulkan.shell.domain;
 
-import java.util.List;
-
 import com.beust.jcommander.Parameter;
 
 /**

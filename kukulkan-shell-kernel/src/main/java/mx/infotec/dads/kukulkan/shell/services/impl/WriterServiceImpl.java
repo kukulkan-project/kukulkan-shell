@@ -69,7 +69,7 @@ public class WriterServiceImpl implements WriterService {
     @Override
     public void copy(String resource, String relative) {
         Path toSave = navigator.getCurrentPath().resolve(relative);
-        FileUtil.copyFromJar("templates" + resource, toSave);
+        FileUtil.copyFromJar("templates/" + resource, toSave);
     }
 
     @Override
@@ -79,7 +79,7 @@ public class WriterServiceImpl implements WriterService {
 
     @Override
     public void copyDir(Class clazz, String directory, String pattern, String relative) {
-        List<String> files = ListFileUtil.listFiles(clazz, directory, pattern);
+        List<String> files = ListFileUtil.listFiles(clazz, "templates/" + directory, pattern);
         for (String file : files) {
             FileUtil.copyFromJar(directory + "/" + file, navigator.getCurrentPath().resolve(relative).resolve(file));
         }
