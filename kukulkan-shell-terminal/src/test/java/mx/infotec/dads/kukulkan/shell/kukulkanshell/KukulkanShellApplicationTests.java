@@ -20,11 +20,10 @@ public class KukulkanShellApplicationTests {
         try {
             File tmp = File.createTempFile("favicon", ".ico");
 
-            FileUtil.copyFromJar("templates/archetypes/angularjs-spring-mongo/src/main/webapp/favicon.ico",
-                    tmp.toPath());
-            
+            FileUtil.copyFromJar("templates/archetypes/angularjs/src/main/webapp/favicon.ico", tmp.toPath());
+
         } catch (IOException ex) {
-            
+
         }
     }
 

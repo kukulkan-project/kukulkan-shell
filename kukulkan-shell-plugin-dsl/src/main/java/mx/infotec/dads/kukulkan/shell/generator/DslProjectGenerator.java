@@ -85,7 +85,7 @@ public class DslProjectGenerator implements Generator {
         writer.copyTemplate(DIRECTORY + "README.md.ftl", "README.md", model);
 
         // Copying resources
-        writer.copyDir(DslProjectGenerator.class, "resources", "resources", model);
+        writer.copyDir(DslProjectGenerator.class, DIRECTORY + "resources", "resources", model);
 
         // Writing XText project
         writer.copyTemplate(DIRECTORY + "package.name.parent/build.gradle.ftl",

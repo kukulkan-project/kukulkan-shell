@@ -81,7 +81,7 @@ public class WriterServiceImpl implements WriterService {
     public void copyDir(Class clazz, String directory, String pattern, String relative) {
         List<String> files = ListFileUtil.listFiles(clazz, "templates/" + directory, pattern);
         for (String file : files) {
-            FileUtil.copyFromJar(directory + "/" + file, navigator.getCurrentPath().resolve(relative).resolve(file));
+            FileUtil.copyFromJar("templates/" + directory + "/" + file, navigator.getCurrentPath().resolve(relative).resolve(file));
         }
     }
 
