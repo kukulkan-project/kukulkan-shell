@@ -1,7 +1,7 @@
 /*
  *  
  * The MIT License (MIT)
- * Copyright (c) 2018 Roberto Villarejo Martínez <robertovillarejom@gmail.com>
+ * Copyright (c) 2018 Roberto Villarejo Martínez <roberto.villarejo@infotec.mx>
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -39,21 +39,26 @@ import mx.infotec.dads.kukulkan.shell.commands.util.DslContextMapper;
 import mx.infotec.dads.kukulkan.shell.generator.DslProjectContext;
 import mx.infotec.dads.kukulkan.shell.generator.DslProjectGenerator;
 
+/**
+ * 
+ * @author Roberto Villarejo Martínez <roberto.villarejo@infotec.mx>
+ *
+ */
 @ShellComponent
 public class DslProjectGeneration extends AbstractCommand {
 
-	@Autowired
-	private DslProjectGenerator generator;
+    @Autowired
+    private DslProjectGenerator generator;
 
-	private static final Logger LOGGER = LoggerFactory.getLogger(DslProjectGenerator.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(DslProjectGenerator.class);
 
-	@ShellMethod("Generates a DSL project")
-	public void dslProject(@ShellOption(optOut = true) @Valid DslProjectArgs params) {
-		DslProjectContext context = DslContextMapper.toDslContext(params);
-		context.setOutputDir(navigator.getCurrentPath());
-		GeneratorContext genContext = new GeneratorContext();
-		genContext.put(DslProjectContext.class, context);
-		generator.process(genContext);
-	}
+    @ShellMethod("Generates a DSL project")
+    public void dslProject(@ShellOption(optOut = true) @Valid DslProjectArgs params) {
+        DslProjectContext context = DslContextMapper.toDslContext(params);
+        context.setOutputDir(navigator.getCurrentPath());
+        GeneratorContext genContext = new GeneratorContext();
+        genContext.put(DslProjectContext.class, context);
+        generator.process(genContext);
+    }
 
 }

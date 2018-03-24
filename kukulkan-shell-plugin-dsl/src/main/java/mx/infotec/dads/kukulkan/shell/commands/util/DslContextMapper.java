@@ -1,7 +1,7 @@
 /*
  *  
  * The MIT License (MIT)
- * Copyright (c) 2018 Roberto Villarejo Martínez <robertovillarejom@gmail.com>
+ * Copyright (c) 2018 Roberto Villarejo Martínez <roberto.villarejo@infotec.mx>
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -27,22 +27,27 @@ package mx.infotec.dads.kukulkan.shell.commands.util;
 import mx.infotec.dads.kukulkan.shell.commands.dsl.DslProjectArgs;
 import mx.infotec.dads.kukulkan.shell.generator.DslProjectContext;
 
+/**
+ * 
+ * @author Roberto Villarejo Martínez <roberto.villarejo@infotec.mx>
+ *
+ */
 public class DslContextMapper {
 
-	private DslContextMapper() {
+    private DslContextMapper() {
 
-	}
+    }
 
-	public static DslProjectContext toDslContext(DslProjectArgs params) {
-		DslProjectContext context = new DslProjectContext();
-		context.setExtension(params.getExtension());
-		context.setGithubUrl(params.getGithubUrl());
-		context.setLicense(params.getLicense());
-		context.setName(params.getName());
-		context.setTheiaVersion(params.getTheiaVersion());
-		context.setVersion(params.getVersion());
-		context.setBasePackage(params.getBasePackage());
-		return context;
-	}
+    public static DslProjectContext toDslContext(DslProjectArgs params) {
+        DslProjectContext context = new DslProjectContext();
+        context.setExtension(params.getExtension());
+        context.setGithubUrl(params.getGithubUrl());
+        context.setLicense(params.getLicense());
+        context.setName(params.getName());
+        context.setTheiaVersion(params.getTheiaVersion());
+        context.setVersion(params.getVersion());
+        context.setBasePackage(params.getBasePackage());
+        return context;
+    }
 
 }

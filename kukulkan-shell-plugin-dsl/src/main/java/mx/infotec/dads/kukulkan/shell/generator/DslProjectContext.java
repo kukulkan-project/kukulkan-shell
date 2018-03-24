@@ -1,7 +1,7 @@
 /*
  *  
  * The MIT License (MIT)
- * Copyright (c) 2018 Roberto Villarejo Martínez <robertovillarejom@gmail.com>
+ * Copyright (c) 2018 Roberto Villarejo Martínez <roberto.villarejo@infotec.mx>
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -28,89 +28,89 @@ import java.nio.file.Path;
 
 /**
  * 
- * @author Roberto Villarejo Martínez <robertovillarejom@gmail.com>
+ * @author Roberto Villarejo Martínez <roberto.villarejo@infotec.mx>
  *
  */
 public class DslProjectContext {
 
-	private Path outputDir;
+    private Path outputDir;
 
-	private String name;
+    private String name;
 
-	private String version;
+    private String version;
 
-	private String theiaVersion;
+    private String theiaVersion;
 
-	private String license;
+    private String license;
 
-	private String githubUrl;
+    private String githubUrl;
 
-	private String extension;
-	
-	private String basePackage;
+    private String extension;
 
-	public Path getOutputDir() {
-		return outputDir;
-	}
+    private String basePackage;
 
-	public void setOutputDir(Path outputDir) {
-		this.outputDir = outputDir;
-	}
+    public Path getOutputDir() {
+        return outputDir;
+    }
 
-	public String getName() {
-		return name;
-	}
+    public void setOutputDir(Path outputDir) {
+        this.outputDir = outputDir;
+    }
 
-	public void setName(String name) {
-		this.name = name;
-	}
+    public String getName() {
+        return name;
+    }
 
-	public String getVersion() {
-		return version;
-	}
+    public void setName(String name) {
+        this.name = name;
+    }
 
-	public void setVersion(String version) {
-		this.version = version;
-	}
+    public String getVersion() {
+        return version;
+    }
 
-	public String getTheiaVersion() {
-		return theiaVersion;
-	}
+    public void setVersion(String version) {
+        this.version = version;
+    }
 
-	public void setTheiaVersion(String theiaVersion) {
-		this.theiaVersion = theiaVersion;
-	}
+    public String getTheiaVersion() {
+        return theiaVersion;
+    }
 
-	public String getLicense() {
-		return license;
-	}
+    public void setTheiaVersion(String theiaVersion) {
+        this.theiaVersion = theiaVersion;
+    }
 
-	public void setLicense(String license) {
-		this.license = license;
-	}
+    public String getLicense() {
+        return license;
+    }
 
-	public String getGithubUrl() {
-		return githubUrl;
-	}
+    public void setLicense(String license) {
+        this.license = license;
+    }
 
-	public void setGithubUrl(String githubUrl) {
-		this.githubUrl = githubUrl;
-	}
+    public String getGithubUrl() {
+        return githubUrl;
+    }
 
-	public String getExtension() {
-		return extension;
-	}
+    public void setGithubUrl(String githubUrl) {
+        this.githubUrl = githubUrl;
+    }
 
-	public void setExtension(String extension) {
-		this.extension = extension;
-	}
+    public String getExtension() {
+        return extension;
+    }
 
-	public String getBasePackage() {
-		return basePackage;
-	}
+    public void setExtension(String extension) {
+        this.extension = extension;
+    }
 
-	public void setBasePackage(String basePackage) {
-		this.basePackage = basePackage;
-	}
+    public String getBasePackage() {
+        return basePackage;
+    }
+
+    public void setBasePackage(String basePackage) {
+        this.basePackage = basePackage;
+    }
 
 }
