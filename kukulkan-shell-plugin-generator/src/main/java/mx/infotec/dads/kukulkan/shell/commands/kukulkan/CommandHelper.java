@@ -26,10 +26,13 @@ package mx.infotec.dads.kukulkan.shell.commands.kukulkan;
 import java.io.File;
 import java.nio.file.Path;
 import java.util.List;
+import java.util.Objects;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 
+import mx.infotec.dads.kukulkan.engine.service.InflectorService;
 import mx.infotec.dads.kukulkan.engine.translator.dsl.GrammarMapping;
 import mx.infotec.dads.kukulkan.engine.translator.dsl.GrammarSemanticAnalyzer;
 import mx.infotec.dads.kukulkan.metamodel.context.GeneratorContext;
@@ -40,6 +43,7 @@ import mx.infotec.dads.kukulkan.metamodel.foundation.DomainModelGroup;
 import mx.infotec.dads.kukulkan.metamodel.foundation.JavaDomainModel;
 import mx.infotec.dads.kukulkan.metamodel.foundation.ProjectConfiguration;
 import mx.infotec.dads.kukulkan.metamodel.util.PKGenerationStrategy;
+import mx.infotec.dads.kukulkan.shell.domain.KukulkanShellContext;
 
 /**
  * Command Helper, It is used for encapsulate common operation performed in the
@@ -69,9 +73,10 @@ public class CommandHelper {
      *            the file
      * @return the generator context
      */
-    public static GeneratorContext createGeneratorContext(ProjectConfiguration projectConfiguration, File file) {
+    public static GeneratorContext createGeneratorContext(ProjectConfiguration projectConfiguration, File file,
+            InflectorService inflectorService) {
         DomainModel domainModel = new JavaDomainModel();
-        GrammarSemanticAnalyzer semanticAnalyzer = new GrammarSemanticAnalyzer(projectConfiguration);
+        GrammarSemanticAnalyzer semanticAnalyzer = new GrammarSemanticAnalyzer(projectConfiguration, inflectorService);
         List<DomainModelGroup> dmgList = GrammarMapping.createSingleDataModelGroupList(semanticAnalyzer, file);
         domainModel.setDomainModelGroup(dmgList);
         LOGGER.info("Processing File...");
@@ -102,4 +107,11 @@ public class CommandHelper {
         projectConfiguration.setDatabase(new Database(databaseType, strategy));
     }
 
+    public static void configLayers(KukulkanShellContext shellContext) {
+        Objects.requireNonNull(shellContext.getConfiguration(), "The configuration Object can not be null");
+        shellContext.getConfiguration().addLayers("angular-js", "spring-rest", "spring-service", "spring-repository","domain-core");
+        if(shellContext.getConfiguration().getDatabase().getDatabaseType().equals(DatabaseType.SQL_MYSQL)){
+            shellContext.getConfiguration().addLayer("liquibase");
+        }
+    }
 }

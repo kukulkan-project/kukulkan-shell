@@ -23,6 +23,7 @@
  */
 package mx.infotec.dads.kukulkan.shell.commands.kukulkan;
 
+import static mx.infotec.dads.kukulkan.shell.commands.kukulkan.CommandHelper.configLayers;
 import static mx.infotec.dads.kukulkan.shell.commands.kukulkan.CommandHelper.configProjectConfiguration;
 import static mx.infotec.dads.kukulkan.shell.commands.kukulkan.CommandHelper.createGeneratorContext;
 import static mx.infotec.dads.kukulkan.shell.commands.maven.MavenCommands.MVN_COMMAND;
@@ -46,6 +47,8 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 
+import mx.infotec.dads.kukulkan.engine.service.EngineGenerator;
+import mx.infotec.dads.kukulkan.engine.service.InflectorService;
 import mx.infotec.dads.kukulkan.metamodel.context.GeneratorContext;
 import mx.infotec.dads.kukulkan.metamodel.foundation.DatabaseType;
 import mx.infotec.dads.kukulkan.metamodel.foundation.ProjectConfiguration;
@@ -72,6 +75,12 @@ public class AppGeneration extends AbstractCommand {
     @Autowired
     ThreadPoolTaskExecutor executor;
 
+    @Autowired
+    private EngineGenerator engineGenerator;
+
+    @Autowired
+    private InflectorService inflectorService;
+
     /**
      * Command Shell for Generate all the entities that come from a file with .3
      * extension
@@ -83,11 +92,9 @@ public class AppGeneration extends AbstractCommand {
     public void appGenerateCrud(@ShellOption(valueProvider = KukulkanFilesProvider.class) String fileName) {
         File file = Paths.get(navigator.getCurrentPath().toString(), fileName).toFile();
         shellContext.setConfiguration(ProjectUtil.readKukulkanFile(navigator.getCurrentPath()));
-        GeneratorContext genCtx = createGeneratorContext(shellContext.getConfiguration(), file);
-        generationService.findGeneratorByName("angularJs-spring").ifPresent(generator -> {
-            generationService.process(genCtx, generator);
-            FileUtil.saveToFile(genCtx);
-        });
+        GeneratorContext genCtx = createGeneratorContext(shellContext.getConfiguration(), file, inflectorService);
+        engineGenerator.process(genCtx);
+        FileUtil.saveToFile(genCtx);
     }
 
     /**
@@ -106,6 +113,7 @@ public class AppGeneration extends AbstractCommand {
         validateProjectParams(appName, packaging);
         configProjectConfiguration(shellContext.getConfiguration(), appName, packaging, navigator.getCurrentPath(),
                 databaseType, pkGenerationType);
+        configLayers(shellContext);
         GeneratorContext genCtx = new GeneratorContext(ProjectConfiguration.class, shellContext.getConfiguration());
         generationService.findGeneratorByName("angular-js-archetype-generator").ifPresent(generator -> {
             generationService.process(genCtx, generator);
