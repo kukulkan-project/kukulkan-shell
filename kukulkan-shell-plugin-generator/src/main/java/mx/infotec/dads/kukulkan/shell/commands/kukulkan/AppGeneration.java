@@ -107,12 +107,11 @@ public class AppGeneration extends AbstractCommand {
      */
     @ShellMethod("Generate a Project from an Archetype Catalog")
     public void appGenerateProject(@NotNull String appName, @NotNull String packaging,
-            @ShellOption(defaultValue = "NO_SQL_MONGODB") DatabaseType databaseType,
-            @ShellOption(defaultValue = "NULL") PKGenerationStrategy pkGenerationType) {
+            @ShellOption(defaultValue = "NO_SQL_MONGODB") DatabaseType databaseType) {
         LOGGER.info("Generating Project...");
         validateProjectParams(appName, packaging);
         configProjectConfiguration(shellContext.getConfiguration(), appName, packaging, navigator.getCurrentPath(),
-                databaseType, pkGenerationType);
+                databaseType, PKGenerationStrategy.IDENTITY);
         configLayers(shellContext);
         GeneratorContext genCtx = new GeneratorContext(ProjectConfiguration.class, shellContext.getConfiguration());
         generationService.findGeneratorByName("angular-js-archetype-generator").ifPresent(generator -> {
