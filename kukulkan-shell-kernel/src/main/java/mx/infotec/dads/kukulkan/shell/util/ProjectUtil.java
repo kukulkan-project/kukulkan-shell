@@ -55,7 +55,7 @@ public class ProjectUtil {
      * @param config
      *            the config
      */
-    public static void saveKukulkanFile(ProjectConfiguration config) {
+    public static void writeKukulkanFile(ProjectConfiguration config) {
         try {
             Path kukulkanFilePath = Paths.get(config.getOutputDir().toString(), config.getId(), KUKULKAN_FILE);
             LOGGER.info("saveFile to: {}", kukulkanFilePath);

@@ -38,6 +38,7 @@ import org.springframework.shell.jline.PromptProvider;
 import org.springframework.stereotype.Component;
 
 import mx.infotec.dads.kukulkan.shell.component.Navigator;
+import mx.infotec.dads.kukulkan.shell.domain.KukulkanShellContext;
 import mx.infotec.dads.kukulkan.shell.event.message.EventType;
 import mx.infotec.dads.kukulkan.shell.event.message.LocationUpdatedEvent;
 import mx.infotec.dads.kukulkan.shell.prompt.event.ChangeLocationAwareness;
@@ -54,6 +55,9 @@ public class KukulkanPromptProvided implements PromptProvider {
     /** The nav. */
     @Autowired
     private Navigator nav;
+
+    @Autowired
+    private KukulkanShellContext context;
 
     @Autowired
     private List<ChangeLocationAwareness> changeLocationAwarenessList;
@@ -94,6 +98,7 @@ public class KukulkanPromptProvided implements PromptProvider {
      */
     @EventListener
     public void handle(LocationUpdatedEvent event) {
+        resetDefaulValues();
         if (EventType.FILE_NAVIGATION.equals(event.getEventType())) {
             changeLocationAwarenessActions();
         }
@@ -111,5 +116,9 @@ public class KukulkanPromptProvided implements PromptProvider {
             }
         }
         prompt = AttributedString.join(new AttributedString(""), basePrompt, currentPrompt, endPrompt);
+    }
+
+    private void resetDefaulValues() {
+        context.setConfiguration(Optional.empty());
     }
 }

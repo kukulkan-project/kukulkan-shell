@@ -23,17 +23,14 @@
  */
 package mx.infotec.dads.kukulkan.shell.commands.kukulkan;
 
-import static mx.infotec.dads.kukulkan.shell.commands.kukulkan.CommandHelper.configLayers;
-import static mx.infotec.dads.kukulkan.shell.commands.kukulkan.CommandHelper.configProjectConfiguration;
-
 import java.io.File;
 import java.nio.file.Path;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import mx.infotec.dads.kukulkan.engine.service.InflectorService;
 import mx.infotec.dads.kukulkan.engine.translator.dsl.GrammarMapping;
@@ -47,6 +44,7 @@ import mx.infotec.dads.kukulkan.metamodel.foundation.JavaDomainModel;
 import mx.infotec.dads.kukulkan.metamodel.foundation.ProjectConfiguration;
 import mx.infotec.dads.kukulkan.metamodel.util.PKGenerationStrategy;
 import mx.infotec.dads.kukulkan.shell.domain.KukulkanShellContext;
+import mx.infotec.dads.kukulkan.shell.util.GeneratorException;
 
 /**
  * Command Helper, It is used for encapsulate common operation performed in the
@@ -76,16 +74,21 @@ public class CommandHelper {
      *            the file
      * @return the generator context
      */
-    public static GeneratorContext createGeneratorContext(ProjectConfiguration projectConfiguration, File file,
-            InflectorService inflectorService) {
-        DomainModel domainModel = new JavaDomainModel();
-        GrammarSemanticAnalyzer semanticAnalyzer = new GrammarSemanticAnalyzer(projectConfiguration, inflectorService);
-        List<DomainModelGroup> dmgList = GrammarMapping.createSingleDataModelGroupList(semanticAnalyzer, file);
-        domainModel.setDomainModelGroup(dmgList);
-        LOGGER.info("Processing File...");
+    public static GeneratorContext createGeneratorContext(Optional<ProjectConfiguration> projectConfiguration,
+            File file, InflectorService inflectorService) {
         GeneratorContext genCtx = new GeneratorContext();
-        genCtx.put(ProjectConfiguration.class, projectConfiguration);
-        genCtx.put(DomainModel.class, domainModel);
+        if (!projectConfiguration.isPresent()) {
+            throw new GeneratorException("projectConfiguration is not present");
+        }
+        projectConfiguration.ifPresent(config -> {
+            DomainModel domainModel = new JavaDomainModel();
+            GrammarSemanticAnalyzer semanticAnalyzer = new GrammarSemanticAnalyzer(config, inflectorService);
+            List<DomainModelGroup> dmgList = GrammarMapping.createSingleDataModelGroupList(semanticAnalyzer, file);
+            domainModel.setDomainModelGroup(dmgList);
+            LOGGER.info("Processing File...");
+            genCtx.put(ProjectConfiguration.class, projectConfiguration);
+            genCtx.put(DomainModel.class, domainModel);
+        });
         return genCtx;
     }
 
@@ -126,6 +129,10 @@ public class CommandHelper {
             String packaging, Path currentPath, DatabaseType databaseType) {
         configProjectConfiguration(shellContext, appName, packaging, currentPath, databaseType);
         configLayers(shellContext);
-        return new GeneratorContext(ProjectConfiguration.class, shellContext.getConfiguration());
+        if (shellContext.getConfiguration().isPresent()) {
+            return new GeneratorContext(ProjectConfiguration.class, shellContext.getConfiguration().get());
+        } else {
+            throw new GeneratorException("The project configuration is not present");
+        }
     }
 }

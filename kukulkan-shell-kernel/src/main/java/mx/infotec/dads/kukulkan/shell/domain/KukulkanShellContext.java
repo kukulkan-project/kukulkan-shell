@@ -15,7 +15,7 @@ public class KukulkanShellContext implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    private Optional<ProjectConfiguration> configuration;
+    private transient Optional<ProjectConfiguration> configuration;
 
     public KukulkanShellContext() {
 

@@ -37,10 +37,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
-import org.springframework.shell.Availability;
 import org.springframework.shell.standard.ShellComponent;
 import org.springframework.shell.standard.ShellMethod;
-import org.springframework.shell.standard.ShellMethodAvailability;
 import org.springframework.shell.standard.ShellOption;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -51,6 +49,7 @@ import mx.infotec.dads.kukulkan.engine.service.EngineGenerator;
 import mx.infotec.dads.kukulkan.engine.service.InflectorService;
 import mx.infotec.dads.kukulkan.metamodel.context.GeneratorContext;
 import mx.infotec.dads.kukulkan.metamodel.foundation.DatabaseType;
+import mx.infotec.dads.kukulkan.metamodel.foundation.ProjectConfiguration;
 import mx.infotec.dads.kukulkan.metamodel.util.FileUtil;
 import mx.infotec.dads.kukulkan.shell.commands.AbstractCommand;
 import mx.infotec.dads.kukulkan.shell.commands.valueprovided.KukulkanFilesProvider;
@@ -89,8 +88,7 @@ public class AppGeneration extends AbstractCommand {
     @ShellMethod("Generate all the entities that come from a file with .3k or .kukulkan extension")
     public void appGenerateCrud(@ShellOption(valueProvider = KukulkanFilesProvider.class) String fileName) {
         File file = Paths.get(navigator.getCurrentPath().toString(), fileName).toFile();
-        // shellContext.setConfiguration(ProjectUtil.readKukulkanFile(navigator.getCurrentPath()));
-        GeneratorContext genCtx = createGeneratorContext(shellContext.getConfiguration().get(), file, inflectorService);
+        GeneratorContext genCtx = createGeneratorContext(shellContext.getConfiguration(), file, inflectorService);
         engineGenerator.process(genCtx);
         FileUtil.saveToFile(genCtx);
     }
@@ -104,7 +102,7 @@ public class AppGeneration extends AbstractCommand {
      *            the packaging
      */
     @ShellMethod("Generate a Project from an Archetype Catalog")
-//    @ShellMethodAvailability("availabilityAppGenerateProject")
+    // @ShellMethodAvailability("availabilityAppGenerateProject")
     public void appGenerateProject(@NotNull String appName, @NotNull String packaging,
             @ShellOption(defaultValue = "NO_SQL_MONGODB") DatabaseType databaseType) {
         LOGGER.info("Generating Project from Archetype...");
@@ -113,7 +111,7 @@ public class AppGeneration extends AbstractCommand {
                 databaseType);
         generationService.findGeneratorByName("angular-js-archetype-generator").ifPresent(generator -> {
             generationService.process(genCtx, generator);
-            ProjectUtil.saveKukulkanFile(shellContext.getConfiguration().get());
+            ProjectUtil.writeKukulkanFile(shellContext.getConfiguration().get());
             commandService.printf("Execute the command", "app-config --type FRONT_END");
             commandService.printf("\n\n\r");
         });
@@ -155,14 +153,16 @@ public class AppGeneration extends AbstractCommand {
     public String appShowConfiguration() throws JsonProcessingException {
         ObjectMapper objectMapper = new ObjectMapper();
         objectMapper.configure(SerializationFeature.INDENT_OUTPUT, true);
-        return objectMapper.writeValueAsString(shellContext.getConfiguration());
+        return objectMapper.writeValueAsString(shellContext.getConfiguration().orElse(new ProjectConfiguration()));
     }
 
-//    public Availability availabilityAppGenerateCrud() {
-//        return Availability.unavailable("You must create a project before. try using <app-generate-project> command");
-//    }
-//
-//    public Availability availabilityAppGenerateProject() {
-//        return Availability.unavailable("You must create a project before. try using <app-generate-project> command");
-//    }
+    // public Availability availabilityAppGenerateCrud() {
+    // return Availability.unavailable("You must create a project before. try
+    // using <app-generate-project> command");
+    // }
+    //
+    // public Availability availabilityAppGenerateProject() {
+    // return Availability.unavailable("You must create a project before. try
+    // using <app-generate-project> command");
+    // }
 }

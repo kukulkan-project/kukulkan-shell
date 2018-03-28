@@ -28,10 +28,6 @@ import java.util.Optional;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-import mx.infotec.dads.kukulkan.metamodel.foundation.Database;
-import mx.infotec.dads.kukulkan.metamodel.foundation.DatabaseType;
-import mx.infotec.dads.kukulkan.metamodel.foundation.ProjectConfiguration;
-import mx.infotec.dads.kukulkan.metamodel.util.PKGenerationStrategy;
 import mx.infotec.dads.kukulkan.shell.domain.KukulkanShellContext;
 
 /**
@@ -47,13 +43,6 @@ public class ProjectContextConfiguration {
      */
     @Bean
     public KukulkanShellContext configProjectContext() {
-        ProjectConfiguration pConf = new ProjectConfiguration();
-        pConf.setId("default");
-        pConf.setVersion("1.0.0");
-        pConf.setPackaging("mx.infotec.dads.default");
-        pConf.setYear("2018");
-        pConf.setAuthor("KUKULKAN");
-        pConf.setDatabase(new Database(DatabaseType.SQL_MYSQL, PKGenerationStrategy.AUTO));
-        return new KukulkanShellContext(Optional.of(pConf));
+        return new KukulkanShellContext(Optional.empty());
     }
 }
