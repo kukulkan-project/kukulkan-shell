@@ -30,7 +30,6 @@ import javax.validation.constraints.NotNull;
 
 import org.jline.utils.AttributedString;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.task.TaskExecutor;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.shell.standard.ShellComponent;
 import org.springframework.shell.standard.ShellMethod;
@@ -67,19 +66,6 @@ public class MavenCommands {
 
     @Autowired
     ThreadPoolTaskExecutor executor;
-
-    /**
-     * Configurate a front end application, It execute the command "mvn package
-     * -Pprod -DskiptTests".
-     */
-    @ShellMethod("Configurate a initial Archetype")
-    public void configurateFrontEnd() {
-        commandService.exec(new ShellCommand(MVN_COMMAND).addArg("package").addArg("-Pprod").addArg("-DskipTests"),
-                line -> {
-                    commandService.printf(TextFormatter.formatLogText(line).toAnsi());
-                    return Optional.ofNullable(new Line(line));
-                });
-    }
 
     @ShellMethod("Run a Spring-Boot App")
     public void runApp() {

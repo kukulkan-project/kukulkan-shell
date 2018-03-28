@@ -56,7 +56,7 @@ public class UserInputValidation {
      * @param appName the app name
      * @param packaging the packaging
      */
-    public static void validateProjectParams(String appName, String packaging) {
+    public static void validateParams(String appName, String packaging) {
         Objects.requireNonNull(appName);
         Objects.requireNonNull(packaging);
         StringBuilder message = new StringBuilder();

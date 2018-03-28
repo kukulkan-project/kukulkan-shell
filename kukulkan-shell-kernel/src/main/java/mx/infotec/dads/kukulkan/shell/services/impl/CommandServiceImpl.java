@@ -204,7 +204,6 @@ public class CommandServiceImpl implements CommandService {
             nc.setInfoMessage(output.toString());
             nc.setActive(true);
         } catch (Exception e) {
-            LOGGER.debug(GENERIC_ERROR_MSG, e);
             LOGGER.warn("[{}] is not installed", nc.getCommand());
             nc.setErrorMessage(String.format("You must install the command [%s]", nc.getCommand()));
         }

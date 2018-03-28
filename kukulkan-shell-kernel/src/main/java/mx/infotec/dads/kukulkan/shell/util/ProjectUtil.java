@@ -26,6 +26,7 @@ package mx.infotec.dads.kukulkan.shell.util;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Optional;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -73,13 +74,13 @@ public class ProjectUtil {
      *            the project path
      * @return the project configuration
      */
-    public static ProjectConfiguration readKukulkanFile(Path projectPath) {
+    public static Optional<ProjectConfiguration> readKukulkanFile(Path projectPath) {
         try {
             Path kukulkanFilePath = Paths.get(projectPath.toString(), KUKULKAN_FILE);
             ObjectMapper objectMapper = new ObjectMapper();
-            return objectMapper.readValue(kukulkanFilePath.toFile(), ProjectConfiguration.class);
+            return Optional.of(objectMapper.readValue(kukulkanFilePath.toFile(), ProjectConfiguration.class));
         } catch (IOException e) {
-            throw new GeneratorException("The file is no well structure", e);
+            return Optional.empty();
         }
 
     }

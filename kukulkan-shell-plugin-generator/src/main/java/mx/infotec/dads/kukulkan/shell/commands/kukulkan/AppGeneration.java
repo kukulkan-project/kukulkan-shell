@@ -23,11 +23,9 @@
  */
 package mx.infotec.dads.kukulkan.shell.commands.kukulkan;
 
-import static mx.infotec.dads.kukulkan.shell.commands.kukulkan.CommandHelper.configLayers;
-import static mx.infotec.dads.kukulkan.shell.commands.kukulkan.CommandHelper.configProjectConfiguration;
 import static mx.infotec.dads.kukulkan.shell.commands.kukulkan.CommandHelper.createGeneratorContext;
 import static mx.infotec.dads.kukulkan.shell.commands.maven.MavenCommands.MVN_COMMAND;
-import static mx.infotec.dads.kukulkan.shell.commands.validation.UserInputValidation.validateProjectParams;
+import static mx.infotec.dads.kukulkan.shell.commands.validation.UserInputValidation.validateParams;
 
 import java.io.File;
 import java.nio.file.Paths;
@@ -39,8 +37,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
+import org.springframework.shell.Availability;
 import org.springframework.shell.standard.ShellComponent;
 import org.springframework.shell.standard.ShellMethod;
+import org.springframework.shell.standard.ShellMethodAvailability;
 import org.springframework.shell.standard.ShellOption;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -51,9 +51,7 @@ import mx.infotec.dads.kukulkan.engine.service.EngineGenerator;
 import mx.infotec.dads.kukulkan.engine.service.InflectorService;
 import mx.infotec.dads.kukulkan.metamodel.context.GeneratorContext;
 import mx.infotec.dads.kukulkan.metamodel.foundation.DatabaseType;
-import mx.infotec.dads.kukulkan.metamodel.foundation.ProjectConfiguration;
 import mx.infotec.dads.kukulkan.metamodel.util.FileUtil;
-import mx.infotec.dads.kukulkan.metamodel.util.PKGenerationStrategy;
 import mx.infotec.dads.kukulkan.shell.commands.AbstractCommand;
 import mx.infotec.dads.kukulkan.shell.commands.valueprovided.KukulkanFilesProvider;
 import mx.infotec.dads.kukulkan.shell.domain.Line;
@@ -91,8 +89,8 @@ public class AppGeneration extends AbstractCommand {
     @ShellMethod("Generate all the entities that come from a file with .3k or .kukulkan extension")
     public void appGenerateCrud(@ShellOption(valueProvider = KukulkanFilesProvider.class) String fileName) {
         File file = Paths.get(navigator.getCurrentPath().toString(), fileName).toFile();
-        shellContext.setConfiguration(ProjectUtil.readKukulkanFile(navigator.getCurrentPath()));
-        GeneratorContext genCtx = createGeneratorContext(shellContext.getConfiguration(), file, inflectorService);
+        // shellContext.setConfiguration(ProjectUtil.readKukulkanFile(navigator.getCurrentPath()));
+        GeneratorContext genCtx = createGeneratorContext(shellContext.getConfiguration().get(), file, inflectorService);
         engineGenerator.process(genCtx);
         FileUtil.saveToFile(genCtx);
     }
@@ -106,17 +104,16 @@ public class AppGeneration extends AbstractCommand {
      *            the packaging
      */
     @ShellMethod("Generate a Project from an Archetype Catalog")
+//    @ShellMethodAvailability("availabilityAppGenerateProject")
     public void appGenerateProject(@NotNull String appName, @NotNull String packaging,
             @ShellOption(defaultValue = "NO_SQL_MONGODB") DatabaseType databaseType) {
-        LOGGER.info("Generating Project...");
-        validateProjectParams(appName, packaging);
-        configProjectConfiguration(shellContext.getConfiguration(), appName, packaging, navigator.getCurrentPath(),
-                databaseType, PKGenerationStrategy.IDENTITY);
-        configLayers(shellContext);
-        GeneratorContext genCtx = new GeneratorContext(ProjectConfiguration.class, shellContext.getConfiguration());
+        LOGGER.info("Generating Project from Archetype...");
+        validateParams(appName, packaging);
+        GeneratorContext genCtx = createGeneratorContext(shellContext, appName, packaging, navigator.getCurrentPath(),
+                databaseType);
         generationService.findGeneratorByName("angular-js-archetype-generator").ifPresent(generator -> {
             generationService.process(genCtx, generator);
-            ProjectUtil.saveKukulkanFile(shellContext.getConfiguration());
+            ProjectUtil.saveKukulkanFile(shellContext.getConfiguration().get());
             commandService.printf("Execute the command", "app-config --type FRONT_END");
             commandService.printf("\n\n\r");
         });
@@ -126,7 +123,7 @@ public class AppGeneration extends AbstractCommand {
      * Configurate a front end application, It execute the command "mvn package
      * -Pprod -DskiptTests".
      */
-    @ShellMethod("Configurate the proyect")
+    @ShellMethod("Configurate the project")
     public void appConfig(@ShellOption(defaultValue = "FRONT_END") ConfigurationType type) {
         if (type.equals(ConfigurationType.FRONT_END)) {
             commandService.exec(new ShellCommand(MVN_COMMAND).addArg("package").addArg("-Pprod").addArg("-DskipTests"),
@@ -155,9 +152,17 @@ public class AppGeneration extends AbstractCommand {
      * @throws JsonProcessingException
      */
     @ShellMethod("Show the current project configuration applied to the current context")
-    public String showFileConfiguration() throws JsonProcessingException {
+    public String appShowConfiguration() throws JsonProcessingException {
         ObjectMapper objectMapper = new ObjectMapper();
         objectMapper.configure(SerializationFeature.INDENT_OUTPUT, true);
         return objectMapper.writeValueAsString(shellContext.getConfiguration());
     }
+
+//    public Availability availabilityAppGenerateCrud() {
+//        return Availability.unavailable("You must create a project before. try using <app-generate-project> command");
+//    }
+//
+//    public Availability availabilityAppGenerateProject() {
+//        return Availability.unavailable("You must create a project before. try using <app-generate-project> command");
+//    }
 }

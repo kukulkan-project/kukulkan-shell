@@ -23,6 +23,8 @@
  */
 package mx.infotec.dads.kukulkan.shell.config;
 
+import java.util.Optional;
+
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -52,6 +54,6 @@ public class ProjectContextConfiguration {
         pConf.setYear("2018");
         pConf.setAuthor("KUKULKAN");
         pConf.setDatabase(new Database(DatabaseType.SQL_MYSQL, PKGenerationStrategy.AUTO));
-        return new KukulkanShellContext(pConf);
+        return new KukulkanShellContext(Optional.of(pConf));
     }
 }

@@ -23,6 +23,9 @@
  */
 package mx.infotec.dads.kukulkan.shell.commands.kukulkan;
 
+import static mx.infotec.dads.kukulkan.shell.commands.kukulkan.CommandHelper.configLayers;
+import static mx.infotec.dads.kukulkan.shell.commands.kukulkan.CommandHelper.configProjectConfiguration;
+
 import java.io.File;
 import java.nio.file.Path;
 import java.util.List;
@@ -99,19 +102,30 @@ public class CommandHelper {
      * @param currentPath
      *            the current path
      */
-    public static void configProjectConfiguration(ProjectConfiguration projectConfiguration, String appName,
-            String packaging, Path currentPath, DatabaseType databaseType, PKGenerationStrategy strategy) {
-        projectConfiguration.setId(appName);
-        projectConfiguration.setPackaging(packaging);
-        projectConfiguration.setOutputDir(currentPath);
-        projectConfiguration.setDatabase(new Database(databaseType, strategy));
+    public static void configProjectConfiguration(KukulkanShellContext shellContext, String appName, String packaging,
+            Path currentPath, DatabaseType databaseType) {
+        shellContext.getConfiguration().ifPresent(config -> {
+            config.setId(appName);
+            config.setPackaging(packaging);
+            config.setOutputDir(currentPath);
+            config.setDatabase(new Database(databaseType, PKGenerationStrategy.IDENTITY));
+        });
     }
 
     public static void configLayers(KukulkanShellContext shellContext) {
         Objects.requireNonNull(shellContext.getConfiguration(), "The configuration Object can not be null");
-        shellContext.getConfiguration().addLayers("angular-js", "spring-rest", "spring-service", "spring-repository","domain-core");
-        if(shellContext.getConfiguration().getDatabase().getDatabaseType().equals(DatabaseType.SQL_MYSQL)){
-            shellContext.getConfiguration().addLayer("liquibase");
-        }
+        shellContext.getConfiguration().ifPresent(config -> {
+            config.addLayers("angular-js", "spring-rest", "spring-service", "spring-repository", "domain-core");
+            if (config.getDatabase().getDatabaseType().equals(DatabaseType.SQL_MYSQL)) {
+                config.addLayer("liquibase");
+            }
+        });
+    }
+
+    public static GeneratorContext createGeneratorContext(KukulkanShellContext shellContext, String appName,
+            String packaging, Path currentPath, DatabaseType databaseType) {
+        configProjectConfiguration(shellContext, appName, packaging, currentPath, databaseType);
+        configLayers(shellContext);
+        return new GeneratorContext(ProjectConfiguration.class, shellContext.getConfiguration());
     }
 }

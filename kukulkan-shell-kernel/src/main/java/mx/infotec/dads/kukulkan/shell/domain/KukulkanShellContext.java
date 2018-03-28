@@ -1,6 +1,7 @@
 package mx.infotec.dads.kukulkan.shell.domain;
 
 import java.io.Serializable;
+import java.util.Optional;
 
 import mx.infotec.dads.kukulkan.metamodel.foundation.ProjectConfiguration;
 
@@ -14,21 +15,21 @@ public class KukulkanShellContext implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    private ProjectConfiguration configuration;
+    private Optional<ProjectConfiguration> configuration;
 
     public KukulkanShellContext() {
 
     }
 
-    public KukulkanShellContext(ProjectConfiguration configuration) {
+    public KukulkanShellContext(Optional<ProjectConfiguration> configuration) {
         this.configuration = configuration;
     }
 
-    public ProjectConfiguration getConfiguration() {
+    public Optional<ProjectConfiguration> getConfiguration() {
         return configuration;
     }
 
-    public void setConfiguration(ProjectConfiguration configuration) {
+    public void setConfiguration(Optional<ProjectConfiguration> configuration) {
         this.configuration = configuration;
     }
 }
