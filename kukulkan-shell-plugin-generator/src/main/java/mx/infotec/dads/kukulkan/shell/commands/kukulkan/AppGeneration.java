@@ -115,8 +115,7 @@ public class AppGeneration extends AbstractCommand {
         generationService.findGeneratorByName("angular-js-archetype-generator").ifPresent(generator -> {
             generationService.process(genCtx, generator);
             ProjectUtil.writeKukulkanFile(shellContext.getConfiguration().get());
-            commandService.printf("Execute the command", "app-config --type FRONT_END");
-            commandService.printf("\n\n\r");
+            commandService.printf("Execute the command", "app-config --type FRONT_END\n\n\r");
         });
     }
 
