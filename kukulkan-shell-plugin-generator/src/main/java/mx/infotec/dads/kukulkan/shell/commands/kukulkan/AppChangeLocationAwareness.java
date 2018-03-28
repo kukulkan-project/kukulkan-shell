@@ -28,8 +28,8 @@ public class AppChangeLocationAwareness extends AbstractChangeLocationAwareness 
     @Override
     public Optional<AttributedString> createPrompt(Path currentLocation) {
         AttributedString dirPrompt = AttributedString.join(new AttributedString(""),
-                new AttributedString("❂", AttributedStyle.BOLD.foreground(AttributedStyle.GREEN)),
-                new AttributedString(" project", AttributedStyle.BOLD_OFF.foreground(AttributedStyle.GREEN)));
+                new AttributedString("@", AttributedStyle.BOLD.foreground(AttributedStyle.GREEN)),
+                new AttributedString("app", AttributedStyle.BOLD_OFF.foreground(AttributedStyle.GREEN)));
         return Optional.of(dirPrompt);
     }
 

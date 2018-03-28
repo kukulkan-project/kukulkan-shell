@@ -23,6 +23,7 @@
  */
 package mx.infotec.dads.kukulkan.shell.commands.kukulkan;
 
+import static mx.infotec.dads.kukulkan.metamodel.util.DefaultValues.getDefaulProjectConfiguration;
 import static mx.infotec.dads.kukulkan.shell.commands.kukulkan.CommandHelper.createGeneratorContext;
 import static mx.infotec.dads.kukulkan.shell.commands.maven.MavenCommands.MVN_COMMAND;
 import static mx.infotec.dads.kukulkan.shell.commands.validation.UserInputValidation.validateParams;
@@ -50,6 +51,7 @@ import mx.infotec.dads.kukulkan.engine.service.InflectorService;
 import mx.infotec.dads.kukulkan.metamodel.context.GeneratorContext;
 import mx.infotec.dads.kukulkan.metamodel.foundation.DatabaseType;
 import mx.infotec.dads.kukulkan.metamodel.foundation.ProjectConfiguration;
+import mx.infotec.dads.kukulkan.metamodel.util.DefaultValues;
 import mx.infotec.dads.kukulkan.metamodel.util.FileUtil;
 import mx.infotec.dads.kukulkan.shell.commands.AbstractCommand;
 import mx.infotec.dads.kukulkan.shell.commands.valueprovided.KukulkanFilesProvider;
@@ -107,6 +109,7 @@ public class AppGeneration extends AbstractCommand {
             @ShellOption(defaultValue = "NO_SQL_MONGODB") DatabaseType databaseType) {
         LOGGER.info("Generating Project from Archetype...");
         validateParams(appName, packaging);
+        shellContext.setConfiguration(Optional.of(getDefaulProjectConfiguration()));
         GeneratorContext genCtx = createGeneratorContext(shellContext, appName, packaging, navigator.getCurrentPath(),
                 databaseType);
         generationService.findGeneratorByName("angular-js-archetype-generator").ifPresent(generator -> {
