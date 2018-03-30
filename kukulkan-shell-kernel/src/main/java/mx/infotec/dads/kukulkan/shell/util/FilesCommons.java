@@ -28,6 +28,7 @@ import java.io.IOException;
 import java.nio.file.DirectoryStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -48,7 +49,7 @@ import org.slf4j.LoggerFactory;
 public final class FilesCommons {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(FilesCommons.class);
-    
+
     /**
      * Instantiates a new files commons.
      */
@@ -125,7 +126,35 @@ public final class FilesCommons {
         try (DirectoryStream<Path> directories = Files.newDirectoryStream(currentPath);) {
             for (Path path : directories) {
                 if (path.toFile().isDirectory()) {
-                    completionProposal.add(new ShellCompletionProposal(path.getFileName().toString()));
+                    completionProposal.add(new ShellCompletionProposal(path.getFileName().toString() + "/"));
+                }
+            }
+        } catch (IOException e) {
+            LOGGER.debug("Error at filter dir", e);
+        }
+        return completionProposal;
+    }
+
+    /**
+     * Filter dirs.
+     *
+     * @param currentPath
+     *            the current path
+     * @return the list
+     */
+    public static List<CompletionProposal> filterDirs(Path ant, Path currentPath) {
+        List<CompletionProposal> completionProposal = new ArrayList<>();
+        try (DirectoryStream<Path> directories = Files.newDirectoryStream(currentPath);) {
+            for (Path path : directories) {
+                if (path.toFile().isDirectory()) {
+                    Path valuePath = null;
+                    if (ant != null) {
+                        valuePath = ant.resolve(path.getFileName());
+                    } else {
+                        valuePath = path.getFileName();
+                    }
+                    completionProposal
+                            .add(new ShellCompletionProposal(valuePath.toString(), path.getFileName().toString()));
                 }
             }
         } catch (IOException e) {

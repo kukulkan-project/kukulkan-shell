@@ -35,20 +35,23 @@ public class ShellCompletionProposal extends CompletionProposal {
     /**
      * Instantiates a new shell completion proposal.
      *
-     * @param lineText the line text
-     * @param description the description
-     */
-    public ShellCompletionProposal(String lineText, String description) {
-        super(lineText);
-        this.description(description);
-    }
-
-    /**
-     * Instantiates a new shell completion proposal.
-     *
-     * @param lineText the line text
+     * @param lineText
+     *            the line text
      */
     public ShellCompletionProposal(String lineText) {
         super(lineText);
     }
+
+    public ShellCompletionProposal(String value, String lineText) {
+        super(value);
+        this.displayText(lineText);
+    }
+    
+    public ShellCompletionProposal(String value, String lineText, String description) {
+        super(value);
+        this.displayText(lineText);
+        this.description(description);
+    }
+    
+
 }
