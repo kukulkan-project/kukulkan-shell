@@ -60,13 +60,24 @@ public class DirectoryValueProvider extends ValueProviderSupport {
     @Override
     public List<CompletionProposal> complete(MethodParameter parameter, CompletionContext completionContext,
             String[] hints) {
+        String currentWord = completionContext.currentWord();
         Path wordPath = Paths.get(completionContext.currentWord());
         Path wordParentPath = wordPath.getParent();
+        
         if (wordPath.toString().isEmpty()) {
             return FilesCommons.filterDirs(nav.getCurrentPath());
         } else {
             Path pathToSearch = getPathToSearchDir(nav.getCurrentPath().resolve(wordPath));
-            return FilesCommons.filterDirs(wordParentPath, pathToSearch);
+            
+            List<CompletionProposal> filterDirs = FilesCommons.filterDirs(wordParentPath, pathToSearch);
+//            System.out.println();
+//            System.out.println("***********");
+//            System.out.println(currentWord);
+//            System.out.println("***********");
+            filterDirs.forEach(k->{
+                System.out.println(k.value());
+            });
+            return filterDirs;
         }
     }
 

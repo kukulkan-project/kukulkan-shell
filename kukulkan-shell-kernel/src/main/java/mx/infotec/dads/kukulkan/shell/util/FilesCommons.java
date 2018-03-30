@@ -138,13 +138,13 @@ public final class FilesCommons {
     /**
      * Filter dirs.
      *
-     * @param currentPath
+     * @param pathToSearch
      *            the current path
      * @return the list
      */
-    public static List<CompletionProposal> filterDirs(Path ant, Path currentPath) {
+    public static List<CompletionProposal> filterDirs(Path ant, Path pathToSearch) {
         List<CompletionProposal> completionProposal = new ArrayList<>();
-        try (DirectoryStream<Path> directories = Files.newDirectoryStream(currentPath);) {
+        try (DirectoryStream<Path> directories = Files.newDirectoryStream(pathToSearch);) {
             for (Path path : directories) {
                 if (path.toFile().isDirectory()) {
                     Path valuePath = null;
@@ -153,8 +153,8 @@ public final class FilesCommons {
                     } else {
                         valuePath = path.getFileName();
                     }
-                    completionProposal
-                            .add(new ShellCompletionProposal(valuePath.toString(), path.getFileName().toString()));
+                    completionProposal.add(new ShellCompletionProposal(valuePath.toString() + "/",
+                            path.getFileName().toString(), valuePath.toString()));
                 }
             }
         } catch (IOException e) {
