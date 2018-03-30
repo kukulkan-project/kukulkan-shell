@@ -7,6 +7,9 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 
 import org.jline.utils.AttributedString;
+import org.unix4j.unix.Ls;
+import org.unix4j.unix.ls.LsOptionSet_Rahlrt;
+import org.unix4j.unix.ls.LsOptionSets;
 
 import mx.infotec.dads.kukulkan.shell.component.Navigator;
 
@@ -69,6 +72,35 @@ public class FileNavigationHelper {
             newPath = Paths.get(nav.getCurrentPath().toAbsolutePath().toString(), toChange.toString());
         }
         return newPath;
+    }
+
+    public static LsOptionSet_Rahlrt parseOptions(String params) {
+        char[] options = params.toCharArray();
+        LsOptionSets optionSet = Ls.Options;
+        LsOptionSet_Rahlrt optionSetRa = null;
+        for (char option : options) {
+            switch (option) {
+            case 'l':
+                optionSetRa = optionSetRa.l;
+                break;
+            case 'a':
+                optionSetRa = optionSetRa.a;
+                break;
+            case 'h':
+                optionSetRa = optionSetRa.h;
+                break;
+            case 'R':
+                optionSetRa = optionSetRa.R;
+            case 'r':
+                optionSetRa = optionSetRa.r;
+            case 't':
+                optionSetRa = optionSetRa.t;
+                break;
+            default:
+                break;
+            }
+        }
+        return optionSetRa;
     }
 
 }

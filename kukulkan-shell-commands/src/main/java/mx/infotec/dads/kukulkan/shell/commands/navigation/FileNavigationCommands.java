@@ -24,6 +24,7 @@
 package mx.infotec.dads.kukulkan.shell.commands.navigation;
 
 import static mx.infotec.dads.kukulkan.shell.commands.navigation.FileNavigationHelper.calculateNewPath;
+import static mx.infotec.dads.kukulkan.shell.commands.navigation.FileNavigationHelper.parseOptions;
 import static mx.infotec.dads.kukulkan.shell.util.FilesCommons.showFiles;
 import static mx.infotec.dads.kukulkan.shell.util.TextFormatter.formatDirNotExistText;
 import static mx.infotec.dads.kukulkan.shell.util.TextFormatter.formatNormalText;
@@ -38,6 +39,11 @@ import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.shell.standard.ShellComponent;
 import org.springframework.shell.standard.ShellMethod;
 import org.springframework.shell.standard.ShellOption;
+import org.unix4j.Unix4j;
+import org.unix4j.line.Line;
+import org.unix4j.unix.Ls;
+import org.unix4j.unix.ls.LsOptionSet_Rahlrt;
+import org.unix4j.unix.ls.LsOptionSets;
 
 import mx.infotec.dads.kukulkan.shell.component.Navigator;
 import mx.infotec.dads.kukulkan.shell.event.message.EventType;
@@ -80,8 +86,8 @@ public class FileNavigationCommands {
      * @return the list
      */
     @ShellMethod(value = "List the currents files", key = { "ls", "ll", "dir" })
-    public List<AttributedString> ls() {
-        return showFiles(nav.getCurrentPath());
+    public List<String> ls(@ShellOption(value = { "-" }, defaultValue = "l") String params) {
+        return Unix4j.ls(parseOptions(params), nav.getCurrentPath().toString()).toStringList();
     }
 
     /**
