@@ -23,40 +23,18 @@
  */
 package mx.infotec.dads.kukulkan.shell.commands.files;
 
-import java.io.BufferedReader;
-import java.io.File;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
-import java.util.ArrayList;
-import java.util.List;
-
 import mx.infotec.dads.kukulkan.shell.commands.AbstractCommand;
-import mx.infotec.dads.kukulkan.shell.commands.navigation.DirectoryValueProvider;
-import mx.infotec.dads.kukulkan.shell.component.Navigator;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.shell.standard.ShellComponent;
 import org.springframework.shell.standard.ShellMethod;
 
-import mx.infotec.dads.kukulkan.shell.services.CommandService;
-import mx.infotec.dads.kukulkan.shell.util.AnsiConstants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.shell.standard.ShellOption;
-import org.unix4j.Unix4j;
-import org.unix4j.builder.Unix4jCommandBuilder;
-import org.unix4j.io.Output;
-import org.unix4j.io.StreamOutput;
-import org.unix4j.line.Line;
-import org.unix4j.unix.Cut;
-import org.unix4j.unix.Ls;
-import org.unix4j.unix.Sort;
-import org.unix4j.unix.grep.GrepOption;
-import org.unix4j.util.Range;
-import org.unix4j.variable.Arg;
 
 /**
  * Util Commands.
@@ -67,33 +45,6 @@ import org.unix4j.variable.Arg;
 public class FileCommands extends AbstractCommand {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(FileCommands.class);
-
-    /**
-     * The command service.
-     */
-    @Autowired
-    private CommandService commandService;
-
-    /**
-     * The navigator service.
-     */
-    @Autowired
-    private Navigator nav;
-
-    /**
-     * Ping.
-     *
-     * @param host
-     *            the host
-     */
-    @ShellMethod("make a ping to a host")
-    public List<Line> lsDump(String param) {
-        List<Line> lineList = Unix4j.ls(Ls.Options.l.a, nav.getCurrentPath().toString()).toLineList();
-        for (Line line : lineList) {
-
-        }
-        return null;
-    }
 
     @ShellMethod("make a ping to a host")
     public void mv(@ShellOption(valueProvider = FileLocationValueProvider.class) String from,

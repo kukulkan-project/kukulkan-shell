@@ -35,7 +35,6 @@ import org.springframework.stereotype.Component;
 
 import mx.infotec.dads.kukulkan.shell.component.Navigator;
 import mx.infotec.dads.kukulkan.shell.domain.ShellCompletionProposal;
-import mx.infotec.dads.kukulkan.shell.util.FilesCommons;
 
 /**
  * The Class DirectoryValueProvider.

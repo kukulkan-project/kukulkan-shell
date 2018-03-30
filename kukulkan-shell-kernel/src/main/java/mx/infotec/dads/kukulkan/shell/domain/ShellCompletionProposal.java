@@ -52,6 +52,4 @@ public class ShellCompletionProposal extends CompletionProposal {
         this.displayText(lineText);
         this.description(description);
     }
-    
-
 }
