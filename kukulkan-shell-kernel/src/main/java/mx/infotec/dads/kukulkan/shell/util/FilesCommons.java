@@ -28,7 +28,6 @@ import java.io.IOException;
 import java.nio.file.DirectoryStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -122,17 +121,7 @@ public final class FilesCommons {
      * @return the list
      */
     public static List<CompletionProposal> filterDirs(Path currentPath) {
-        List<CompletionProposal> completionProposal = new ArrayList<>();
-        try (DirectoryStream<Path> directories = Files.newDirectoryStream(currentPath);) {
-            for (Path path : directories) {
-                if (path.toFile().isDirectory()) {
-                    completionProposal.add(new ShellCompletionProposal(path.getFileName().toString() + "/"));
-                }
-            }
-        } catch (IOException e) {
-            LOGGER.debug("Error at filter dir", e);
-        }
-        return completionProposal;
+        return filterDirs(null, currentPath);
     }
 
     /**
@@ -142,19 +131,19 @@ public final class FilesCommons {
      *            the current path
      * @return the list
      */
-    public static List<CompletionProposal> filterDirs(Path ant, Path pathToSearch) {
+    public static List<CompletionProposal> filterDirs(Path prepend, Path pathToSearch) {
         List<CompletionProposal> completionProposal = new ArrayList<>();
         try (DirectoryStream<Path> directories = Files.newDirectoryStream(pathToSearch);) {
             for (Path path : directories) {
                 if (path.toFile().isDirectory()) {
                     Path valuePath = null;
-                    if (ant != null) {
-                        valuePath = ant.resolve(path.getFileName());
+                    if (prepend != null) {
+                        valuePath = prepend.resolve(path.getFileName());
                     } else {
                         valuePath = path.getFileName();
                     }
-                    completionProposal.add(new ShellCompletionProposal(valuePath.toString() + "/",
-                            path.getFileName().toString(), valuePath.toString()));
+                    completionProposal.add(
+                            new ShellCompletionProposal(valuePath.toString() + "/", path.getFileName().toString()));
                 }
             }
         } catch (IOException e) {

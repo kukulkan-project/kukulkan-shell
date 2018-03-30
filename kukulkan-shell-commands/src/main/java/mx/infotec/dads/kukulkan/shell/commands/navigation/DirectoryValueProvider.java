@@ -24,10 +24,8 @@
 package mx.infotec.dads.kukulkan.shell.commands.navigation;
 
 import java.io.File;
-import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -60,53 +58,31 @@ public class DirectoryValueProvider extends ValueProviderSupport {
     @Override
     public List<CompletionProposal> complete(MethodParameter parameter, CompletionContext completionContext,
             String[] hints) {
-        String currentWord = completionContext.currentWord();
-        Path wordPath = Paths.get(completionContext.currentWord());
-        Path wordParentPath = wordPath.getParent();
-        
-        if (wordPath.toString().isEmpty()) {
+        Path completionWordPath = Paths.get(completionContext.currentWord());
+
+        if (completionWordPath.toString().isEmpty()) {
             return FilesCommons.filterDirs(nav.getCurrentPath());
         } else {
-            Path pathToSearch = getPathToSearchDir(nav.getCurrentPath().resolve(wordPath));
-            
-            List<CompletionProposal> filterDirs = FilesCommons.filterDirs(wordParentPath, pathToSearch);
-//            System.out.println();
-//            System.out.println("***********");
-//            System.out.println(currentWord);
-//            System.out.println("***********");
-            filterDirs.forEach(k->{
-                System.out.println(k.value());
-            });
-            return filterDirs;
+            Path pathToSearch = resolvePathToSearchDirectory(nav.getCurrentPath().resolve(completionWordPath));
+            return FilesCommons.filterDirs(resolveParent(completionWordPath), pathToSearch);
         }
     }
 
-    private Path getPathToSearchDir(Path currentWord) {
-        File f = new File(currentWord.toString());
+    private Path resolveParent(Path currentWord) {
+        Path resolve = nav.getCurrentPath().resolve(currentWord);
+        return testIfPathExist(resolve, currentWord);
+    }
+
+    private Path resolvePathToSearchDirectory(Path currentWord) {
+        return testIfPathExist(currentWord, currentWord);
+    }
+
+    private Path testIfPathExist(Path testPath, Path returnedPath) {
+        File f = new File(testPath.toString());
         if (f.exists() && f.isDirectory()) {
-            return currentWord;
+            return returnedPath;
         } else {
-            return currentWord.getParent();
+            return returnedPath.getParent();
         }
     }
-
-    private String lastWord(String word) {
-        int lastIndexOf = word.lastIndexOf("/");
-        if (lastIndexOf == -1) {
-            return word;
-        } else {
-            return word.substring(lastIndexOf);
-
-        }
-    }
-
-    public static void main(String[] args) {
-        Path parent = Paths.get("/home").getParent();
-        if (parent == null) {
-            System.out.println("null value");
-        } else {
-            System.out.println(parent.toString());
-        }
-    }
-
 }
