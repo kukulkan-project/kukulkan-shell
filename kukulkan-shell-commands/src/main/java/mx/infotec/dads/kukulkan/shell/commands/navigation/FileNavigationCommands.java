@@ -24,13 +24,12 @@
 package mx.infotec.dads.kukulkan.shell.commands.navigation;
 
 import static mx.infotec.dads.kukulkan.shell.commands.navigation.FileNavigationHelper.calculateNewPath;
-import static mx.infotec.dads.kukulkan.shell.commands.navigation.FileNavigationHelper.processActions;
 import static mx.infotec.dads.kukulkan.shell.util.FilesCommons.showFiles;
 import static mx.infotec.dads.kukulkan.shell.util.TextFormatter.formatDirNotExistText;
 import static mx.infotec.dads.kukulkan.shell.util.TextFormatter.formatNormalText;
 
 import java.nio.file.Path;
-import java.nio.file.Paths;
+
 import java.util.List;
 
 import org.jline.utils.AttributedString;
@@ -94,8 +93,8 @@ public class FileNavigationCommands {
      */
     @ShellMethod("Change location")
     public AttributedString cd(
-            @ShellOption(valueProvider = DirectoryValueProvider.class, defaultValue = "@home") String dir) {
-        Path newPath = calculateNewPath(dir, nav);
+            @ShellOption(valueProvider = DirectoryValueProvider.class, defaultValue = "@home") String to) {
+        Path newPath = calculateNewPath(to, nav);
         if (newPath.toFile().exists()) {
             nav.setCurrentPath(newPath);
             publisher.publishEvent(new LocationUpdatedEvent(EventType.FILE_NAVIGATION));

@@ -9,8 +9,6 @@ import java.nio.file.Paths;
 import org.jline.utils.AttributedString;
 
 import mx.infotec.dads.kukulkan.shell.component.Navigator;
-import mx.infotec.dads.kukulkan.shell.event.message.EventType;
-import mx.infotec.dads.kukulkan.shell.event.message.LocationUpdatedEvent;
 
 /**
  * File Navigation Helper, It is used for do common operations in the

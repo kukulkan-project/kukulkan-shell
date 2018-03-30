@@ -23,6 +23,11 @@
  */
 package mx.infotec.dads.kukulkan.shell.commands.navigation;
 
+import java.io.File;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,12 +50,52 @@ public class DirectoryValueProvider extends ValueProviderSupport {
     @Autowired
     private Navigator nav;
 
-    /* (non-Javadoc)
-     * @see org.springframework.shell.standard.ValueProvider#complete(org.springframework.core.MethodParameter, org.springframework.shell.CompletionContext, java.lang.String[])
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.springframework.shell.standard.ValueProvider#complete(org.
+     * springframework.core.MethodParameter,
+     * org.springframework.shell.CompletionContext, java.lang.String[])
      */
     @Override
     public List<CompletionProposal> complete(MethodParameter parameter, CompletionContext completionContext,
             String[] hints) {
-        return FilesCommons.filterDirs(nav.getCurrentPath());
+        Path wordPath = Paths.get(completionContext.currentWord());
+        Path wordParentPath = wordPath.getParent();
+        if (wordPath.toString().isEmpty()) {
+            return FilesCommons.filterDirs(nav.getCurrentPath());
+        } else {
+            Path pathToSearch = getPathToSearchDir(nav.getCurrentPath().resolve(wordPath));
+            return FilesCommons.filterDirs(wordParentPath, pathToSearch);
+        }
     }
+
+    private Path getPathToSearchDir(Path currentWord) {
+        File f = new File(currentWord.toString());
+        if (f.exists() && f.isDirectory()) {
+            return currentWord;
+        } else {
+            return currentWord.getParent();
+        }
+    }
+
+    private String lastWord(String word) {
+        int lastIndexOf = word.lastIndexOf("/");
+        if (lastIndexOf == -1) {
+            return word;
+        } else {
+            return word.substring(lastIndexOf);
+
+        }
+    }
+
+    public static void main(String[] args) {
+        Path parent = Paths.get("/home").getParent();
+        if (parent == null) {
+            System.out.println("null value");
+        } else {
+            System.out.println(parent.toString());
+        }
+    }
+
 }
