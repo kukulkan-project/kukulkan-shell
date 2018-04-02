@@ -67,6 +67,10 @@
 			<groupId>mx.infotec.dads.kukulkan</groupId>
 			<artifactId>kukulkan-shell-plugin-dsl</artifactId>
 		</dependency>
+		<dependency>
+			<groupId>mx.infotec.dads.kukulkan</groupId>
+			<artifactId>kukulkan-shell-plugin-xtext</artifactId>
+		</dependency>
 	</dependencies>
 	<profiles>
 		<profile>

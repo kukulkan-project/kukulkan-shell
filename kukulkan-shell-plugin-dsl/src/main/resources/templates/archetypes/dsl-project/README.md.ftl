@@ -45,7 +45,7 @@ For distributing your app, run the following command
 This will generate:
 - a `deb` and `AppImage` in Ubuntu
 - an `exe` in Windows (you'll need some extra tools, see Windows subsection)
-- an `dmg` in Mac
+- a `dmg` in Mac
 
 ### Windows
 - Download [MSBuild](https://www.visualstudio.com/es/downloads/)

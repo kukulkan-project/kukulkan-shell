@@ -48,6 +48,9 @@ public class DslProjectGenerator implements Generator {
 
     @Autowired
     private WriterService writer;
+    
+    @Autowired
+    private XtextProjectGenerator xtextGenerator;
 
     private static final Logger LOGGER = LoggerFactory.getLogger(DslProjectGenerator.class);
 
@@ -66,6 +69,19 @@ public class DslProjectGenerator implements Generator {
 
         LOGGER.info("Generating {} DSL project", dslContext.getName());
 
+        // Writing root project
+        writer.copyTemplate(DIRECTORY + "electron-builder.yml.ftl", "electron-builder.yml", model);
+        writer.copyTemplate(DIRECTORY + "package.json.ftl", "package.json", model);
+        writer.copyTemplate(DIRECTORY + "README.md.ftl", "README.md", model);
+
+        // Copying resources
+        writer.copyDir(DslProjectGenerator.class, DIRECTORY + "resources", "resources", model);
+
+        // Writing XText project
+        XtextProjectContext xtextCtx = buildXtextContext(dslContext);
+        context.put(XtextProjectContext.class, xtextCtx);
+        xtextGenerator.process(context);
+        
         // Writing Theia extension
         writer.copyTemplate(DIRECTORY + "name-extension/package.json.ftl", "${project.name}-extension/package.json",
                 model);
@@ -79,45 +95,16 @@ public class DslProjectGenerator implements Generator {
         writer.copyTemplate(DIRECTORY + "name-extension/src/node/name-backend-module.ts.ftl",
                 "${project.name}-extension/src/node/${project.name}-backend-module.ts", model);
 
-        // Writing root project
-        writer.copyTemplate(DIRECTORY + "electron-builder.yml.ftl", "electron-builder.yml", model);
-        writer.copyTemplate(DIRECTORY + "package.json.ftl", "package.json", model);
-        writer.copyTemplate(DIRECTORY + "README.md.ftl", "README.md", model);
-
-        // Copying resources
-        writer.copyDir(DslProjectGenerator.class, DIRECTORY + "resources", "resources", model);
-
-        // Writing XText project
-        writer.copyTemplate(DIRECTORY + "package.name.parent/build.gradle.ftl",
-                "${project.basePackage}.${project.name}.parent/build.gradle", model);
-        writer.copyTemplate(DIRECTORY + "package.name.parent/settings.gradle.ftl",
-                "${project.basePackage}.${project.name}.parent/settings.gradle", model);
-        writer.copy(DIRECTORY + "package.name.parent/gradlew", "${project.basePackage}.${project.name}.parent/gradlew",
-                model);
-        writer.copy(DIRECTORY + "package.name.parent/gradlew.bat",
-                "${project.basePackage}.${project.name}.parent/gradlew.bat", model);
-
-        writer.copy(DIRECTORY + "package.name.parent/gradle/wrapper/gradle-wrapper.properties",
-                "${project.basePackage}.${project.name}.parent/gradle/wrapper/gradle-wrapper.properties", model);
-        writer.copy(DIRECTORY + "package.name.parent/gradle/maven-deployment.gradle",
-                "${project.basePackage}.${project.name}.parent/gradle/maven-deployment.gradle", model);
-        writer.copy(DIRECTORY + "package.name.parent/gradle/source-layout.gradle",
-                "${project.basePackage}.${project.name}.parent/gradle/source-layout.gradle", model);
-        writer.copy(DIRECTORY + "package.name.parent/gradle/wrapper/gradle-wrapper.jar",
-                "${project.basePackage}.${project.name}.parent/gradle/wrapper/gradle-wrapper.jar", model);
-        writer.copyTemplate(
-                DIRECTORY + "package.name.parent/package.name/src/main/java/qualified/GenerateName.mwe2.ftl",
-                "${project.basePackage}.${project.name}.parent/${project.basePackage}.${project.name}/src/main/java/${project.basePackage?replace(\".\", \"/\")}/${project.name}/Generate${project.name?cap_first}.mwe2",
-                model);
-        writer.copyTemplate(DIRECTORY + "package.name.parent/package.name/src/main/java/qualified/Name.xtext.ftl",
-                "${project.basePackage}.${project.name}.parent/${project.basePackage}.${project.name}/src/main/java/${project.basePackage?replace(\".\", \"/\")}/${project.name}/${project.name?cap_first}.xtext",
-                model);
-        writer.copyTemplate(DIRECTORY + "package.name.parent/package.name/build.gradle.ftl",
-                "${project.basePackage}.${project.name}.parent/${project.basePackage}.${project.name}/build.gradle",
-                model);
-        writer.copyTemplate(DIRECTORY + "package.name.parent/package.name.ide/build.gradle.ftl",
-                "${project.basePackage}.${project.name}.parent/${project.basePackage}.${project.name}.ide/build.gradle",
-                model);
+    }
+    
+    private XtextProjectContext buildXtextContext(DslProjectContext context){
+    	XtextProjectContext xtextCtx = new XtextProjectContext();
+        xtextCtx.setBasePackage(context.getBasePackage());
+        xtextCtx.setExtension(context.getExtension());
+        xtextCtx.setName(context.getName());
+        xtextCtx.setOutputDir(context.getOutputDir());
+        xtextCtx.setVersion(context.getVersion());
+        return xtextCtx;
     }
 
 }

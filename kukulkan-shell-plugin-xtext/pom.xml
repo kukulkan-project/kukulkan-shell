@@ -3,11 +3,11 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>kukulkan-shell-plugin-dsl</artifactId>
+    <artifactId>kukulkan-shell-plugin-xtext</artifactId>
     <packaging>jar</packaging>
 
-    <name>Kukulkan Shell :: plugin DSL project</name>
-    <description>The kukulkan generator for DSL projects</description>
+    <name>Kukulkan Shell :: plugin Xtext project</name>
+    <description>The kukulkan generator for Xtext projects</description>
 
     <parent>
         <groupId>mx.infotec.dads.kukulkan</groupId>
@@ -50,14 +50,11 @@
             <groupId>mx.infotec.dads.kukulkan</groupId>
             <artifactId>kukulkan-generator-angularjs</artifactId>
         </dependency>
+        
         <dependency>
             <groupId>mx.infotec.dads.kukulkan</groupId>
             <artifactId>kukulkan-shell-test-config</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>mx.infotec.dads.kukulkan</groupId>
-            <artifactId>kukulkan-shell-plugin-xtext</artifactId>
-        </dependency>
+        </dependency>        
     </dependencies>
     <repositories>
         <repository>

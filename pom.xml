@@ -69,6 +69,7 @@
         <module>kukulkan-shell-terminal</module>
         <module>kukulkan-shell-plugin-antlr4</module>
         <module>kukulkan-shell-plugin-dsl</module>
+        <module>kukulkan-shell-plugin-xtext</module>
     </modules>
 
     <dependencyManagement>
@@ -137,6 +138,11 @@
             <dependency>
             	<groupId>mx.infotec.dads.kukulkan</groupId>
             	<artifactId>kukulkan-shell-plugin-dsl</artifactId>
+            	<version>0.0.1-SNAPSHOT</version>
+            </dependency>
+            <dependency>
+            	<groupId>mx.infotec.dads.kukulkan</groupId>
+            	<artifactId>kukulkan-shell-plugin-xtext</artifactId>
             	<version>0.0.1-SNAPSHOT</version>
             </dependency>
         </dependencies>
