@@ -19,7 +19,7 @@ Install yarn.
 ## Quick Start
 
     //Generate the XText artifacts
-    cd ${project.name}.parent && ./gradlew
+    cd ${project.basePackage}.${project.name}.parent && ./gradlew
     //Generate the Language Server and package into jar
     ./gradlew shadowJar
     //Install extension dependencies

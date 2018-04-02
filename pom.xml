@@ -334,7 +334,7 @@
         <repository>
             <id>infotec-repo</id>
             <name>INFOTEC Repository</name>
-            <url>http://artifactory.dads.infotec.mx/artifactory/infotec</url>
+            <url>https://artifactory.dads.infotec.mx/artifactory/infotec</url>
         </repository>
     </repositories>
 </project>

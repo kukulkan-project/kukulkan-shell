@@ -66,7 +66,7 @@ public class DslProjectGenerator implements Generator {
 
         LOGGER.info("Generating {} DSL project", dslContext.getName());
 
-        // Wirting Theia extension
+        // Writing Theia extension
         writer.copyTemplate(DIRECTORY + "name-extension/package.json.ftl", "${project.name}-extension/package.json",
                 model);
         writer.copy(DIRECTORY + "name-extension/tsconfig.json", "${project.name}-extension/tsconfig.json", model);
