@@ -27,7 +27,7 @@ import static mx.infotec.dads.kukulkan.shell.util.AnsiConstants.ANSI_GREEN;
 import static mx.infotec.dads.kukulkan.shell.util.AnsiConstants.ANSI_RESET;
 
 import java.io.BufferedReader;
-import java.io.File;
+import java.io.IOException;
 import java.io.InputStreamReader;
 import java.nio.file.Path;
 import java.util.ArrayList;
@@ -47,17 +47,23 @@ import mx.infotec.dads.kukulkan.shell.domain.Line;
 import mx.infotec.dads.kukulkan.shell.domain.NativeCommand;
 import mx.infotec.dads.kukulkan.shell.domain.ShellCommand;
 import mx.infotec.dads.kukulkan.shell.services.CommandService;
+import mx.infotec.dads.kukulkan.shell.util.BufferCollector;
+import mx.infotec.dads.kukulkan.shell.util.CharSequenceCollector;
 import mx.infotec.dads.kukulkan.shell.util.LineProcessor;
 import mx.infotec.dads.kukulkan.shell.util.LineValuedProcessor;
+import mx.infotec.dads.kukulkan.shell.util.StringBuilderCollector;
 import mx.infotec.dads.kukulkan.shell.util.TextFormatter;
 
 /**
  * Useful methods to handle the main Console.
  *
  * @author Daniel Cortes Pichardo
+ * @param <A>
+ * @param <R>
+ * @param <T>
  */
 @Service
-public class CommandServiceImpl implements CommandService {
+public class CommandServiceImpl<A, R, T> implements CommandService {
 
     /**
      * The Constant LOGGER.
@@ -174,13 +180,9 @@ public class CommandServiceImpl implements CommandService {
         try {
             Process p = Runtime.getRuntime().exec(command.getExecutableCommand(), null, workingDirectory.toFile());
             p.waitFor();
-            BufferedReader reader = getBuffedReaderForProcess(p);
-            String line;
-            while ((line = reader.readLine()) != null) {
-                processor.process(line).ifPresent(lines::add);
-            }
+            lines = readBufferProcess(p, new CharSequenceCollector());
         } catch (Exception e) {
-            LOGGER.info(GENERIC_ERROR_MSG, e);
+            LOGGER.debug(GENERIC_ERROR_MSG, e);
             lines.add(e.getMessage());
         }
         return lines;
@@ -195,17 +197,13 @@ public class CommandServiceImpl implements CommandService {
      */
     @Override
     public void testNativeCommand(NativeCommand nc) {
-        StringBuilder output = new StringBuilder();
+        String output;
         try {
             Process p = Runtime.getRuntime().exec(nc.getTestCommand());
             p.waitFor();
-            BufferedReader reader = getBuffedReaderForProcess(p);
-            String line;
-            while ((line = reader.readLine()) != null) {
-                output.append(line).append("\n");
-            }
+            output = readBufferProcess(p, new StringBuilderCollector());
             LOGGER.info("[{}] is installed", nc.getCommand());
-            nc.setInfoMessage(output.toString());
+            nc.setInfoMessage(output);
             nc.setActive(true);
         } catch (Exception e) {
             LOGGER.warn("[{}] is not installed", nc.getCommand());
@@ -213,11 +211,24 @@ public class CommandServiceImpl implements CommandService {
         }
     }
 
-    private static BufferedReader getBuffedReaderForProcess(Process p) {
+    private BufferedReader getBuffedReaderForProcess(Process p) {
         if (p.exitValue() > 0) {
             return new BufferedReader(new InputStreamReader(p.getErrorStream()));
         } else {
             return new BufferedReader(new InputStreamReader(p.getInputStream()));
         }
+    }
+
+    public static <L> L readBufferProcess(Process p, BufferCollector<L> bufferCollector) throws IOException {
+        String stringHolder;
+        BufferedReader stdInput = new BufferedReader(new InputStreamReader(p.getInputStream()));
+        BufferedReader stdError = new BufferedReader(new InputStreamReader(p.getErrorStream()));
+        while ((stringHolder = stdInput.readLine()) != null) {
+            bufferCollector.collect(stringHolder);
+        }
+        while ((stringHolder = stdError.readLine()) != null) {
+            bufferCollector.collect(stringHolder);
+        }
+        return bufferCollector.getCollection();
     }
 }
