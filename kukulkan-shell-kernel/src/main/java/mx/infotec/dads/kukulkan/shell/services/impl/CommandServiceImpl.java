@@ -27,6 +27,7 @@ import static mx.infotec.dads.kukulkan.shell.util.AnsiConstants.ANSI_GREEN;
 import static mx.infotec.dads.kukulkan.shell.util.AnsiConstants.ANSI_RESET;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.InputStreamReader;
 import java.nio.file.Path;
 import java.util.ArrayList;
@@ -64,7 +65,7 @@ public class CommandServiceImpl implements CommandService {
     private static final Logger LOGGER = LoggerFactory.getLogger(CommandServiceImpl.class);
 
     private static final String GENERIC_ERROR_MSG = "Errot at exec command";
-    
+
     /**
      * The terminal.
      */
@@ -81,7 +82,8 @@ public class CommandServiceImpl implements CommandService {
     /**
      * Printf.
      *
-     * @param text the text
+     * @param text
+     *            the text
      * @deprecated prefered use TextFormatter class
      * @see TextFormatter
      */
@@ -95,8 +97,10 @@ public class CommandServiceImpl implements CommandService {
     /**
      * Printf.
      *
-     * @param key the key
-     * @param message the message
+     * @param key
+     *            the key
+     * @param message
+     *            the message
      * @deprecated prefered use TextFormatter class
      * @see TextFormatter
      */
@@ -120,7 +124,7 @@ public class CommandServiceImpl implements CommandService {
         List<Line> lines = new ArrayList<>();
         try {
             Process p = Runtime.getRuntime().exec(command.getExecutableCommand(), null, nav.getCurrentPath().toFile());
-            BufferedReader reader = new BufferedReader(new InputStreamReader(p.getInputStream()));
+            BufferedReader reader = getBuffedReaderForProcess(p);
             String line;
             while ((line = reader.readLine()) != null) {
                 processor.process(line).ifPresent(lines::add);
@@ -170,13 +174,13 @@ public class CommandServiceImpl implements CommandService {
         try {
             Process p = Runtime.getRuntime().exec(command.getExecutableCommand(), null, workingDirectory.toFile());
             p.waitFor();
-            BufferedReader reader = new BufferedReader(new InputStreamReader(p.getInputStream()));
+            BufferedReader reader = getBuffedReaderForProcess(p);
             String line;
             while ((line = reader.readLine()) != null) {
                 processor.process(line).ifPresent(lines::add);
             }
         } catch (Exception e) {
-            LOGGER.debug(GENERIC_ERROR_MSG, e);
+            LOGGER.info(GENERIC_ERROR_MSG, e);
             lines.add(e.getMessage());
         }
         return lines;
@@ -195,7 +199,7 @@ public class CommandServiceImpl implements CommandService {
         try {
             Process p = Runtime.getRuntime().exec(nc.getTestCommand());
             p.waitFor();
-            BufferedReader reader = new BufferedReader(new InputStreamReader(p.getInputStream()));
+            BufferedReader reader = getBuffedReaderForProcess(p);
             String line;
             while ((line = reader.readLine()) != null) {
                 output.append(line).append("\n");
@@ -206,6 +210,14 @@ public class CommandServiceImpl implements CommandService {
         } catch (Exception e) {
             LOGGER.warn("[{}] is not installed", nc.getCommand());
             nc.setErrorMessage(String.format("You must install the command [%s]", nc.getCommand()));
+        }
+    }
+
+    private static BufferedReader getBuffedReaderForProcess(Process p) {
+        if (p.exitValue() > 0) {
+            return new BufferedReader(new InputStreamReader(p.getErrorStream()));
+        } else {
+            return new BufferedReader(new InputStreamReader(p.getInputStream()));
         }
     }
 }

@@ -1,6 +1,6 @@
 package mx.infotec.dads.kukulkan.shell.commands.git;
 
-import static mx.infotec.dads.kukulkan.shell.commands.git.GitCommands.GIT_COMMAND;
+import static mx.infotec.dads.kukulkan.shell.commands.git.GitHelper.GIT_COMMAND;
 
 import java.nio.file.Path;
 import java.util.List;

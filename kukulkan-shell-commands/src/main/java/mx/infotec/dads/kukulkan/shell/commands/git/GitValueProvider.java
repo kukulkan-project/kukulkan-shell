@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package mx.infotec.dads.kukulkan.shell.commands.files;
+package mx.infotec.dads.kukulkan.shell.commands.git;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -34,27 +34,41 @@ import org.springframework.shell.standard.ValueProviderSupport;
 import org.springframework.stereotype.Component;
 
 import mx.infotec.dads.kukulkan.shell.component.Navigator;
-import mx.infotec.dads.kukulkan.shell.domain.ShellCompletionProposal;
+import mx.infotec.dads.kukulkan.shell.domain.ShellCommand;
+import mx.infotec.dads.kukulkan.shell.services.CommandService;
 
 /**
  * The Class GitValueProvider.
  */
 @Component
-public class FileLocationValueProvider extends ValueProviderSupport {
+public class GitValueProvider extends ValueProviderSupport {
 
     /** The nav. */
     @Autowired
     private Navigator nav;
+    @Autowired
+    CommandService commandService;
 
-    /* (non-Javadoc)
-     * @see org.springframework.shell.standard.ValueProvider#complete(org.springframework.core.MethodParameter, org.springframework.shell.CompletionContext, java.lang.String[])
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.springframework.shell.standard.ValueProvider#complete(org.
+     * springframework.core.MethodParameter,
+     * org.springframework.shell.CompletionContext, java.lang.String[])
      */
     @Override
     public List<CompletionProposal> complete(MethodParameter parameter, CompletionContext completionContext,
             String[] hints) {
+
+        List<CharSequence> exec = commandService.exec(new ShellCommand("git", "branch"));
         List<CompletionProposal> completionProposal = new ArrayList<>();
-        completionProposal.add(new ShellCompletionProposal(completionContext.currentWord()));
-        completionProposal.add(new ShellCompletionProposal("hola mundo"));
+        for (CharSequence charSequence : exec) {
+            completionProposal.add(new CompletionProposal(String.valueOf(charSequence)));
+        }
+
+        if (completionProposal.isEmpty()) {
+            completionProposal.add(new CompletionProposal("[noValues]"));
+        }
         return completionProposal;
     }
 }

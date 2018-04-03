@@ -39,7 +39,7 @@ import mx.infotec.dads.kukulkan.shell.component.Navigator;
 import mx.infotec.dads.kukulkan.shell.util.FilesCommons;
 
 /**
- * The Class DirectoryValueProvider.
+ * The Class GitValueProvider.
  */
 @Component
 public class DirectoryValueProvider extends ValueProviderSupport {

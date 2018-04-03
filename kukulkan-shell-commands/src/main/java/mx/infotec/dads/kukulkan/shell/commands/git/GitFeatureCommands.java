@@ -23,16 +23,13 @@
  */
 package mx.infotec.dads.kukulkan.shell.commands.git;
 
-import static mx.infotec.dads.kukulkan.shell.commands.git.GitHelper.ADD;
-import static mx.infotec.dads.kukulkan.shell.commands.git.GitHelper.CLONE;
+import static mx.infotec.dads.kukulkan.shell.commands.git.GitHelper.CHECKOUT;
+import static mx.infotec.dads.kukulkan.shell.commands.git.GitHelper.DEVELOP_BRANCH;
+import static mx.infotec.dads.kukulkan.shell.commands.git.GitHelper.FEATURE_PREFIX;
 import static mx.infotec.dads.kukulkan.shell.commands.git.GitHelper.GIT_COMMAND;
-import static mx.infotec.dads.kukulkan.shell.commands.git.GitHelper.STATUS;
-
-import java.util.List;
 
 import javax.validation.constraints.NotNull;
 
-import org.jline.utils.AttributedString;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,7 +38,6 @@ import org.springframework.shell.Availability;
 import org.springframework.shell.standard.ShellComponent;
 import org.springframework.shell.standard.ShellMethod;
 import org.springframework.shell.standard.ShellMethodAvailability;
-import org.springframework.shell.standard.ShellOption;
 
 import mx.infotec.dads.kukulkan.shell.domain.NativeCommand;
 import mx.infotec.dads.kukulkan.shell.domain.NativeCommandContext;
@@ -49,7 +45,6 @@ import mx.infotec.dads.kukulkan.shell.domain.ShellCommand;
 import mx.infotec.dads.kukulkan.shell.event.message.EventType;
 import mx.infotec.dads.kukulkan.shell.event.message.LocationUpdatedEvent;
 import mx.infotec.dads.kukulkan.shell.services.CommandService;
-import mx.infotec.dads.kukulkan.shell.util.TextFormatter;
 
 /**
  * Docker Commands.
@@ -57,11 +52,9 @@ import mx.infotec.dads.kukulkan.shell.util.TextFormatter;
  * @author Daniel Cortes Pichardo
  */
 @ShellComponent
-public class GitCommands {
+public class GitFeatureCommands {
 
-    private static final String LOGGER_EXEC = "exec [{} {}]";
-
-    private static final Logger LOGGER = LoggerFactory.getLogger(GitCommands.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(GitFeatureCommands.class);
 
     /** The command service. */
     @Autowired
@@ -75,50 +68,78 @@ public class GitCommands {
     @Autowired
     private ApplicationEventPublisher publisher;
 
-    /**
-     * Git status.
-     *
-     * @return the list
-     */
-    @ShellMethod("Show the status of the current git project")
-    public List<AttributedString> gitStatus() {
-        LOGGER.debug(LOGGER_EXEC, GIT_COMMAND, STATUS);
-        return execGitCommand(new ShellCommand(GIT_COMMAND, STATUS));
-    }
-
-    @ShellMethod("Show the status of the current git project")
-    public List<AttributedString> gitClone(@NotNull String repositoryPath) {
-        LOGGER.debug(LOGGER_EXEC, GIT_COMMAND, CLONE);
-        return execGitCommand(new ShellCommand(GIT_COMMAND, CLONE).addArg(repositoryPath));
-    }
-
-    @ShellMethod("Show the status of the current git project")
-    public List<AttributedString> gitAdd(@NotNull String fileName) {
-        LOGGER.debug(LOGGER_EXEC, GIT_COMMAND, ADD);
-        return execGitCommand(new ShellCommand(GIT_COMMAND, ADD).addArg(fileName));
-    }
-
-    @ShellMethod("Change to other branch")
-    public List<AttributedString> gitCheckout(
-            @ShellOption(valueProvider = GitValueProvider.class) @NotNull String fileName) {
-        LOGGER.debug(LOGGER_EXEC, GIT_COMMAND, GitHelper.CHECKOUT);
-        return execGitCommand(new ShellCommand(GIT_COMMAND, GitHelper.CHECKOUT).addArg(fileName));
-    }
-
-    @ShellMethod("Show the status of the current git project")
-    public List<AttributedString> gitBranchList(@NotNull String fileName) {
-        LOGGER.debug(LOGGER_EXEC, GIT_COMMAND, GitHelper.BRANCH);
-        return execGitCommand(new ShellCommand(GIT_COMMAND, GitHelper.BRANCH));
-    }
-
-    private List<AttributedString> execGitCommand(ShellCommand shellCommand) {
-        List<CharSequence> exec = commandService.exec(shellCommand);
+    @ShellMethod("Create a new Feature")
+    public void gitFeatureList() {
+        commandService.exec(new ShellCommand(GIT_COMMAND, CHECKOUT, "-b", FEATURE_PREFIX, DEVELOP_BRANCH));
         publisher.publishEvent(new LocationUpdatedEvent(EventType.FILE_NAVIGATION));
-        return TextFormatter.formatToGitOutput(exec);
     }
 
-    @ShellMethodAvailability("gitStatus")
-    public Availability gitStatusAvailability() {
+    /**
+     * Git create feature.
+     *
+     * @param name
+     *            the name
+     */
+    @ShellMethod("Create a new Feature")
+    public void gitFeatureStart(@NotNull String name) {
+        commandService.exec(new ShellCommand(GIT_COMMAND, CHECKOUT, "-b", FEATURE_PREFIX + name, DEVELOP_BRANCH));
+        publisher.publishEvent(new LocationUpdatedEvent(EventType.FILE_NAVIGATION));
+    }
+
+    /**
+     * Git terminate feature.
+     *
+     * @param name
+     *            the name
+     */
+    @ShellMethod("Terminate a Feature")
+    public void gitFeatureFinish(@NotNull String name) {
+        commandService.exec(new ShellCommand(GIT_COMMAND, CHECKOUT, DEVELOP_BRANCH));
+        commandService.exec(new ShellCommand(GIT_COMMAND, "merge", "--no-ff", name));
+        commandService.exec(new ShellCommand(GIT_COMMAND, "branch", "-d", FEATURE_PREFIX + name));
+        publisher.publishEvent(new LocationUpdatedEvent(EventType.FILE_NAVIGATION));
+    }
+
+    /**
+     * Git publish feature.
+     *
+     * @param name
+     *            the name
+     */
+    @ShellMethod("Publish a Feature to a remote server")
+    public void gitFeaturePublish(@NotNull String name) {
+        commandService.exec(new ShellCommand(GIT_COMMAND, "push", "origin", FEATURE_PREFIX + name));
+        publisher.publishEvent(new LocationUpdatedEvent(EventType.FILE_NAVIGATION));
+    }
+
+    @ShellMethod("Publish a Feature to a remote server")
+    public void gitFeatureTrack(@NotNull String name) {
+
+    }
+
+    @ShellMethod("Publish a Feature to a remote server")
+    public void gitFeatureDiff(@NotNull String name) {
+    }
+
+    @ShellMethod("Publish a Feature to a remote server")
+    public void gitFeatureRebase(@NotNull String name) {
+    }
+
+    @ShellMethod("Publish a Feature to a remote server")
+    public void gitFeatureCheckout(@NotNull String name) {
+    }
+
+    @ShellMethod("Publish a Feature to a remote server")
+    public void gitFeaturePull(@NotNull String name) {
+    }
+
+    /**
+     * s Docker show running process availability.
+     *
+     * @return the availability
+     */
+    @ShellMethodAvailability({ "gitFeaturePublish", "gitFeatureFinish", "gitFeatureStart" })
+    public Availability gitFeatureAvailability() {
         NativeCommand gitCmd = projectContext.getAvailableCommands().get(GIT_COMMAND);
         if (gitCmd != null && gitCmd.isActive()) {
             return Availability.available();
