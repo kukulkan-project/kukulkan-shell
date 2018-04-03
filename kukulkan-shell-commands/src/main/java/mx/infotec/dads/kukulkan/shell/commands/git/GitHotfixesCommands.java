@@ -27,30 +27,23 @@ import static mx.infotec.dads.kukulkan.shell.commands.git.GitHelper.CHECKOUT;
 import static mx.infotec.dads.kukulkan.shell.commands.git.GitHelper.DEVELOP_BRANCH;
 import static mx.infotec.dads.kukulkan.shell.commands.git.GitHelper.FEATURE_PREFIX;
 import static mx.infotec.dads.kukulkan.shell.commands.git.GitHelper.GIT_COMMAND;
-import static mx.infotec.dads.kukulkan.shell.commands.git.GitHelper.RELEASE_PREFIX;
 
-import java.util.List;
 
 import javax.validation.constraints.NotNull;
 
-import org.jline.utils.AttributedString;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
-import org.springframework.shell.Availability;
 import org.springframework.shell.standard.ShellComponent;
 import org.springframework.shell.standard.ShellMethod;
-import org.springframework.shell.standard.ShellMethodAvailability;
 
 import mx.infotec.dads.kukulkan.shell.component.Navigator;
-import mx.infotec.dads.kukulkan.shell.domain.NativeCommand;
 import mx.infotec.dads.kukulkan.shell.domain.NativeCommandContext;
 import mx.infotec.dads.kukulkan.shell.domain.ShellCommand;
 import mx.infotec.dads.kukulkan.shell.event.message.EventType;
 import mx.infotec.dads.kukulkan.shell.event.message.LocationUpdatedEvent;
 import mx.infotec.dads.kukulkan.shell.services.CommandService;
-import mx.infotec.dads.kukulkan.shell.util.TextFormatter;
 
 /**
  * Docker Commands.
@@ -114,21 +107,5 @@ public class GitHotfixesCommands {
         commandService.exec(new ShellCommand(GIT_COMMAND, "merge", "--no-ff", name));
         commandService.exec(new ShellCommand(GIT_COMMAND, "branch", "-d", FEATURE_PREFIX + name));
         publisher.publishEvent(new LocationUpdatedEvent(EventType.FILE_NAVIGATION));
-    }
-
-    /**
-     * Docker show running process availability.
-     *
-     * @return the availability
-     */
-    @ShellMethodAvailability({ "gitCreateFeature", "gitTerminateFeature", "gitPublishFeature", "gitCreateRelease",
-            "gitTerminateRelease", "gitPublishRelease" })
-    public Availability dockerShowRunningProcessAvailability() {
-        NativeCommand gitCmd = projectContext.getAvailableCommands().get(GIT_COMMAND);
-        if (gitCmd != null && gitCmd.isActive()) {
-            return Availability.available();
-        } else {
-            return Availability.unavailable("you must install git");
-        }
     }
 }

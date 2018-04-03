@@ -35,20 +35,14 @@ import javax.validation.constraints.NotNull;
 import org.jline.utils.AttributedString;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationEventPublisher;
-import org.springframework.shell.Availability;
 import org.springframework.shell.standard.ShellComponent;
 import org.springframework.shell.standard.ShellMethod;
-import org.springframework.shell.standard.ShellMethodAvailability;
 import org.springframework.shell.standard.ShellOption;
 
-import mx.infotec.dads.kukulkan.shell.domain.NativeCommand;
-import mx.infotec.dads.kukulkan.shell.domain.NativeCommandContext;
+import mx.infotec.dads.kukulkan.shell.commands.git.valueprovided.GitValueProvider;
 import mx.infotec.dads.kukulkan.shell.domain.ShellCommand;
 import mx.infotec.dads.kukulkan.shell.event.message.EventType;
 import mx.infotec.dads.kukulkan.shell.event.message.LocationUpdatedEvent;
-import mx.infotec.dads.kukulkan.shell.services.CommandService;
 import mx.infotec.dads.kukulkan.shell.util.TextFormatter;
 
 /**
@@ -57,56 +51,42 @@ import mx.infotec.dads.kukulkan.shell.util.TextFormatter;
  * @author Daniel Cortes Pichardo
  */
 @ShellComponent
-public class GitCommands {
-
-    private static final String LOGGER_EXEC = "exec [{} {}]";
+public class GitCommands extends GitBaseCommands{
 
     private static final Logger LOGGER = LoggerFactory.getLogger(GitCommands.class);
-
-    /** The command service. */
-    @Autowired
-    CommandService commandService;
-
-    /** The project context. */
-    @Autowired
-    NativeCommandContext projectContext;
-
-    /** The publisher. */
-    @Autowired
-    private ApplicationEventPublisher publisher;
 
     /**
      * Git status.
      *
      * @return the list
      */
-    @ShellMethod("Show the status of the current git project")
+    @ShellMethod("Displays paths that have differences between the index file and the current HEAD commit")
     public List<AttributedString> gitStatus() {
         LOGGER.debug(LOGGER_EXEC, GIT_COMMAND, STATUS);
         return execGitCommand(new ShellCommand(GIT_COMMAND, STATUS));
     }
 
-    @ShellMethod("Show the status of the current git project")
+    @ShellMethod("Clones a repository into a newly created directory, creates remote-tracking branches for each branch in the cloned repository")
     public List<AttributedString> gitClone(@NotNull String repositoryPath) {
         LOGGER.debug(LOGGER_EXEC, GIT_COMMAND, CLONE);
         return execGitCommand(new ShellCommand(GIT_COMMAND, CLONE).addArg(repositoryPath));
     }
 
-    @ShellMethod("Show the status of the current git project")
+    @ShellMethod("Updates the index using the current content found in the working tree, to prepare the content staged for the next commit")
     public List<AttributedString> gitAdd(@NotNull String fileName) {
         LOGGER.debug(LOGGER_EXEC, GIT_COMMAND, ADD);
         return execGitCommand(new ShellCommand(GIT_COMMAND, ADD).addArg(fileName));
     }
 
-    @ShellMethod("Change to other branch")
+    @ShellMethod("Updates files in the working tree to match the version in the index or the specified tree")
     public List<AttributedString> gitCheckout(
-            @ShellOption(valueProvider = GitValueProvider.class) @NotNull String fileName) {
+            @ShellOption(valueProvider = GitValueProvider.GitBranchValueProvider.class) @NotNull String branchName) {
         LOGGER.debug(LOGGER_EXEC, GIT_COMMAND, GitHelper.CHECKOUT);
-        return execGitCommand(new ShellCommand(GIT_COMMAND, GitHelper.CHECKOUT).addArg(fileName));
+        return execGitCommand(new ShellCommand(GIT_COMMAND, GitHelper.CHECKOUT).addArg(branchName));
     }
 
-    @ShellMethod("Show the status of the current git project")
-    public List<AttributedString> gitBranchList(@NotNull String fileName) {
+    @ShellMethod("List all the branches in the local repository")
+    public List<AttributedString> gitBranchList() {
         LOGGER.debug(LOGGER_EXEC, GIT_COMMAND, GitHelper.BRANCH);
         return execGitCommand(new ShellCommand(GIT_COMMAND, GitHelper.BRANCH));
     }
@@ -115,15 +95,5 @@ public class GitCommands {
         List<CharSequence> exec = commandService.exec(shellCommand);
         publisher.publishEvent(new LocationUpdatedEvent(EventType.FILE_NAVIGATION));
         return TextFormatter.formatToGitOutput(exec);
-    }
-
-    @ShellMethodAvailability("gitStatus")
-    public Availability gitStatusAvailability() {
-        NativeCommand gitCmd = projectContext.getAvailableCommands().get(GIT_COMMAND);
-        if (gitCmd != null && gitCmd.isActive()) {
-            return Availability.available();
-        } else {
-            return Availability.unavailable("you must install git");
-        }
     }
 }

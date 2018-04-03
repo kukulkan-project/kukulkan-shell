@@ -57,9 +57,6 @@ public class KukulkanPromptProvided implements PromptProvider {
     private Navigator nav;
 
     @Autowired
-    private KukulkanShellContext context;
-
-    @Autowired
     private List<ChangeLocationAwareness> changeLocationAwarenessList;
     /** The prompt. */
     private AttributedString prompt;
@@ -69,6 +66,9 @@ public class KukulkanPromptProvided implements PromptProvider {
 
     /** The end prompt. */
     private AttributedString endPrompt;
+
+    @Autowired
+    private List<Resettable> resettableList;
 
     /**
      * Inits the.
@@ -98,7 +98,7 @@ public class KukulkanPromptProvided implements PromptProvider {
      */
     @EventListener
     public void handle(LocationUpdatedEvent event) {
-        resetDefaulValues();
+        resettableList.forEach(Resettable::reset);
         if (EventType.FILE_NAVIGATION.equals(event.getEventType())) {
             changeLocationAwarenessActions();
         }
@@ -116,9 +116,5 @@ public class KukulkanPromptProvided implements PromptProvider {
             }
         }
         prompt = AttributedString.join(new AttributedString(""), basePrompt, currentPrompt, endPrompt);
-    }
-
-    private void resetDefaulValues() {
-        context.setConfiguration(Optional.empty());
     }
 }

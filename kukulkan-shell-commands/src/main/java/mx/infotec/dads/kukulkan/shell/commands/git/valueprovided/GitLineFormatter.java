@@ -21,52 +21,13 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package mx.infotec.dads.kukulkan.shell.commands.git;
+package mx.infotec.dads.kukulkan.shell.commands.git.valueprovided;
 
 /**
- * Docker Commands.
- *
- * @author Daniel Cortes Pichardo
+ * GitLineFormatter
  */
-public class GitHelper {
 
-    private GitHelper() {
-
-    }
-
-    /** The Constant GIT_COMMAND. */
-    public static final String GIT_COMMAND = "git";
-
-    public static final String INIT = "init";
-
-    public static final String CLONE = "clone";
-
-    public static final String ADD = "add";
-
-    public static final String COMMIT = "commit";
-
-    public static final String PUSH = "push";
-
-    public static final String PULL = "pull";
-
-    public static final String MERGE = "merge";
-
-    public static final String STATUS = "status";
-
-    public static final String CHECKOUT = "checkout";
-
-    public static final String BRANCH = "branch";
-
-    public static final String LOG = "log";
-
-    public static final String DEVELOP_BRANCH = "develop";
-
-    public static final String FEATURE_PREFIX = "feature-";
-
-    public static final String RELEASE_PREFIX = "release-";
-
-    
-    public static String formatGitBranchLine(CharSequence charSequence) {
-        return String.valueOf(charSequence).replace("*", "").trim();
-    }
+@FunctionalInterface
+public interface GitLineFormatter {
+    public String formatLine(CharSequence line);
 }

@@ -21,54 +21,54 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package mx.infotec.dads.kukulkan.shell.commands.git;
+package mx.infotec.dads.kukulkan.shell.commands.git.valueprovided;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
+
+import javax.annotation.PostConstruct;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.MethodParameter;
 import org.springframework.shell.CompletionContext;
 import org.springframework.shell.CompletionProposal;
 import org.springframework.shell.standard.ValueProviderSupport;
-import org.springframework.stereotype.Component;
 
-import mx.infotec.dads.kukulkan.shell.component.Navigator;
+import mx.infotec.dads.kukulkan.shell.commands.git.GitHelper;
 import mx.infotec.dads.kukulkan.shell.domain.ShellCommand;
 import mx.infotec.dads.kukulkan.shell.services.CommandService;
 
 /**
  * The Class GitValueProvider.
+ * 
+ * @author Daniel Cortes Pichardo
  */
-@Component
-public class GitValueProvider extends ValueProviderSupport {
 
-    /** The nav. */
+public abstract class GitBaseValueProvider extends ValueProviderSupport {
     @Autowired
-    private Navigator nav;
-    @Autowired
-    CommandService commandService;
+    private CommandService commandService;
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.springframework.shell.standard.ValueProvider#complete(org.
-     * springframework.core.MethodParameter,
-     * org.springframework.shell.CompletionContext, java.lang.String[])
-     */
+    private ShellCommand shellCommand;
+
+    private GitLineFormatter formatter;
+
+    @PostConstruct
+    private void init() {
+        shellCommand = getShellCommand();
+        formatter = getLineFormatter();
+    }
+
     @Override
     public List<CompletionProposal> complete(MethodParameter parameter, CompletionContext completionContext,
             String[] hints) {
-
-        List<CharSequence> exec = commandService.exec(new ShellCommand("git", "branch"));
-        List<CompletionProposal> completionProposal = new ArrayList<>();
-        for (CharSequence charSequence : exec) {
-            completionProposal.add(new CompletionProposal(String.valueOf(charSequence)));
-        }
-
-        if (completionProposal.isEmpty()) {
-            completionProposal.add(new CompletionProposal("[noValues]"));
-        }
-        return completionProposal;
+        return commandService.exec(shellCommand).stream()
+                .map(charSequence -> new CompletionProposal(formatter.formatLine(charSequence)))
+                .collect(Collectors.toList());
     }
+
+    public GitLineFormatter getLineFormatter() {
+        return (line) -> String.valueOf(line).trim();
+    }
+
+    public abstract ShellCommand getShellCommand();
 }

@@ -3,7 +3,6 @@ package mx.infotec.dads.kukulkan.shell.commands.git;
 import static mx.infotec.dads.kukulkan.shell.commands.git.GitHelper.GIT_COMMAND;
 
 import java.nio.file.Path;
-import java.util.List;
 import java.util.Optional;
 
 import org.jline.utils.AttributedString;
@@ -22,16 +21,22 @@ public class GitChangeLocationAwareness extends AbstractChangeLocationAwareness 
     /** The command service. */
     @Autowired
     private CommandServiceImpl commandService;
+    @Autowired
+    private GitContext context;
 
     @Override
     public Optional<AttributedString> createPrompt(Path currentLocation) {
-        List<CharSequence> result = commandService.exec(currentLocation,
+        String branchName = commandService.exec(currentLocation,
                 new ShellCommand(GIT_COMMAND).addArg("rev-parse").addArg("--abbrev-ref").addArg("HEAD"),
-                line -> Optional.ofNullable(new AttributedString(line)));
+                line -> Optional.ofNullable(new AttributedString(line))).get(0).toString();
         AttributedString dirPrompt = AttributedString.join(new AttributedString(""),
                 new AttributedString("@", AttributedStyle.BOLD.foreground(AttributedStyle.YELLOW)),
-                new AttributedString("git/" + result.get(0).toString(),
-                        AttributedStyle.BOLD_OFF.foreground(AttributedStyle.YELLOW)));
+                new AttributedString("git/" + branchName, AttributedStyle.BOLD_OFF.foreground(AttributedStyle.YELLOW)));
+        if (branchName.equals("master")) {
+            context.setMaster(true);
+        } else if (branchName.equals("develop")) {
+            context.setDevelop(true);
+        }
         return Optional.of(dirPrompt);
     }
 

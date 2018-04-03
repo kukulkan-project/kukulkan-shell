@@ -1,9 +1,9 @@
 package mx.infotec.dads.kukulkan.shell.domain;
 
-import java.io.Serializable;
 import java.util.Optional;
 
 import mx.infotec.dads.kukulkan.metamodel.foundation.ProjectConfiguration;
+import mx.infotec.dads.kukulkan.shell.prompt.Resettable;
 
 /**
  * KukulkanShellContext
@@ -11,7 +11,7 @@ import mx.infotec.dads.kukulkan.metamodel.foundation.ProjectConfiguration;
  * @author Daniel Cortes Pichardo
  *
  */
-public class KukulkanShellContext implements Serializable {
+public class KukulkanShellContext implements Resettable {
 
     private static final long serialVersionUID = 1L;
 
@@ -31,5 +31,10 @@ public class KukulkanShellContext implements Serializable {
 
     public void setConfiguration(Optional<ProjectConfiguration> configuration) {
         this.configuration = configuration;
+    }
+
+    @Override
+    public void reset() {
+        this.setConfiguration(Optional.empty());
     }
 }

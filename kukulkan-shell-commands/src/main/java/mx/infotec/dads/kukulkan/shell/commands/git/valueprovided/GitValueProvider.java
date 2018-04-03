@@ -21,52 +21,43 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package mx.infotec.dads.kukulkan.shell.commands.git;
+package mx.infotec.dads.kukulkan.shell.commands.git.valueprovided;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.MethodParameter;
+import org.springframework.shell.CompletionContext;
+import org.springframework.shell.CompletionProposal;
+import org.springframework.shell.standard.ValueProviderSupport;
+import org.springframework.stereotype.Component;
+
+import mx.infotec.dads.kukulkan.shell.commands.git.GitHelper;
+import mx.infotec.dads.kukulkan.shell.component.Navigator;
+import mx.infotec.dads.kukulkan.shell.domain.ShellCommand;
+import mx.infotec.dads.kukulkan.shell.services.CommandService;
 
 /**
- * Docker Commands.
- *
+ * The Class GitValueProvider.
+ * 
  * @author Daniel Cortes Pichardo
  */
-public class GitHelper {
 
-    private GitHelper() {
+public class GitValueProvider {
 
-    }
+    @Component
+    public static class GitBranchValueProvider extends GitBaseValueProvider {
 
-    /** The Constant GIT_COMMAND. */
-    public static final String GIT_COMMAND = "git";
+        @Override
+        public ShellCommand getShellCommand() {
+            return new ShellCommand(GitHelper.GIT_COMMAND).addArg(GitHelper.BRANCH);
+        }
 
-    public static final String INIT = "init";
+        @Override
+        public GitLineFormatter getLineFormatter() {
+            return (line) -> String.valueOf(line).replace("*", "").trim();
+        }
 
-    public static final String CLONE = "clone";
-
-    public static final String ADD = "add";
-
-    public static final String COMMIT = "commit";
-
-    public static final String PUSH = "push";
-
-    public static final String PULL = "pull";
-
-    public static final String MERGE = "merge";
-
-    public static final String STATUS = "status";
-
-    public static final String CHECKOUT = "checkout";
-
-    public static final String BRANCH = "branch";
-
-    public static final String LOG = "log";
-
-    public static final String DEVELOP_BRANCH = "develop";
-
-    public static final String FEATURE_PREFIX = "feature-";
-
-    public static final String RELEASE_PREFIX = "release-";
-
-    
-    public static String formatGitBranchLine(CharSequence charSequence) {
-        return String.valueOf(charSequence).replace("*", "").trim();
     }
 }

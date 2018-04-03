@@ -26,6 +26,7 @@ package mx.infotec.dads.kukulkan.shell.commands.git.validation;
 import java.util.Objects;
 import java.util.regex.Pattern;
 
+import mx.infotec.dads.kukulkan.shell.commands.git.GitContext;
 import mx.infotec.dads.kukulkan.shell.util.GeneratorException;
 
 /**
@@ -50,5 +51,15 @@ public class GitValidation {
         if (message.length() > 0) {
             throw new GeneratorException(message.toString());
         }
+    }
+
+    public static void validateDevelopBranch(GitContext gitContext) {
+        if (!gitContext.isDevelop()) {
+            throw new GeneratorException("You mus be on <develp> branch");
+        }
+    }
+
+    public static void notYetImplemented() {
+        throw new GeneratorException("Not yet implemented, await for the next release");
     }
 }

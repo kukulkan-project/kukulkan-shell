@@ -32,19 +32,13 @@ import javax.validation.constraints.NotNull;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationEventPublisher;
-import org.springframework.shell.Availability;
 import org.springframework.shell.standard.ShellComponent;
 import org.springframework.shell.standard.ShellMethod;
-import org.springframework.shell.standard.ShellMethodAvailability;
 
-import mx.infotec.dads.kukulkan.shell.domain.NativeCommand;
-import mx.infotec.dads.kukulkan.shell.domain.NativeCommandContext;
+import mx.infotec.dads.kukulkan.shell.commands.git.validation.GitValidation;
 import mx.infotec.dads.kukulkan.shell.domain.ShellCommand;
 import mx.infotec.dads.kukulkan.shell.event.message.EventType;
 import mx.infotec.dads.kukulkan.shell.event.message.LocationUpdatedEvent;
-import mx.infotec.dads.kukulkan.shell.services.CommandService;
 
 /**
  * Docker Commands.
@@ -52,21 +46,9 @@ import mx.infotec.dads.kukulkan.shell.services.CommandService;
  * @author Daniel Cortes Pichardo
  */
 @ShellComponent
-public class GitFeatureCommands {
+public class GitFeatureCommands extends GitBaseCommands {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(GitFeatureCommands.class);
-
-    /** The command service. */
-    @Autowired
-    CommandService commandService;
-
-    /** The project context. */
-    @Autowired
-    NativeCommandContext projectContext;
-
-    /** The publisher. */
-    @Autowired
-    private ApplicationEventPublisher publisher;
 
     @ShellMethod("Create a new Feature")
     public void gitFeatureList() {
@@ -82,6 +64,8 @@ public class GitFeatureCommands {
      */
     @ShellMethod("Create a new Feature")
     public void gitFeatureStart(@NotNull String name) {
+        GitValidation.validateBranchName(name);
+        GitValidation.validateDevelopBranch(gitContext);
         commandService.exec(new ShellCommand(GIT_COMMAND, CHECKOUT, "-b", FEATURE_PREFIX + name, DEVELOP_BRANCH));
         publisher.publishEvent(new LocationUpdatedEvent(EventType.FILE_NAVIGATION));
     }
@@ -119,32 +103,21 @@ public class GitFeatureCommands {
 
     @ShellMethod("Publish a Feature to a remote server")
     public void gitFeatureDiff(@NotNull String name) {
+        GitValidation.notYetImplemented();
     }
 
     @ShellMethod("Publish a Feature to a remote server")
     public void gitFeatureRebase(@NotNull String name) {
+        GitValidation.notYetImplemented();
     }
 
     @ShellMethod("Publish a Feature to a remote server")
     public void gitFeatureCheckout(@NotNull String name) {
+        GitValidation.notYetImplemented();
     }
 
     @ShellMethod("Publish a Feature to a remote server")
     public void gitFeaturePull(@NotNull String name) {
-    }
-
-    /**
-     * s Docker show running process availability.
-     *
-     * @return the availability
-     */
-    @ShellMethodAvailability({ "gitFeaturePublish", "gitFeatureFinish", "gitFeatureStart" })
-    public Availability gitFeatureAvailability() {
-        NativeCommand gitCmd = projectContext.getAvailableCommands().get(GIT_COMMAND);
-        if (gitCmd != null && gitCmd.isActive()) {
-            return Availability.available();
-        } else {
-            return Availability.unavailable("you must install git");
-        }
+        GitValidation.notYetImplemented();
     }
 }
