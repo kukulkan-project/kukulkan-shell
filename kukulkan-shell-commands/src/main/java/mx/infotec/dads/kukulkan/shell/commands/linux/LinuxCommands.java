@@ -138,7 +138,6 @@ public class LinuxCommands {
 
     @ShellMethod("showColors")
     public void showColors() {
-        commandService.printf("todo bien");
         commandService.printf(AnsiConstants.ANSI_BLUE, "blue");
         commandService.printf(AnsiConstants.ANSI_BLACK, "black");
         commandService.printf(AnsiConstants.ANSI_CYAN, "cyan");

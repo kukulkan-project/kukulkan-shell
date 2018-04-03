@@ -1,7 +1,7 @@
 /*
  *  
  * The MIT License (MIT)
- * Copyright (c) 2018 Roberto Villarejo Martínez <robertovillarejom@gmail.com>
+ * Copyright (c) 2018 Roberto Villarejo Martínez <roberto.villarejom@infotec.mx>
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -52,77 +52,76 @@ import mx.infotec.dads.kukulkan.shell.services.CommandService;
 /**
  * SphinxCommands
  * 
- * @author Roberto Villarejo Martínez <robertovillarejom@gmail.com>
+ * @author Roberto Villarejo Martínez <roberto.villarejo@infotec.mx>
  *
  */
 @ShellComponent
 public class SphinxCommands {
 
-	private static final Logger LOGGER = LoggerFactory.getLogger(SphinxCommands.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(SphinxCommands.class);
 
-	/** The command service. */
-	@Autowired
-	CommandService commandService;
+    /** The command service. */
+    @Autowired
+    CommandService commandService;
 
-	/** The Constant GIT_COMMAND. */
-	public static final String SPHINX_COMMAND = "sphinx-quickstart";
+    /** The Constant SPHINX_COMMAND. */
+    public static final String SPHINX_COMMAND = "sphinx-quickstart";
 
-	/** The project context. */
-	@Autowired
-	NativeCommandContext projectContext;
+    /** The project context. */
+    @Autowired
+    NativeCommandContext projectContext;
 
-	/** The nav. */
-	@Autowired
-	Navigator nav;
+    /** The navigator */
+    @Autowired
+    Navigator navigator;
 
-	@ShellMethod("Generate a documentation static site")
-	public void initDocs(@NotNull @ShellOption(defaultValue = "KukulkanProject") String project,
-			@ShellOption(defaultValue = "Kukulkan") @NotNull String author,
-			@ShellOption(defaultValue = "1.0") Float version, @ShellOption(defaultValue = "1.0") Float release,
-			@ShellOption(defaultValue = "es") String lang) {
-		if (copyResources()) {
-			ShellCommand command = prepareCommand(project, author, version, release, lang);
-			commandService.exec(command);
-			commandService.exec(new ShellCommand("make", "--directory", "docs", "html"));
-			LOGGER.info("Your docs site has been generated in docs/build/html");
-			LOGGER.info("Use your favorite browser to open the index.html file");
-			LOGGER.info("Edit the Markdown files (.md) placed in /docs/source ");
-			LOGGER.info("Run `make html` in docs folder every time you edit the contents");
-		} else {
-			LOGGER.error("Error while copying resources");
-		}
+    @ShellMethod("Generate a documentation static site")
+    @ShellMethodAvailability({ "sphinxAvailability" })
+    public void initDocs(
+            @NotNull @ShellOption(defaultValue = "KukulkanProject") String project,
+            @ShellOption(defaultValue = "Kukulkan") String author, 
+            @ShellOption(defaultValue = "1.0") String version,
+            @ShellOption(defaultValue = "1.0") String release, 
+            @ShellOption(defaultValue = "es") String lang) {
+        try {
+            copyResources();
+            ShellCommand command = buildSphinxCommand(project, author, version, release, lang);
+            commandService.exec(command);
+            commandService.exec(new ShellCommand("make", "--directory", "docs", "html"));
+            LOGGER.info("Your docs site has been generated in docs/build/html");
+            LOGGER.info("Use your favorite browser to open the index.html file");
+            LOGGER.info("Edit the Markdown files (.md) placed in /docs/source ");
+            LOGGER.info("Run `make html` in docs folder every time you edit the contents");
+        } catch (IOException ex) {
+            LOGGER.error("Error while copying resources");
+        }
 
-	}
+    }
 
-	@ShellMethodAvailability({ "initDocs" })
-	public Availability sphinxAvailability() {
-		NativeCommand sphinxCmd = projectContext.getAvailableCommands().get(SPHINX_COMMAND);
-		if (sphinxCmd != null && sphinxCmd.isActive()) {
-			return Availability.available();
-		} else {
-			return Availability.unavailable("you must install " + SPHINX_COMMAND);
-		}
-	}
+    public Availability sphinxAvailability() {
+        NativeCommand sphinxCmd = projectContext.getAvailableCommands().get(SPHINX_COMMAND);
+        if (sphinxCmd != null && sphinxCmd.isActive()) {
+            return Availability.available();
+        } else {
+            return Availability.unavailable("you must install " + SPHINX_COMMAND);
+        }
+    }
 
-	private ShellCommand prepareCommand(String project, String author, Float version, Float release, String lang) {
-		return new ShellCommand(SPHINX_COMMAND, "--quiet", "--sep", "--project", project, "--author", author, "-v",
-				version.toString(), "--release", release.toString(), "--language", lang, "--makefile", "--batchfile",
-				"-t", nav.getCurrentPath().toString() + "/docs/template-DADS",
-				nav.getCurrentPath().toString() + "/docs");
-	}
+    private ShellCommand buildSphinxCommand(String project, String author, String version, String release, String lang) {
+        return new ShellCommand(SPHINX_COMMAND, "--quiet", "--sep", "--project", project, "--author", author, "-v",
+                version, "--release", release, "--language", lang, "--makefile", "--batchfile", "-t",
+                navigator.getCurrentPath().toString() + "/docs/template-DADS",
+                navigator.getCurrentPath().toString() + "/docs");
+    }
 
-	private boolean copyResources() {
-		for (String template : TemplateDocs.DOCS_TEMPLATE_LIST) {
-			LOGGER.info("Template: {}", template);
-			try (InputStream in = getClass().getClassLoader().getResourceAsStream(template)) {
-				Path target = Paths.get(nav.getCurrentPath().toString(), template);
-				FileUtil.createDirectories(target);
-				Files.copy(in, target, StandardCopyOption.REPLACE_EXISTING);
-			} catch (IOException e) {
-				return false;
-			}
-		}
-		return true;
-	}
+    private void copyResources() throws IOException {
+        for (String template : TemplateDocs.DOCS_TEMPLATE_LIST) {
+            LOGGER.info("Template: {}", template);
+            InputStream in = getClass().getClassLoader().getResourceAsStream(template);
+            Path target = Paths.get(navigator.getCurrentPath().toString(), template);
+            FileUtil.createDirectories(target);
+            Files.copy(in, target, StandardCopyOption.REPLACE_EXISTING);
+        }
+    }
 
 }

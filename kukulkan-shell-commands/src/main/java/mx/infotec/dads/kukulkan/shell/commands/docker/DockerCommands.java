@@ -61,30 +61,35 @@ public class DockerCommands {
      * Docker ps.
      */
     @ShellMethod("Show the current docker process running")
+    @ShellMethodAvailability({ "dockerCommandAvailability" })
     public void dockerPs() {
-        commandService.exec(new ShellCommand(DOCKER_COMMAND).addArg("ps"));
+        commandService.exec(new ShellCommand(DOCKER_COMMAND, "ps"));
     }
 
     /**
      * Docker stop.
      *
-     * @param containerId the container id
+     * @param containerId
+     *            the container id
      */
     @ShellMethod("Show the current docker process running")
+    @ShellMethodAvailability({ "dockerCommandAvailability" })
     public void dockerStop(
             @ShellOption(valueProvider = DockerStopValueProvider.class, defaultValue = NULL) String containerId) {
-        commandService.exec(new ShellCommand(DOCKER_COMMAND).addArg("stop").addArg(containerId));
+        commandService.exec(new ShellCommand(DOCKER_COMMAND, "stop", containerId));
     }
 
     /**
      * Docker start.
      *
-     * @param containerId the container id
+     * @param containerId
+     *            the container id
      */
     @ShellMethod("Show the current docker process running")
+    @ShellMethodAvailability({ "dockerCommandAvailability" })
     public void dockerStart(
             @ShellOption(valueProvider = DockerStartValueProvider.class, defaultValue = NULL) String containerId) {
-        commandService.exec(new ShellCommand(DOCKER_COMMAND).addArg("start").addArg(containerId));
+        commandService.exec(new ShellCommand(DOCKER_COMMAND, "start", containerId));
     }
 
     /**
@@ -92,8 +97,8 @@ public class DockerCommands {
      *
      * @return the availability
      */
-    @ShellMethodAvailability({ "dockerShowRunningProcess", "dockerStop" })
-    public Availability dockerShowRunningProcessAvailability() {
+    @ShellMethodAvailability({ "dockerCommandAvailability" })
+    public Availability dockerCommandAvailability() {
         NativeCommand dockerCmd = projectContext.getAvailableCommands().get(DOCKER_COMMAND);
         if (dockerCmd != null && dockerCmd.isActive()) {
             return Availability.available();

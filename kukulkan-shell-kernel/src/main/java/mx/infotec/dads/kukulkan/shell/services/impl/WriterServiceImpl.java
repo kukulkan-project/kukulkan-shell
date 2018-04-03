@@ -31,7 +31,6 @@ import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import freemarker.template.Configuration;
@@ -43,6 +42,11 @@ import mx.infotec.dads.kukulkan.metamodel.util.FileUtil;
 import mx.infotec.dads.kukulkan.shell.component.Navigator;
 import mx.infotec.dads.kukulkan.shell.services.WriterService;
 
+/**
+ * 
+ * @author Roberto Villarejo Martínez <roberto.villarejo@infotec.mx>
+ *
+ */
 @Service
 public class WriterServiceImpl implements WriterService {
 
@@ -50,14 +54,19 @@ public class WriterServiceImpl implements WriterService {
 
     private static final String ALL_FILES_PATTERN = ".*";
 
-    @Autowired
+    private static final String TEMPLATES_DIR = "templates/";
+
     private TemplateService templateService;
 
-    @Autowired
     private Configuration fmConfiguration;
 
-    @Autowired
     private Navigator navigator;
+
+    public WriterServiceImpl(TemplateService templateService, Navigator navigator, Configuration fmConfiguration) {
+        this.templateService = templateService;
+        this.fmConfiguration = fmConfiguration;
+        this.navigator = navigator;
+    }
 
     @Override
     public void copyTemplate(String template, String relative, Object model) {
@@ -69,7 +78,7 @@ public class WriterServiceImpl implements WriterService {
     @Override
     public void copy(String resource, String relative) {
         Path toSave = navigator.getCurrentPath().resolve(relative);
-        FileUtil.copyFromJar("templates/" + resource, toSave);
+        FileUtil.copyFromJar(TEMPLATES_DIR + resource, toSave);
     }
 
     @Override
@@ -79,9 +88,10 @@ public class WriterServiceImpl implements WriterService {
 
     @Override
     public void copyDir(Class clazz, String directory, String pattern, String relative) {
-        List<String> files = ListFileUtil.listFiles(clazz, "templates/" + directory, pattern);
+        List<String> files = ListFileUtil.listFiles(clazz, TEMPLATES_DIR + directory, pattern);
         for (String file : files) {
-            FileUtil.copyFromJar("templates/" + directory + "/" + file, navigator.getCurrentPath().resolve(relative).resolve(file));
+            FileUtil.copyFromJar(TEMPLATES_DIR + directory + "/" + file,
+                    navigator.getCurrentPath().resolve(relative).resolve(file));
         }
     }
 

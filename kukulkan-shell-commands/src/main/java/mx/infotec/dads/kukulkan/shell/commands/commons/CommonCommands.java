@@ -56,10 +56,6 @@ public class CommonCommands {
     @Lazy
     private Terminal terminal;
 
-    /** The result handler. */
-    @Autowired
-    private ShellResultHandler resultHandler;
-
     /** The command service. */
     @Autowired
     CommandService commandService;
@@ -80,8 +76,7 @@ public class CommonCommands {
      */
     @ShellMethod("Show the status of the common commands")
     public AboutInfo test() {
-        AboutInfo info = new AboutInfo("server", "102");
-        return info;
+        return new AboutInfo("server", "102");
     }
 
     /**

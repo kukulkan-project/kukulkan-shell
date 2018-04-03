@@ -28,9 +28,7 @@ import java.io.Serializable;
 
 import com.beust.jcommander.Parameter;
 
-import mx.infotec.dads.kukulkan.shell.domain.AbstractArgs;
-
-public class DslProjectArgs extends AbstractArgs implements Serializable {
+public class DslProjectArgs extends XtextProjectArgs implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
@@ -39,9 +37,6 @@ public class DslProjectArgs extends AbstractArgs implements Serializable {
 
     @Parameter(names = { "--githubUrl" }, description = "The github url ")
     private String githubUrl;
-
-    @Parameter(names = { "--extension" }, description = "The extension associated to the DSL")
-    private String extension;
 
     public String getTheiaVersion() {
         return theiaVersion;
@@ -57,14 +52,6 @@ public class DslProjectArgs extends AbstractArgs implements Serializable {
 
     public void setGithubUrl(String githubUrl) {
         this.githubUrl = githubUrl;
-    }
-
-    public String getExtension() {
-        return extension;
-    }
-
-    public void setExtension(String extension) {
-        this.extension = extension;
     }
 
 }
