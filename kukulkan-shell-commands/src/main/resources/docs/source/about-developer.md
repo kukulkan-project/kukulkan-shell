@@ -1,3 +1,3 @@
-# About Developer
+# Acerca del desarrollador
 
-Write a bit about who are you or who are the developers of the project. You can include a link to your official page. 
+Cuenta un poco sobre quién o quiénes son los desarrolladores del proyecto. Puedes incluir un enlace a tu página oficial.

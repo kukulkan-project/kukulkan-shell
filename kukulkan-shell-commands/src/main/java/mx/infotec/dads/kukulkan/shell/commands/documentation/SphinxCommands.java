@@ -87,9 +87,9 @@ public class SphinxCommands {
             copyResources();
             ShellCommand command = buildSphinxCommand(project, author, version, release, lang);
             commandService.exec(command);
-            commandService.exec(new ShellCommand("make", "--directory", "docs", "html"));
-            LOGGER.info("Your docs site has been generated in docs/build/html");
-            LOGGER.info("Use your favorite browser to open the index.html file");
+            LOGGER.info("Run `make html` inside generated docs folder");
+            LOGGER.info("Your documentation site will be generated in docs/build/html");
+            LOGGER.info("Then use your favorite browser to open the index.html file");
             LOGGER.info("Edit the Markdown files (.md) placed in /docs/source ");
             LOGGER.info("Run `make html` in docs folder every time you edit the contents");
         } catch (IOException ex) {
@@ -116,7 +116,7 @@ public class SphinxCommands {
 
     private void copyResources() throws IOException {
         for (String template : TemplateDocs.DOCS_TEMPLATE_LIST) {
-            LOGGER.info("Template: {}", template);
+            LOGGER.info("Created: {}", template);
             InputStream in = getClass().getClassLoader().getResourceAsStream(template);
             Path target = Paths.get(navigator.getCurrentPath().toString(), template);
             FileUtil.createDirectories(target);

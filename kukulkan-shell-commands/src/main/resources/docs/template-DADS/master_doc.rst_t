@@ -1,14 +1,14 @@
 .. {{ project }} documentation master file, created by
    sphinx-quickstart on {{ now }}.
-   You can adapt this file completely to your liking, but it should at least
-   contain the root `toctree` directive.
+   Puedes adaptar este archivo completamente a tu gusto, pero debe al menos
+   contener la directiva raíz `toctree`.
 
-Welcome to {{ project }}'s documentation!
-==========={{ project_underline }}=================
+Bienvenido a la documentación de {{ project }}!
+==========={{ project_underline }}==============================================
 
 .. toctree::
    :maxdepth: 1
-   :caption: Contents:
+   :caption: Contenido:
 
    description
    getting-started
@@ -21,7 +21,7 @@ Welcome to {{ project }}'s documentation!
 
 {{ mastertoctree }}
 
-Indices and tables
+Índices y tablas
 ==================
 
 * :ref:`genindex`

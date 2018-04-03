@@ -1,3 +1,3 @@
-# Getting Started
+# Empezando
 
-Here goes the required steps to prepare the environment before using your code.
+Aquí van los pasos requeridos para preparar el ambiente antes de usar tu código

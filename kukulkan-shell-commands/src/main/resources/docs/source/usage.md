@@ -1,3 +1,3 @@
-# Usage
+# Uso
 
-Include some examples about how use your project.
+Incluye algunos ejemplos sobre cómo usar tu proyecto.

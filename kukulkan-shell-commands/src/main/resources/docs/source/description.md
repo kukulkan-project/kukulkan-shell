@@ -1,3 +1,3 @@
-# Description
+# Descripción
 
-Describe in some lines the purpose of your project. Be short.
+Describe el propósito de tu proyecto. Trata de ser breve.

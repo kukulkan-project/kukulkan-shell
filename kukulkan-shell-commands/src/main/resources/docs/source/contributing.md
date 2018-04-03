@@ -1,3 +1,3 @@
-# Contributing
+# Contribuciones
 
-If this is an _open source_ project, indicate how contributions should be submitted. 
+Si este es un proyecto _open source_, indica cómo deben enviarse las contribuciones.

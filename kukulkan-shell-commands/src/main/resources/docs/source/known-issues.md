@@ -1,3 +1,3 @@
-# Known Issues
+# Problemas conocidos
 
-Publish all known bugs and issues to save time to developers, help them know that is nothing wrong in their code.
+Publica todos los _bugs_ conocidos para ahorrar tiempo a los desarrolladores, que sepan que no hay nada malo en su código. 

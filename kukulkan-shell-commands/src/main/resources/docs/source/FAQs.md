@@ -1,3 +1,3 @@
 # FAQS
 
-If you are constantly receiving the same questions about your project, maybe is better include this section to save time to your users (and you).
+Si contantemente recibes las mismas preguntas sobre tu proyecto, tal vez sea mejor incluir esta sección para ahorrar tiempo a tus usuarios (y a ti).

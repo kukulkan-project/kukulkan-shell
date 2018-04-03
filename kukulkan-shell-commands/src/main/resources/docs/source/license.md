@@ -1,7 +1,7 @@
 # License
 
-Always choose an appropiate license for your project.  
+Siempre elige una licencia apropiada para tu proyecto.
 
-In Github, if you don't choose a license you keep the rights on your project by default, but is better to be explicit about it.  
+En Github, si no eliges una licencia por defecto mantienes los derechos sobre tu proyecto pero es mejor ser explícito sobre eso.  
 
-Go to [Choose a License](choosealicense.com) to clarify doubts.
+Visita [Choose a License](choosealicense.com) para aclarar dudas.
