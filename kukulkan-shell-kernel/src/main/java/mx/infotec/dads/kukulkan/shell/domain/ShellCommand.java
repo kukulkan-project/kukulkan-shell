@@ -107,12 +107,12 @@ public class ShellCommand implements Command {
      *
      * @return the executable command
      */
-    public String getExecutableCommand() {
-        StringBuilder sb = new StringBuilder(command);
+    public String[] getExecutableCommand() {
+        List<String> list = new ArrayList<>();
+        list.add(command);
         for (Args arg : args) {
-            sb.append(" ").append(arg.getParam());
+            list.add(arg.getParam());
         }
-        return sb.toString();
-
+        return list.toArray(new String[0]);
     }
 }

@@ -41,7 +41,7 @@ import mx.infotec.dads.kukulkan.metamodel.util.Constants;
  * @author Daniel Cortes Pichardo
  */
 public class TextFormatter {
-    
+
     /**
      * Instantiates a new text formatter.
      */
@@ -52,7 +52,8 @@ public class TextFormatter {
      * format a List<CharSequence> in order to highlight some git command
      * results.
      *
-     * @param input the input
+     * @param input
+     *            the input
      * @return List<AttributedString>
      */
     public static List<AttributedString> formatToGitOutput(List<CharSequence> input) {
@@ -65,11 +66,12 @@ public class TextFormatter {
         }).collect(Collectors.toList());
 
     }
-    
+
     /**
      * Format normal text.
      *
-     * @param text the text
+     * @param text
+     *            the text
      * @return the attributed string
      */
     public static AttributedString formatNormalText(String text) {
@@ -79,7 +81,8 @@ public class TextFormatter {
     /**
      * Format dir not exist text.
      *
-     * @param text the text
+     * @param text
+     *            the text
      * @return the attributed string
      */
     public static AttributedString formatDirNotExistText(String text) {
@@ -89,7 +92,8 @@ public class TextFormatter {
     /**
      * Format error text.
      *
-     * @param text the text
+     * @param text
+     *            the text
      * @return the attributed string
      */
     public static AttributedString formatErrorText(String text) {
@@ -117,7 +121,8 @@ public class TextFormatter {
     /**
      * Format log text.
      *
-     * @param text the text
+     * @param text
+     *            the text
      * @return the attributed string
      */
     public static AttributedString formatLogText(String text) {
@@ -137,8 +142,10 @@ public class TextFormatter {
     /**
      * Format like glossary.
      *
-     * @param key the key
-     * @param term the term
+     * @param key
+     *            the key
+     * @param term
+     *            the term
      * @return the attributed string
      */
     public static AttributedString formatLikeGlossary(String key, String term) {
@@ -152,7 +159,8 @@ public class TextFormatter {
     /**
      * Format log level.
      *
-     * @param logLevel the log level
+     * @param logLevel
+     *            the log level
      * @return the attributed string
      */
     private static AttributedString formatLogLevel(String logLevel) {
