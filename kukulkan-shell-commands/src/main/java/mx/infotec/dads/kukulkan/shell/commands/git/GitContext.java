@@ -16,9 +16,10 @@ public class GitContext implements Resettable {
 
     private static final long serialVersionUID = 1L;
 
-    boolean master;
-    boolean develop;
-    boolean avaliable;
+    private boolean master;
+    private boolean develop;
+    private boolean avaliable;
+    private String currentBranchName;
 
     public boolean isMaster() {
         return master;
@@ -44,9 +45,18 @@ public class GitContext implements Resettable {
         this.avaliable = avaliable;
     }
 
+    public String getCurrentBranchName() {
+        return currentBranchName;
+    }
+
+    public void setCurrentBranchName(String currentBranchName) {
+        this.currentBranchName = currentBranchName;
+    }
+
     @Override
     public void reset() {
         this.master = this.develop = this.avaliable = false;
+        this.currentBranchName = "@NO-BRANCH-SELECTED";
     }
 
 }

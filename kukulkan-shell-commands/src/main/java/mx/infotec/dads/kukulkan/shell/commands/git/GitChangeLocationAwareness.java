@@ -37,6 +37,7 @@ public class GitChangeLocationAwareness extends AbstractChangeLocationAwareness 
         } else if (branchName.equals("develop")) {
             context.setDevelop(true);
         }
+        context.setCurrentBranchName(branchName);
         return Optional.of(dirPrompt);
     }
 

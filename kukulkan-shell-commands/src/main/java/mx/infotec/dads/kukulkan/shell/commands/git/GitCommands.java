@@ -51,7 +51,7 @@ import mx.infotec.dads.kukulkan.shell.util.TextFormatter;
  * @author Daniel Cortes Pichardo
  */
 @ShellComponent
-public class GitCommands extends GitBaseCommands{
+public class GitCommands extends GitBaseCommands {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(GitCommands.class);
 
@@ -78,6 +78,28 @@ public class GitCommands extends GitBaseCommands{
         return execGitCommand(new ShellCommand(GIT_COMMAND, ADD).addArg(fileName));
     }
 
+    @ShellMethod("Stores the current contents of the index in a new commit along with a log message from the user describing the changes")
+    public List<AttributedString> gitCommit(@NotNull String message) {
+        LOGGER.debug(LOGGER_EXEC, GIT_COMMAND, GitHelper.COMMIT);
+        return execGitCommand(new ShellCommand(GIT_COMMAND, GitHelper.COMMIT).addArg("-m").addArg(message));
+    }
+
+    @ShellMethod("Updates remote refs using local refs, while sending objects necessary to complete the given refs")
+    public List<AttributedString> gitPush(boolean setUpstream) {
+        LOGGER.debug(LOGGER_EXEC, GIT_COMMAND, GitHelper.PUSH);
+        ShellCommand shellCommand = new ShellCommand(GIT_COMMAND, GitHelper.PUSH);
+        if (setUpstream) {
+            shellCommand.addArg("--set-upstream").addArg("origin").addArg(gitContext.getCurrentBranchName());
+        }
+        return execGitCommand(shellCommand);
+    }
+
+    @ShellMethod("Fetch from and integrate with another repository or a local branch")
+    public List<AttributedString> gitPull() {
+        LOGGER.debug(LOGGER_EXEC, GIT_COMMAND, GitHelper.PULL);
+        return execGitCommand(new ShellCommand(GIT_COMMAND, GitHelper.PULL));
+    }
+
     @ShellMethod("Updates files in the working tree to match the version in the index or the specified tree")
     public List<AttributedString> gitCheckout(
             @ShellOption(valueProvider = GitValueProvider.GitBranchValueProvider.class) @NotNull String branchName) {
@@ -86,7 +108,7 @@ public class GitCommands extends GitBaseCommands{
     }
 
     @ShellMethod("List all the branches in the local repository")
-    public List<AttributedString> gitBranchList() {
+    public List<AttributedString> gitBranches() {
         LOGGER.debug(LOGGER_EXEC, GIT_COMMAND, GitHelper.BRANCH);
         return execGitCommand(new ShellCommand(GIT_COMMAND, GitHelper.BRANCH));
     }

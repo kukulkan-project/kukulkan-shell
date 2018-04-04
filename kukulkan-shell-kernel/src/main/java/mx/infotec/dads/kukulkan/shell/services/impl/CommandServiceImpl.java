@@ -64,7 +64,7 @@ import mx.infotec.dads.kukulkan.shell.util.TextFormatter;
  * @param <T>
  */
 @Service
-public class CommandServiceImpl<A, R, T> implements CommandService {
+public class CommandServiceImpl implements CommandService {
 
     /**
      * The Constant LOGGER.
