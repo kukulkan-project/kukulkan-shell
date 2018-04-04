@@ -1,7 +1,7 @@
 /*
  *  
  * The MIT License (MIT)
- * Copyright (c) 2018 Roberto Villarejo Martínez
+ * Copyright (c) 2018 Roberto Villarejo Martínez <roberto.villarejo@infotec.mx>
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -31,7 +31,7 @@ import mx.infotec.dads.kukulkan.shell.generator.WebhookConfig;
 
 /**
  * Mapper from ChatbotArgs to ChatbotContext
- * @author Roberto Villarejo Martínez <robertovillarejom@gmail.com>
+ * @author Roberto Villarejo Martínez <roberto.villarejo@infotec.mx>
  *
  */
 public class Mapper {
@@ -46,8 +46,8 @@ public class Mapper {
 	 */
 	public static ChatbotContext toContext(ChatbotArgs params) {
 		ChatbotContext ctx = new ChatbotContext();
-		ctx.setName(params.getAppName());
-		ctx.setPage(params.getAppPage());
+		ctx.setName(params.getName());
+		ctx.setPage(params.getHomepage());
 		ctx.setAuthor(params.getAuthor());
 		ctx.setDescription(params.getDescription());
 		ctx.setDialogflowConfig(toDialogFlowConfig(params));

@@ -1,7 +1,7 @@
 /*
  *  
  * The MIT License (MIT)
- * Copyright (c) 2018 Roberto Villarejo Martínez
+ * Copyright (c) 2018 Roberto Villarejo Martínez <roberto.villarejo@infotec.mx>
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -46,7 +46,7 @@ import mx.infotec.dads.kukulkan.shell.template.ChatbotTemplateFactory;
 /**
  * Generator for Chatbot
  * 
- * @author Roberto Villarejo Martínez
+ * @author Roberto Villarejo Martínez <roberto.villarejo@infotec.mx>
  *
  */
 @GeneratorComponent
