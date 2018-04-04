@@ -24,6 +24,7 @@
 package mx.infotec.dads.kukulkan.shell.commands.git.valueprovided;
 
 import java.util.List;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 import javax.annotation.PostConstruct;
@@ -33,8 +34,6 @@ import org.springframework.core.MethodParameter;
 import org.springframework.shell.CompletionContext;
 import org.springframework.shell.CompletionProposal;
 import org.springframework.shell.standard.ValueProviderSupport;
-
-import mx.infotec.dads.kukulkan.shell.commands.git.GitHelper;
 import mx.infotec.dads.kukulkan.shell.domain.ShellCommand;
 import mx.infotec.dads.kukulkan.shell.services.CommandService;
 
@@ -52,22 +51,29 @@ public abstract class GitBaseValueProvider extends ValueProviderSupport {
 
     private GitLineFormatter formatter;
 
+    private Predicate<CharSequence> predicate;
+
     @PostConstruct
     private void init() {
         shellCommand = getShellCommand();
         formatter = getLineFormatter();
+        predicate = getFilter();
     }
 
     @Override
     public List<CompletionProposal> complete(MethodParameter parameter, CompletionContext completionContext,
             String[] hints) {
-        return commandService.exec(shellCommand).stream()
+        return commandService.exec(shellCommand).stream().filter(predicate)
                 .map(charSequence -> new CompletionProposal(formatter.formatLine(charSequence)))
                 .collect(Collectors.toList());
     }
 
     public GitLineFormatter getLineFormatter() {
         return (line) -> String.valueOf(line).trim();
+    }
+
+    public Predicate<CharSequence> getFilter() {
+        return (charSequence) -> true;
     }
 
     public abstract ShellCommand getShellCommand();

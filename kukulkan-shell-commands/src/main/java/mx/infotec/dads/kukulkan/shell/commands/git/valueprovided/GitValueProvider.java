@@ -23,20 +23,12 @@
  */
 package mx.infotec.dads.kukulkan.shell.commands.git.valueprovided;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.function.Predicate;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.MethodParameter;
-import org.springframework.shell.CompletionContext;
-import org.springframework.shell.CompletionProposal;
-import org.springframework.shell.standard.ValueProviderSupport;
 import org.springframework.stereotype.Component;
 
 import mx.infotec.dads.kukulkan.shell.commands.git.GitHelper;
-import mx.infotec.dads.kukulkan.shell.component.Navigator;
 import mx.infotec.dads.kukulkan.shell.domain.ShellCommand;
-import mx.infotec.dads.kukulkan.shell.services.CommandService;
 
 /**
  * The Class GitValueProvider.
@@ -57,6 +49,26 @@ public class GitValueProvider {
         @Override
         public GitLineFormatter getLineFormatter() {
             return (line) -> String.valueOf(line).replace("*", "").trim();
+        }
+
+    }
+
+    @Component
+    public static class GitFeatureValueProvider extends GitBaseValueProvider {
+
+        @Override
+        public ShellCommand getShellCommand() {
+            return new ShellCommand(GitHelper.GIT_COMMAND).addArg(GitHelper.BRANCH);
+        }
+        
+        @Override
+        public GitLineFormatter getLineFormatter() {
+            return (line) -> String.valueOf(line).replace("*", "").trim();
+        }
+
+        @Override
+        public Predicate<CharSequence> getFilter() {
+            return (charSequence) -> String.valueOf(charSequence).contains("feature-");
         }
 
     }

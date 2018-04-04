@@ -23,6 +23,8 @@
  */
 package mx.infotec.dads.kukulkan.shell.commands.git;
 
+import mx.infotec.dads.kukulkan.shell.util.GeneratorException;
+
 /**
  * Docker Commands.
  *
@@ -65,8 +67,18 @@ public class GitHelper {
 
     public static final String RELEASE_PREFIX = "release-";
 
-    
     public static String formatGitBranchLine(CharSequence charSequence) {
         return String.valueOf(charSequence).replace("*", "").trim();
     }
+
+    public static void validateFeatureBranch(String branchName) {
+        validateFeatureBranch(branchName, "You are not on a <Feature> branch");
+    }
+
+    public static void validateFeatureBranch(String branchName, String message) {
+        if (!branchName.matches("feature-.*")) {
+            throw new GeneratorException(message);
+        }
+    }
+
 }

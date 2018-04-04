@@ -28,14 +28,18 @@ import static mx.infotec.dads.kukulkan.shell.commands.git.GitHelper.DEVELOP_BRAN
 import static mx.infotec.dads.kukulkan.shell.commands.git.GitHelper.FEATURE_PREFIX;
 import static mx.infotec.dads.kukulkan.shell.commands.git.GitHelper.GIT_COMMAND;
 
+import java.util.List;
+
 import javax.validation.constraints.NotNull;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.shell.standard.ShellComponent;
 import org.springframework.shell.standard.ShellMethod;
+import org.springframework.shell.standard.ShellOption;
 
 import mx.infotec.dads.kukulkan.shell.commands.git.validation.GitValidation;
+import mx.infotec.dads.kukulkan.shell.commands.git.valueprovided.GitValueProvider;
 import mx.infotec.dads.kukulkan.shell.domain.ShellCommand;
 import mx.infotec.dads.kukulkan.shell.event.message.EventType;
 import mx.infotec.dads.kukulkan.shell.event.message.LocationUpdatedEvent;
@@ -73,15 +77,19 @@ public class GitFeatureCommands extends GitBaseCommands {
     /**
      * Git terminate feature.
      *
-     * @param name
+     * @param featureBranchName
      *            the name
      */
     @ShellMethod("Terminate a Feature")
-    public void gitFeatureFinish(@NotNull String name) {
-        commandService.exec(new ShellCommand(GIT_COMMAND, CHECKOUT, DEVELOP_BRANCH));
-        commandService.exec(new ShellCommand(GIT_COMMAND, "merge", "--no-ff", name));
-        commandService.exec(new ShellCommand(GIT_COMMAND, "branch", "-d", FEATURE_PREFIX + name));
+    public List<CharSequence> gitFeatureFinish(
+            @ShellOption(valueProvider = GitValueProvider.GitFeatureValueProvider.class) @NotNull String featureBranchName) {
+        GitHelper.validateFeatureBranch(featureBranchName, "The branch name is no a valid <feature> branch name");
+        GitHelper.validateFeatureBranch(gitContext.getCurrentBranchName());
+        List<CharSequence> exec = commandService.exec(new ShellCommand(GIT_COMMAND, CHECKOUT, DEVELOP_BRANCH));
+        exec.addAll(commandService.exec(new ShellCommand(GIT_COMMAND, "merge", "--no-ff", featureBranchName)));
+        exec.addAll(commandService.exec(new ShellCommand(GIT_COMMAND, "branch", "-d", featureBranchName)));
         publisher.publishEvent(new LocationUpdatedEvent(EventType.FILE_NAVIGATION));
+        return exec;
     }
 
     /**
@@ -91,8 +99,10 @@ public class GitFeatureCommands extends GitBaseCommands {
      *            the name
      */
     @ShellMethod("Publish a Feature to a remote server")
-    public void gitFeaturePublish(@NotNull String name) {
-        commandService.exec(new ShellCommand(GIT_COMMAND, "push", "origin", FEATURE_PREFIX + name));
+    public void gitFeaturePublish() {
+        LOGGER.debug(LOGGER_EXEC, GIT_COMMAND, gitContext.getCurrentBranchName());
+        GitHelper.validateFeatureBranch(gitContext.getCurrentBranchName());
+        commandService.exec(new ShellCommand(GIT_COMMAND, "push", "origin").addArg(gitContext.getCurrentBranchName()));
         publisher.publishEvent(new LocationUpdatedEvent(EventType.FILE_NAVIGATION));
     }
 
