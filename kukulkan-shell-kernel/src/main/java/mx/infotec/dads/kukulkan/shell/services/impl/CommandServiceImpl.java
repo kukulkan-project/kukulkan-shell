@@ -49,6 +49,7 @@ import mx.infotec.dads.kukulkan.shell.domain.ShellCommand;
 import mx.infotec.dads.kukulkan.shell.services.CommandService;
 import mx.infotec.dads.kukulkan.shell.util.BufferCollector;
 import mx.infotec.dads.kukulkan.shell.util.CharSequenceCollector;
+import mx.infotec.dads.kukulkan.shell.util.LineCollector;
 import mx.infotec.dads.kukulkan.shell.util.LineProcessor;
 import mx.infotec.dads.kukulkan.shell.util.LineValuedProcessor;
 import mx.infotec.dads.kukulkan.shell.util.StringBuilderCollector;
@@ -130,11 +131,8 @@ public class CommandServiceImpl<A, R, T> implements CommandService {
         List<Line> lines = new ArrayList<>();
         try {
             Process p = Runtime.getRuntime().exec(command.getExecutableCommand(), null, nav.getCurrentPath().toFile());
-            BufferedReader reader = getBuffedReaderForProcess(p);
-            String line;
-            while ((line = reader.readLine()) != null) {
-                processor.process(line).ifPresent(lines::add);
-            }
+            p.waitFor();
+            return readBufferProcess(p, new LineCollector(processor));
         } catch (Exception e) {
             LOGGER.debug(GENERIC_ERROR_MSG, e);
             printf(String.format("The command [%s] could not be executed", command));
