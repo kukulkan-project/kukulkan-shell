@@ -209,14 +209,6 @@ public class CommandServiceImpl<A, R, T> implements CommandService {
         }
     }
 
-    private BufferedReader getBuffedReaderForProcess(Process p) {
-        if (p.exitValue() > 0) {
-            return new BufferedReader(new InputStreamReader(p.getErrorStream()));
-        } else {
-            return new BufferedReader(new InputStreamReader(p.getInputStream()));
-        }
-    }
-
     public static <L> L readBufferProcess(Process p, BufferCollector<L> bufferCollector) throws IOException {
         String stringHolder;
         BufferedReader stdInput = new BufferedReader(new InputStreamReader(p.getInputStream()));
