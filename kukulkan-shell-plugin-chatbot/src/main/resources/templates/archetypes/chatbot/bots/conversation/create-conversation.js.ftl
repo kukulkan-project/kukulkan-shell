@@ -4,7 +4,7 @@ var request = require('request');
 var path = require('path');
 const API_URL = 'https://api.dialogflow.com/v1/intents?v=20150910';
 
-var envFile = path.join(__dirname, '../', '.env');
+var envFile = path.join(__dirname, '../../', '.env');
 
 env(envFile);
 
@@ -28,8 +28,8 @@ intents.forEach(element => {
         auth: {
             bearer: DEVELOPER_TOKEN
         }
-    }, function error, response, body => {
-        if(!error && response.statusCode === 200 ) {
+    }, (error, response, body) => {
+        if (!error && response.statusCode === 200) {
             console.log(element.name + ' intent successfully added!');
         } else {
             console.log(element.name + ' intent failed to add');

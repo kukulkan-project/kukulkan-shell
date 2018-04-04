@@ -4,7 +4,6 @@ module.exports = function (controller) {
 
     debug('Loading skills...');
 
-    <#if project.facebookBot && project.nlpService == "DIALOGFLOW">
     //Reply every message_received with fbResponse 
     //produced by dialogflow-to-facebook-middleware
     controller.on('message_received,facebook_postback', function (bot, message) {
@@ -16,6 +15,4 @@ module.exports = function (controller) {
             });
         }
     });
-    </#if>
-
 }

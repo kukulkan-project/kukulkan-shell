@@ -5,20 +5,14 @@
 # reference these in your code with process.env.SECRET
 
 <#if project.nlpService == "DIALOGFLOW">
-DIALOGFLOW_CLIENT_TOKEN=${project.dialogflowConfig.clientToken}
-DIALOGFLOW_DEVELOPER_TOKEN=${project.dialogflowConfig.developerToken}
+DIALOGFLOW_CLIENT_TOKEN=
+DIALOGFLOW_DEVELOPER_TOKEN=
 </#if>
 <#if project.facebookBot>
-ACCESS_TOKEN=${project.facebookBotConfig.accessToken}
-VERIFY_TOKEN=${project.facebookBotConfig.verifyToken}
+ACCESS_TOKEN=
+VERIFY_TOKEN=
 </#if>
-PORT=${project.port?string.computer}
-<#if project.webhook>
-FULFILLMENT_ENDPOINT=${project.webhookConfig.endpoint}
-</#if>
-<#if project.webBot>
-WEB_BOT_PORT=3000
-</#if>
-TOKEN_FULFILLMENT=
+PORT=8090
+DEBUG=*
 
 # note: .env is a shell file so there can’t be spaces around =

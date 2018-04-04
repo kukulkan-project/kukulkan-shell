@@ -25,23 +25,16 @@ package mx.infotec.dads.kukulkan.shell.generator;
 
 import static mx.infotec.dads.kukulkan.metamodel.util.Validator.requiredNotEmpty;
 
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 
-import mx.infotec.dads.kukulkan.engine.templating.service.TemplateService;
 import mx.infotec.dads.kukulkan.metamodel.annotation.GeneratorComponent;
 import mx.infotec.dads.kukulkan.metamodel.context.GeneratorContext;
 import mx.infotec.dads.kukulkan.metamodel.generator.Generator;
-import mx.infotec.dads.kukulkan.metamodel.util.FileUtil;
-import mx.infotec.dads.kukulkan.shell.template.ChatbotTemplateFactory;
+import mx.infotec.dads.kukulkan.shell.services.WriterService;
 
 /**
  * Generator for Chatbot
@@ -52,49 +45,70 @@ import mx.infotec.dads.kukulkan.shell.template.ChatbotTemplateFactory;
 @GeneratorComponent
 public class ChatbotGenerator implements Generator {
 
-	/** The template service. */
-	@Autowired
-	private TemplateService templateService;
+    private static final Logger LOGGER = LoggerFactory.getLogger(ChatbotGenerator.class);
 
-	private static final Logger LOGGER = LoggerFactory.getLogger(ChatbotGenerator.class);
+    private static final String CHATBOT_ARCHETYPE = "archetypes/chatbot/";
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see mx.infotec.dads.kukulkan.metamodel.generator.Generator#getName()
-	 */
-	@Override
-	public String getName() {
-		return "chatbot-generator";
-	}
+    private WriterService writer;
 
-	@Override
-	public void process(GeneratorContext context) {
-		ChatbotContext chatbotCtx = requiredNotEmpty(context.get(ChatbotContext.class));
-		Map<String, Object> model = new HashMap<>();
-		model.put("project", chatbotCtx);
-		List<String> templates = new ArrayList<>();
-		templates.addAll(ChatbotTemplateFactory.getCommonChatbotTemplates());
-		if (chatbotCtx.isFacebookBot())
-			templates.addAll(ChatbotTemplateFactory.getFacebookChatbotTemplates());
+    public ChatbotGenerator(WriterService writer) {
+        this.writer = writer;
+    }
 
-		if (chatbotCtx.isWebBot())
-			templates.addAll(ChatbotTemplateFactory.getWebChatbotTemplates());
+    /*
+     * (non-Javadoc)
+     * 
+     * @see mx.infotec.dads.kukulkan.metamodel.generator.Generator#getName()
+     */
+    @Override
+    public String getName() {
+        return "chatbot-generator";
+    }
 
-		if (chatbotCtx.isWebhook())
-			templates.addAll(ChatbotTemplateFactory.getWebhookChatbotTemplates());
+    @Override
+    public void process(GeneratorContext context) {
+        ChatbotContext chatbotCtx = requiredNotEmpty(context.get(ChatbotContext.class));
+        Map<String, Object> model = new HashMap<>();
+        model.put("project", chatbotCtx);
 
-		LOGGER.info("Generating chatbot project...");
-		for (String template : templates) {
-			String content = templateService.fillTemplate(template, model);
-			Path toSave = Paths.get(chatbotCtx.getOutputDir().toString(),
-					template.replaceAll(ChatbotTemplateFactory.CHATBOT_TEMPLATE, "").replaceAll(".ftl", ""));
-			FileUtil.saveToFile(toSave, content);
-		}
+        // Common files
+        writer.copy(CHATBOT_ARCHETYPE + "yarn.lock", "yarn.lock");
+        writer.copyTemplate(CHATBOT_ARCHETYPE + "README.md.ftl", "README.md", model);
+        writer.copy(CHATBOT_ARCHETYPE + "Procfile", "Procfile");
+        writer.copyTemplate(CHATBOT_ARCHETYPE + "package.json.ftl", "package.json", model);
+        writer.copy(CHATBOT_ARCHETYPE + "app.js", "app.js");
+        writer.copy(CHATBOT_ARCHETYPE + ".gitignore", ".gitignore");
+        writer.copyTemplate(CHATBOT_ARCHETYPE + ".env.ftl", ".env", model);
+        writer.copyDir(ChatbotGenerator.class, CHATBOT_ARCHETYPE + "views", "views");
+        writer.copyDir(ChatbotGenerator.class, CHATBOT_ARCHETYPE + "routes", "routes");
+        writer.copyDir(ChatbotGenerator.class, CHATBOT_ARCHETYPE + "public", "public");
+        writer.copy(CHATBOT_ARCHETYPE + "bin/www", "bin/www");
+        writer.copyTemplate(CHATBOT_ARCHETYPE + "bots/index.js.ftl", "bots/index.js", model);
+        
+        // Facebook bot
+        if (chatbotCtx.isFacebookBot()) {
+            writer.copyTemplate(CHATBOT_ARCHETYPE + "bots/facebook/controller.js.ftl", "bots/facebook/controller.js", model);
+            writer.copyTemplate(CHATBOT_ARCHETYPE + "bots/facebook/menu.js.ftl", "bots/facebook/menu.js", model);
+            writer.copyTemplate(CHATBOT_ARCHETYPE + "bots/facebook/middlewares.js.ftl", "bots/facebook/middlewares.js", model);
+            writer.copyTemplate(CHATBOT_ARCHETYPE + "bots/facebook/skills.js.ftl", "bots/facebook/skills.js", model);
+        }
 
-		LOGGER.info("Finished!");
-		LOGGER.info("Run `npm install` to install dependencies");
-		LOGGER.info("Run `npm start` to run the project");
-	}
+        // Web bot
+        if (chatbotCtx.isWebBot()) {
+            writer.copyTemplate(CHATBOT_ARCHETYPE + "bots/web/controller.js.ftl", "bots/web/controller.js", model);
+            writer.copyTemplate(CHATBOT_ARCHETYPE + "bots/web/middlewares.js.ftl", "bots/web/middlewares.js", model);
+            writer.copyTemplate(CHATBOT_ARCHETYPE + "bots/web/skills.js.ftl", "bots/web/skills.js", model);
+        }
+
+        // DialogFlow conversation scripts
+        if (chatbotCtx.getNlpService().equals(NlpService.DIALOGFLOW)) {
+            writer.copyTemplate(CHATBOT_ARCHETYPE + "bots/conversation/create-conversation.js.ftl", "bots/conversation/create-conversation.js", model);
+            writer.copyTemplate(CHATBOT_ARCHETYPE + "bots/conversation/starter-conversation.js.ftl", "bots/conversation/starter-conversation.js", model);
+        }
+
+        LOGGER.info("Finished!");
+        LOGGER.info("Run `npm install` to install dependencies");
+        LOGGER.info("Run `npm start` to run the project");
+    }
 
 }

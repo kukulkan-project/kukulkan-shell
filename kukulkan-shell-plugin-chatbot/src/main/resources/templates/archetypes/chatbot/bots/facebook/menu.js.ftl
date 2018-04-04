@@ -1,5 +1,4 @@
 module.exports = function (controller) {
-    <#if project.facebookBotConfig.menu && project.facebookBot>
     controller.api.messenger_profile.greeting('!Hola! Soy el chatbot de ${project.name}');
     controller.api.messenger_profile.get_started('Hola');
     controller.api.messenger_profile.menu([{
@@ -30,13 +29,13 @@ module.exports = function (controller) {
             <#if project.page != "">
             {
                 "type": "web_url",
-                "title": "${project.name}",
-                "url": "${project.page}",
+                "title": "STARTER",
+                "url": "https://github.com/robertovillarejo/botkit-starter-dads-infotec",
                 "webview_height_ratio": "full"
             }
             </#if>
         ]
     }
     ]);
-    </#if>
+
 }

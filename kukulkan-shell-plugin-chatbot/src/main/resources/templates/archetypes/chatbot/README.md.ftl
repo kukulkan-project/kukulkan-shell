@@ -2,7 +2,7 @@
 ${project.description}
 
 ## Getting Started
-You'll need:
+You will need:
 - [NodeJS](https://nodejs.org/es/)
 
 <#if project.facebookBot>
@@ -22,32 +22,23 @@ For DialogFlow support:
 - The developer access token
 </#if>
 
-<#if project.webhook>
-For fulfillment support:
-- The endpoint of the external system (host and port)
-- The credentials
-</#if>
-
 ## Usage
 Fist, make sure you're done with all environment variables in your `.env` file.
 
+<#if project.nlpService == "DIALOGFLOW">
 - **DIALOGFLOW_CLIENT_TOKEN**: The DialogFlow client token
 - **DIALOGFLOW_DEVELOPER_TOKEN**: The DialogFlow developer token (required if you want to use the `conversation-create` script)
+</#if>
 <#if project.facebookBot>
 - **ACCESS_TOKEN**: The Facebook page access token (this token is provided by Facebook)
 - **VERIFY_TOKEN**: The Facebook verify token (this token is defined by the user)
 </#if>
-- **PORT**: The port that this application will use
-<#if project.webhook>
-- **FULFILLMENT_ENDPOINT**: The URL that this application will use as webhook
-</#if>
 
 Once all variables defined, run `npm install` and dependencies will be downloaded.
 
-Finally, to run the project simply execute `npm start` or `node index.js`.
+Finally, to run the project simply execute `npm start`.
 
-<#if project.nlpService == "DIALOGFLOW">
-# Creating Conversation
+### Creating Conversation
 
 If you want to create a basic conversation for your DialogFlow agent, run `npm run conversation-create` (currently supports only Spanish).
 After that, your chatbot will be able to recognize the following intents:
@@ -63,9 +54,16 @@ After that, your chatbot will be able to recognize the following intents:
 - What is your web page? (¿Cuál es su página web?)
 - Feedback (Eres de gran ayuda/No sirves para nada)
 - Location of the company (¿En dónde se ubican?)
-</#if>
 
-## Chatting with the chatbot
+### Chatting with the chatbot
+<#if project.facebookBot>
+#### Facebook
 Once your project is running, make sure your ip is public. Then, in your Facebook App, add a webhook with that ip and the verify token you defined in the `.env` file.
 
 Go to your Facebook page and send a message to start the conversation.
+</#if>
+<#if project.facebookBot>
+#### Web
+Go to `http://localhost:8090/chat.html`
+</#if>
+

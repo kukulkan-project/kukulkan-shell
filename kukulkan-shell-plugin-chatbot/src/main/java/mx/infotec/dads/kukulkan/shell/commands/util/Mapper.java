@@ -25,63 +25,35 @@ package mx.infotec.dads.kukulkan.shell.commands.util;
 
 import mx.infotec.dads.kukulkan.shell.commands.chatbot.ChatbotArgs;
 import mx.infotec.dads.kukulkan.shell.generator.ChatbotContext;
-import mx.infotec.dads.kukulkan.shell.generator.DialogFlowConfig;
-import mx.infotec.dads.kukulkan.shell.generator.FacebookBotConfig;
-import mx.infotec.dads.kukulkan.shell.generator.WebhookConfig;
+import mx.infotec.dads.kukulkan.shell.generator.NlpService;
 
 /**
  * Mapper from ChatbotArgs to ChatbotContext
+ * 
  * @author Roberto Villarejo Martínez <roberto.villarejo@infotec.mx>
  *
  */
 public class Mapper {
-	
-	private Mapper() {
-	}
 
-	/**
-	 * 
-	 * @param The args read from console
-	 * @return The ChatbotContext
-	 */
-	public static ChatbotContext toContext(ChatbotArgs params) {
-		ChatbotContext ctx = new ChatbotContext();
-		ctx.setName(params.getName());
-		ctx.setPage(params.getHomepage());
-		ctx.setAuthor(params.getAuthor());
-		ctx.setDescription(params.getDescription());
-		ctx.setDialogflowConfig(toDialogFlowConfig(params));
-		ctx.setFacebookBot(params.isFacebookBot());
-		ctx.setFacebookBotConfig(toFacebookBotConfig(params));
-		ctx.setWebBot(!params.isNoWebBot());
-		ctx.setGitRepository(params.getGitRepository());
-		ctx.setLicense(params.getLicense());
-		ctx.setNlpService(params.getNlpService());
-		ctx.setPort(params.getPort());
-		ctx.setWebhook(params.isWebhook());
-		ctx.setWebhookConfig(toWebhookConfig(params));
-		return ctx;
-	}
+    private Mapper() {
+    }
 
-	private static DialogFlowConfig toDialogFlowConfig(ChatbotArgs params) {
-		DialogFlowConfig dialogflowConfig = new DialogFlowConfig();
-		dialogflowConfig.setClientToken(params.getDfClientToken());
-		dialogflowConfig.setDeveloperToken(params.getDfDeveloperToken());
-		return dialogflowConfig;
-	}
-
-	private static FacebookBotConfig toFacebookBotConfig(ChatbotArgs params) {
-		FacebookBotConfig fbBotConfig = new FacebookBotConfig();
-		fbBotConfig.setAccessToken(params.getFbAccessToken());
-		fbBotConfig.setVerifyToken(params.getFbVerifyToken());
-		fbBotConfig.setMenu(!params.isNoFbMenu());
-		return fbBotConfig;
-	}
-
-	private static WebhookConfig toWebhookConfig(ChatbotArgs params) {
-		WebhookConfig webhookConfig = new WebhookConfig();
-		webhookConfig.setEndpoint(params.getEndpointWebhook());
-		return webhookConfig;
-	}
+    /**
+     * 
+     * @param The args read from console
+     * @return The ChatbotContext
+     */
+    public static ChatbotContext toContext(ChatbotArgs params) {
+        ChatbotContext ctx = new ChatbotContext();
+        ctx.setName(params.getName());
+        ctx.setPage(params.getHomepage());
+        ctx.setAuthor(params.getAuthor());
+        ctx.setDescription(params.getDescription());
+        ctx.setFacebookBot(!params.isNoFacebookBot());
+        ctx.setWebBot(!params.isNoWebBot());
+        ctx.setLicense(params.getLicense());
+        ctx.setNlpService(NlpService.DIALOGFLOW);
+        return ctx;
+    }
 
 }
