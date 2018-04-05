@@ -28,8 +28,12 @@ import static mx.infotec.dads.kukulkan.shell.commands.kukulkan.CommandHelper.cre
 import static mx.infotec.dads.kukulkan.shell.commands.maven.MavenCommands.MVN_COMMAND;
 import static mx.infotec.dads.kukulkan.shell.commands.validation.UserInputValidation.validateParams;
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.InputStreamReader;
 import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 import javax.validation.constraints.NotNull;
@@ -57,6 +61,7 @@ import mx.infotec.dads.kukulkan.shell.commands.AbstractCommand;
 import mx.infotec.dads.kukulkan.shell.commands.valueprovided.KukulkanFilesProvider;
 import mx.infotec.dads.kukulkan.shell.domain.Line;
 import mx.infotec.dads.kukulkan.shell.domain.ShellCommand;
+import mx.infotec.dads.kukulkan.shell.util.LineCollector;
 import mx.infotec.dads.kukulkan.shell.util.ProjectUtil;
 import mx.infotec.dads.kukulkan.shell.util.TextFormatter;
 
@@ -126,11 +131,17 @@ public class AppGeneration extends AbstractCommand {
     @ShellMethod("Configurate the project")
     public void appConfig(@ShellOption(defaultValue = "FRONT_END") ConfigurationType type) {
         if (type.equals(ConfigurationType.FRONT_END)) {
-            commandService.exec(new ShellCommand(MVN_COMMAND).addArg("package").addArg("-Pprod").addArg("-DskipTests"),
-                    line -> {
-                        commandService.printf(TextFormatter.formatLogText(line).toAnsi());
-                        return Optional.ofNullable(new Line(line));
-                    });
+            try {
+                Process p = Runtime.getRuntime().exec(new ShellCommand("mvn").addArg("package").addArg("-Pprod")
+                        .addArg("-DskipTests").getExecutableCommand(), null, navigator.getCurrentPath().toFile());
+                BufferedReader reader = new BufferedReader(new InputStreamReader(p.getInputStream()));
+                String line;
+                while ((line = reader.readLine()) != null) {
+                    commandService.printf(TextFormatter.formatLogText(line).toAnsi());
+                }
+                p.waitFor();
+            } catch (Exception e) {
+            }
         } else {
             commandService.printf("This configuration is not supported: " + type);
         }
@@ -138,10 +149,18 @@ public class AppGeneration extends AbstractCommand {
 
     @ShellMethod("Run a Spring-Boot App")
     public void appRun() {
-        executor.execute(() -> commandService.exec(new ShellCommand(MVN_COMMAND).addArg("spring-boot:run"), line -> {
-            commandService.printf(TextFormatter.formatLogText(line).toAnsi());
-            return Optional.ofNullable(new Line(line));
-        }));
+        try {
+            Process p = Runtime.getRuntime().exec(
+                    new ShellCommand("mvn").addArg("spring-boot:run").getExecutableCommand(), null,
+                    navigator.getCurrentPath().toFile());
+            BufferedReader reader = new BufferedReader(new InputStreamReader(p.getInputStream()));
+            String line;
+            while ((line = reader.readLine()) != null) {
+                commandService.printf(TextFormatter.formatLogText(line).toAnsi());
+            }
+            p.waitFor();
+        } catch (Exception e) {
+        }
     }
 
     /**
