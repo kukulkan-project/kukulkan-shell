@@ -86,7 +86,7 @@ public class CommandHelper {
             List<DomainModelGroup> dmgList = GrammarMapping.createSingleDataModelGroupList(semanticAnalyzer, file);
             domainModel.setDomainModelGroup(dmgList);
             LOGGER.info("Processing File...");
-            genCtx.put(ProjectConfiguration.class, projectConfiguration);
+            genCtx.put(ProjectConfiguration.class, config);
             genCtx.put(DomainModel.class, domainModel);
         });
         return genCtx;
