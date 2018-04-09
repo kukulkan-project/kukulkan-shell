@@ -5,7 +5,7 @@
     
     <groupId>mx.infotec.dads.kukulkan</groupId>
     <artifactId>kukulkan-shell</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
+    <version>0.0.1</version>
 
     <name>Kukulkan Shell</name>
     <packaging>pom</packaging>
