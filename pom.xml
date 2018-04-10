@@ -5,7 +5,7 @@
     
     <groupId>mx.infotec.dads.kukulkan</groupId>
     <artifactId>kukulkan-shell</artifactId>
-    <version>0.0.2-SNAPSHOT</version>
+    <version>0.0.1-RELEASE</version>
 
     <name>Kukulkan Shell</name>
     <packaging>pom</packaging>
@@ -29,7 +29,6 @@
     </parent>
 
     <properties>
-        <revision>0.0.1-SNAPSHOT</revision>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <java.version>1.8</java.version>
@@ -53,10 +52,12 @@
         <checkstyle.config.location>etc/checkstyle/checkstyle.xml</checkstyle.config.location>
         <javadoc.opts>-Xdoclint:none</javadoc.opts>
         <checkstyle.config.location>etc/checkstyle/checkstyle.xml</checkstyle.config.location>
-        <!-- Kukulkan Modules dependencies -->
-        <kukulkan.metamodel.version></kukulkan.metamodel.version>
-        <kukulkan.shell.commands></kukulkan.shell.commands>
-        <kukulkan.version>0.0.1-SNAPSHOT</kukulkan.version>
+        <!-- Kukulkan dependencies -->
+        <kukulkan-grammar.version>0.0.1-RELEASE</kukulkan-grammar.version>
+        <kukulkan-metamodel.version>0.0.1-RELEASE</kukulkan-metamodel.version>
+        <kukulkan-engine.version>0.0.1-RELEASE</kukulkan-engine.version>
+        <kukulkan-generator-angularjs.version>0.0.1-RELEASE</kukulkan-generator-angularjs.version>
+        <!-- Kukulkan Shell Modules dependencies -->
     </properties>
 
     <modules>
@@ -86,64 +87,64 @@
             </dependency>
             <dependency>
                 <groupId>mx.infotec.dads.kukulkan</groupId>
+                <artifactId>kukulkan-grammar</artifactId>
+                <version>${kukulkan-grammar.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>mx.infotec.dads.kukulkan</groupId>
                 <artifactId>kukulkan-metamodel</artifactId>
-                <version>${kukulkan.version}</version>
+                <version>${kukulkan-metamodel.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>mx.infotec.dads.kukulkan</groupId>
+                <artifactId>kukulkan-engine</artifactId>
+                <version>${kukulkan-engine.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>mx.infotec.dads.kukulkan</groupId>
+                <artifactId>kukulkan-generator-angularjs</artifactId>
+                <version>${kukulkan-generator-angularjs.version}</version>
             </dependency>
             <dependency>
                 <groupId>mx.infotec.dads.kukulkan</groupId>
                 <artifactId>kukulkan-shell-test-config</artifactId>
-                <version>${kukulkan.version}</version>
+                <version>${project.version}</version>
                 <scope>test</scope>
             </dependency>
             <dependency>
                 <groupId>mx.infotec.dads.kukulkan</groupId>
                 <artifactId>kukulkan-shell-plugin-generator</artifactId>
-                <version>${kukulkan.version}</version>
+                <version>${project.version}</version>
             </dependency>
             <dependency>
                 <groupId>mx.infotec.dads.kukulkan</groupId>
                 <artifactId>kukulkan-shell-kernel</artifactId>
-                <version>${kukulkan.version}</version>
+                <version>${project.version}</version>
             </dependency>
             <dependency>
                 <groupId>mx.infotec.dads.kukulkan</groupId>
                 <artifactId>kukulkan-shell-commands</artifactId>
-                <version>${kukulkan.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>mx.infotec.dads.kukulkan</groupId>
-                <artifactId>kukulkan-engine</artifactId>
-                <version>${kukulkan.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>mx.infotec.dads.kukulkan</groupId>
-                <artifactId>kukulkan-generator-angularjs</artifactId>
-                <version>${kukulkan.version}</version>
+                <version>${project.version}</version>
             </dependency>
             <dependency>
                 <groupId>mx.infotec.dads.kukulkan</groupId>
                 <artifactId>kukulkan-shell-plugin-chatbot</artifactId>
-                <version>${kukulkan.version}</version>
+                <version>${project.version}</version>
             </dependency>
             <dependency>
                 <groupId>mx.infotec.dads.kukulkan</groupId>
                 <artifactId>kukulkan-shell-plugin-antlr4</artifactId>
-                <version>${kukulkan.version}</version>
+                <version>${project.version}</version>
             </dependency>
             <dependency>
                 <groupId>mx.infotec.dads.kukulkan</groupId>
-                <artifactId>kukulkan-grammar</artifactId>
-                <version>${kukulkan.version}</version>
+                <artifactId>kukulkan-shell-plugin-dsl</artifactId>
+                <version>${project.version}</version>
             </dependency>
             <dependency>
-            	<groupId>mx.infotec.dads.kukulkan</groupId>
-            	<artifactId>kukulkan-shell-plugin-dsl</artifactId>
-            	<version>0.0.1-SNAPSHOT</version>
-            </dependency>
-            <dependency>
-            	<groupId>mx.infotec.dads.kukulkan</groupId>
-            	<artifactId>kukulkan-shell-plugin-xtext</artifactId>
-            	<version>0.0.1-SNAPSHOT</version>
+                <groupId>mx.infotec.dads.kukulkan</groupId>
+                <artifactId>kukulkan-shell-plugin-xtext</artifactId>
+                <version>${project.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
