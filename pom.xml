@@ -5,7 +5,7 @@
     
     <groupId>mx.infotec.dads.kukulkan</groupId>
     <artifactId>kukulkan-shell</artifactId>
-    <version>0.0.1-RELEASE</version>
+    <version>0.0.2-SNAPSHOT</version>
 
     <name>Kukulkan Shell</name>
     <packaging>pom</packaging>
@@ -53,10 +53,10 @@
         <javadoc.opts>-Xdoclint:none</javadoc.opts>
         <checkstyle.config.location>etc/checkstyle/checkstyle.xml</checkstyle.config.location>
         <!-- Kukulkan dependencies -->
-        <kukulkan-grammar.version>0.0.1-RELEASE</kukulkan-grammar.version>
-        <kukulkan-metamodel.version>0.0.1-RELEASE</kukulkan-metamodel.version>
-        <kukulkan-engine.version>0.0.1-RELEASE</kukulkan-engine.version>
-        <kukulkan-generator-angularjs.version>0.0.1-RELEASE</kukulkan-generator-angularjs.version>
+        <kukulkan-grammar.version>0.0.2-SNAPSHOT</kukulkan-grammar.version>
+        <kukulkan-metamodel.version>0.0.2-SNAPSHOT</kukulkan-metamodel.version>
+        <kukulkan-engine.version>0.0.2-SNAPSHOT</kukulkan-engine.version>
+        <kukulkan-generator-angularjs.version>0.0.2-SNAPSHOT</kukulkan-generator-angularjs.version>
         <!-- Kukulkan Shell Modules dependencies -->
     </properties>
 
