@@ -131,8 +131,9 @@ public class CommandServiceImpl implements CommandService {
         List<Line> lines = new ArrayList<>();
         try {
             Process p = Runtime.getRuntime().exec(command.getExecutableCommand(), null, nav.getCurrentPath().toFile());
+            List<Line> readBufferProcess = readBufferProcess(p, new LineCollector(processor));
             p.waitFor();
-            return readBufferProcess(p, new LineCollector(processor));
+            return readBufferProcess;
         } catch (Exception e) {
             LOGGER.debug(GENERIC_ERROR_MSG, e);
             printf(String.format("The command [%s] could not be executed", command));

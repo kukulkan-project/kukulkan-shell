@@ -67,22 +67,9 @@ public class MavenCommands {
     @Autowired
     ThreadPoolTaskExecutor executor;
 
-    @ShellMethod("Run a Spring-Boot App")
-    public void runApp() {
-        executor.execute(() -> commandService.exec(new ShellCommand(MVN_COMMAND).addArg("spring-boot:run"), line -> {
-            commandService.printf(TextFormatter.formatLogText(line).toAnsi());
-            return Optional.ofNullable(new Line(line));
-        }));
-    }
-
     @ShellMethod("Stop a Process")
     public void stopProcess(@ShellOption(valueProvider = JavaProcessValueProvider.class) @NotNull String id) {
         commandService.exec(new ShellCommand("kill", "-9", id));
-    }
-
-    @ShellMethod("Stop an App")
-    public void stopApp() {
-        executor.destroy();
     }
 
     /**
