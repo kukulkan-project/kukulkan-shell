@@ -69,6 +69,7 @@
         <module>kukulkan-shell-commands</module>
         <module>kukulkan-shell-terminal</module>
         <module>kukulkan-shell-plugin-antlr4</module>
+        <module>kukulkan-shell-plugin-graphs</module>
         <module>kukulkan-shell-plugin-dsl</module>
         <module>kukulkan-shell-plugin-xtext</module>
     </modules>
