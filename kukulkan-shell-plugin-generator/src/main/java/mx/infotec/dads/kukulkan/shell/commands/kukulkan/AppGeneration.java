@@ -28,16 +28,14 @@ import static mx.infotec.dads.kukulkan.shell.commands.kukulkan.CommandHelper.cre
 import static mx.infotec.dads.kukulkan.shell.commands.maven.MavenCommands.MVN_COMMAND;
 import static mx.infotec.dads.kukulkan.shell.commands.validation.UserInputValidation.validateParams;
 
-import java.io.BufferedReader;
 import java.io.File;
-import java.io.InputStreamReader;
 import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Optional;
 
 import javax.validation.constraints.NotNull;
 
+import org.jline.utils.AttributedCharSequence;
+import org.jline.utils.AttributedString;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -55,14 +53,12 @@ import mx.infotec.dads.kukulkan.engine.service.InflectorService;
 import mx.infotec.dads.kukulkan.metamodel.context.GeneratorContext;
 import mx.infotec.dads.kukulkan.metamodel.foundation.DatabaseType;
 import mx.infotec.dads.kukulkan.metamodel.foundation.ProjectConfiguration;
-import mx.infotec.dads.kukulkan.metamodel.util.DefaultValues;
 import mx.infotec.dads.kukulkan.metamodel.util.FileUtil;
 import mx.infotec.dads.kukulkan.shell.commands.AbstractCommand;
 import mx.infotec.dads.kukulkan.shell.commands.valueprovided.KukulkanFilesProvider;
 import mx.infotec.dads.kukulkan.shell.domain.Line;
 import mx.infotec.dads.kukulkan.shell.domain.ShellCommand;
 import mx.infotec.dads.kukulkan.shell.services.CommandService;
-import mx.infotec.dads.kukulkan.shell.util.LineCollector;
 import mx.infotec.dads.kukulkan.shell.util.ProjectUtil;
 import mx.infotec.dads.kukulkan.shell.util.TextFormatter;
 
@@ -165,6 +161,12 @@ public class AppGeneration extends AbstractCommand {
         ObjectMapper objectMapper = new ObjectMapper();
         objectMapper.configure(SerializationFeature.INDENT_OUTPUT, true);
         return objectMapper.writeValueAsString(shellContext.getConfiguration().orElse(new ProjectConfiguration()));
+    }
+    
+    
+    @ShellMethod("Show the current project configuration applied to the current context")
+    public AttributedCharSequence testingCommand() {
+       return new AttributedString("testing command");
     }
 
     // public Availability availabilityAppGenerateCrud() {

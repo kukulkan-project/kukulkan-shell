@@ -27,7 +27,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.annotation.EnableAsync;
 
-import mx.infotec.dads.kukulkan.shell.event.handler.ShellResultHandler;
+import mx.infotec.dads.kukulkan.shell.result.ShellResultHandler;
 
 /**
  * The Class ResultHandlerConfiguration.
@@ -45,4 +45,5 @@ public class ResultHandlerConfiguration {
     public ShellResultHandler shellResultHandlerConfiguration() {
         return new ShellResultHandler();
     }
+
 }
