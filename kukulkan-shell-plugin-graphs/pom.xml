@@ -12,7 +12,7 @@
     <parent>
         <groupId>mx.infotec.dads.kukulkan</groupId>
         <artifactId>kukulkan-shell</artifactId>
-        <version>0.0.1-SNAPSHOT</version>
+        <version>0.0.2-SNAPSHOT</version>
     </parent>
 
     <properties>
@@ -32,7 +32,6 @@
         <dependency>
             <groupId>com.github.marschall</groupId>
             <artifactId>memoryfilesystem</artifactId>
-            <version>1.2.0</version>
         </dependency>
         <dependency>
             <groupId>com.beust</groupId>
@@ -70,16 +69,10 @@
         <dependency>
             <groupId>com.google.code.gson</groupId>
             <artifactId>gson</artifactId>
-            <version>2.8.2</version>
         </dependency>
         <dependency>
             <groupId>org.jsoup</groupId>
             <artifactId>jsoup</artifactId>
-            <version>1.11.2</version>
-        </dependency>
-        <dependency>
-            <groupId>mx.infotec.dads.kukulkan</groupId>
-            <artifactId>kukulkan-shell-kernel</artifactId>
         </dependency>
     </dependencies>
     <repositories>
