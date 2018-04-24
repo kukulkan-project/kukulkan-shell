@@ -33,9 +33,7 @@ import mx.infotec.dads.kukulkan.shell.component.Navigator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.shell.standard.ShellComponent;
 import org.springframework.shell.standard.ShellMethod;
-
-import mx.infotec.dads.kukulkan.shell.services.CommandService;
-import mx.infotec.dads.kukulkan.shell.util.AnsiConstants;
+import mx.infotec.dads.kukulkan.shell.services.PrintService;
 
 import org.jline.utils.AttributedString;
 import org.jline.utils.AttributedStyle;
@@ -54,16 +52,13 @@ public class LinuxCommands {
     private static final Logger LOGGER = LoggerFactory.getLogger(LinuxCommands.class);
 
     /**
-     * The command service.
-     */
-    @Autowired
-    private CommandService commandService;
-
-    /**
      * The navigator service.
      */
     @Autowired
     private Navigator nav;
+
+    @Autowired
+    private PrintService printService;
 
     /**
      * Ping.
@@ -128,7 +123,7 @@ public class LinuxCommands {
             try (BufferedReader in = new BufferedReader(new InputStreamReader(pr.getInputStream()))) {
                 String line;
                 while ((line = in.readLine()) != null) {
-                    commandService.printf(new AttributedString(line));
+                    printService.print(new AttributedString(line));
                 }
 
                 pr.waitFor();
@@ -142,13 +137,13 @@ public class LinuxCommands {
 
     @ShellMethod("showColors")
     public void showColors() {
-        commandService.printf(new AttributedString("blue", AttributedStyle.BOLD.foreground(AttributedStyle.BLUE)));
-        commandService.printf(new AttributedString("black", AttributedStyle.BOLD.foreground(AttributedStyle.BLACK)));
-        commandService.printf(new AttributedString("cyan", AttributedStyle.BOLD.foreground(AttributedStyle.CYAN)));
-        commandService.printf(new AttributedString("green", AttributedStyle.BOLD.foreground(AttributedStyle.GREEN)));
-        commandService.printf(new AttributedString("purple", AttributedStyle.BOLD.foreground(AttributedStyle.MAGENTA)));
-        commandService.printf(new AttributedString("red", AttributedStyle.BOLD.foreground(AttributedStyle.RED)));
-        commandService.printf(new AttributedString("white", AttributedStyle.BOLD.foreground(AttributedStyle.WHITE)));
-        commandService.printf(new AttributedString("yellow", AttributedStyle.BOLD.foreground(AttributedStyle.YELLOW)));
+        printService.print(new AttributedString("blue", AttributedStyle.BOLD.foreground(AttributedStyle.BLUE)));
+        printService.print(new AttributedString("black", AttributedStyle.BOLD.foreground(AttributedStyle.BLACK)));
+        printService.print(new AttributedString("cyan", AttributedStyle.BOLD.foreground(AttributedStyle.CYAN)));
+        printService.print(new AttributedString("green", AttributedStyle.BOLD.foreground(AttributedStyle.GREEN)));
+        printService.print(new AttributedString("purple", AttributedStyle.BOLD.foreground(AttributedStyle.MAGENTA)));
+        printService.print(new AttributedString("red", AttributedStyle.BOLD.foreground(AttributedStyle.RED)));
+        printService.print(new AttributedString("white", AttributedStyle.BOLD.foreground(AttributedStyle.WHITE)));
+        printService.print(new AttributedString("yellow", AttributedStyle.BOLD.foreground(AttributedStyle.YELLOW)));
     }
 }

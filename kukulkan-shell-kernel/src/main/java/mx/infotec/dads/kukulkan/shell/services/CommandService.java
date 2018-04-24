@@ -43,24 +43,6 @@ import mx.infotec.dads.kukulkan.shell.util.LineValuedProcessor;
 public interface CommandService {
 
     /**
-     * Printf.
-     *
-     * @param text
-     *            the text
-     */
-    public void printf(AttributedString text);
-
-    /**
-     * Printf.
-     *
-     * @param key
-     *            the key
-     * @param message
-     *            the message
-     */
-    public void printf(String key, String message);
-
-    /**
      * Exec.
      *
      * @param command

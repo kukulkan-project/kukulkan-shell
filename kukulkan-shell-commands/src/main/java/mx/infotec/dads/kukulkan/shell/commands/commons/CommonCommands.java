@@ -27,7 +27,6 @@ import java.util.List;
 
 import javax.validation.constraints.NotNull;
 
-import org.jline.terminal.Terminal;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.shell.standard.ShellComponent;
@@ -37,6 +36,7 @@ import mx.infotec.dads.kukulkan.shell.domain.AboutInfo;
 import mx.infotec.dads.kukulkan.shell.domain.NativeCommandContext;
 import mx.infotec.dads.kukulkan.shell.domain.ShellCommand;
 import mx.infotec.dads.kukulkan.shell.services.CommandService;
+import mx.infotec.dads.kukulkan.shell.services.PrintService;
 
 /**
  * Docker Commands.
@@ -48,16 +48,15 @@ public class CommonCommands {
 
     /** The context. */
     @Autowired
-    private NativeCommandContext context;
-    
-    /** The terminal. */
-    @Autowired
     @Lazy
-    private Terminal terminal;
+    private NativeCommandContext context;
 
     /** The command service. */
     @Autowired
-    CommandService commandService;
+    private CommandService commandService;
+    
+    @Autowired
+    private PrintService printService;
 
     /**
      * Native commands.
@@ -65,7 +64,7 @@ public class CommonCommands {
     @ShellMethod("Show the status of the common commands")
     public void nativeCommands() {
         context.getAvailableCommands()
-                .forEach((key, cmd) -> commandService.printf(cmd.getCommand(), Boolean.toString(cmd.isActive())));
+                .forEach((key, cmd) -> printService.print(cmd.getCommand(), Boolean.toString(cmd.isActive())));
     }
 
     /**

@@ -27,6 +27,7 @@ import static mx.infotec.dads.kukulkan.shell.commands.git.GitHelper.GIT_COMMAND;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.shell.Availability;
 import org.springframework.shell.standard.ShellMethodAvailability;
 
@@ -49,6 +50,7 @@ public abstract class GitBaseCommands {
 
     /** The project context. */
     @Autowired
+    @Lazy
     protected NativeCommandContext projectContext;
 
     /** The publisher. */

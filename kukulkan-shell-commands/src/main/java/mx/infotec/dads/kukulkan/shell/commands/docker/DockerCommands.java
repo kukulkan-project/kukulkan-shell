@@ -24,6 +24,7 @@
 package mx.infotec.dads.kukulkan.shell.commands.docker;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.shell.Availability;
 import org.springframework.shell.standard.ShellComponent;
 import org.springframework.shell.standard.ShellMethod;
@@ -51,11 +52,12 @@ public class DockerCommands {
 
     /** The project context. */
     @Autowired
-    NativeCommandContext projectContext;
+    @Lazy
+    private NativeCommandContext projectContext;
 
     /** The command service. */
     @Autowired
-    CommandService commandService;
+    private CommandService commandService;
 
     /**
      * Docker ps.

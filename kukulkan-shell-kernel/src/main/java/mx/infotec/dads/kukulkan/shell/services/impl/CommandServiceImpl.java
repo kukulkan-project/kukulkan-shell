@@ -31,12 +31,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import org.jline.terminal.Terminal;
 import org.jline.utils.AttributedString;
+import org.jline.utils.AttributedStyle;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
 import mx.infotec.dads.kukulkan.shell.component.Navigator;
@@ -44,13 +43,13 @@ import mx.infotec.dads.kukulkan.shell.domain.Line;
 import mx.infotec.dads.kukulkan.shell.domain.NativeCommand;
 import mx.infotec.dads.kukulkan.shell.domain.ShellCommand;
 import mx.infotec.dads.kukulkan.shell.services.CommandService;
+import mx.infotec.dads.kukulkan.shell.services.PrintService;
 import mx.infotec.dads.kukulkan.shell.util.BufferCollector;
 import mx.infotec.dads.kukulkan.shell.util.CharSequenceCollector;
 import mx.infotec.dads.kukulkan.shell.util.LineCollector;
 import mx.infotec.dads.kukulkan.shell.util.LineProcessor;
 import mx.infotec.dads.kukulkan.shell.util.LineValuedProcessor;
 import mx.infotec.dads.kukulkan.shell.util.StringBuilderCollector;
-import mx.infotec.dads.kukulkan.shell.util.TextFormatter;
 
 /**
  * Useful methods to handle the main Console.
@@ -71,45 +70,13 @@ public class CommandServiceImpl implements CommandService {
     private static final String GENERIC_ERROR_MSG = "Errot at exec command";
 
     /**
-     * The terminal.
-     */
-    @Autowired
-    @Lazy
-    private Terminal terminal;
-
-    /**
      * The nav.
      */
     @Autowired
     private Navigator nav;
 
-    /**
-     * Printf.
-     *
-     * @param text
-     *            the text
-     * @see TextFormatter
-     */
-    @Override
-    public void printf(AttributedString text) {
-        terminal.writer().append(text.toAnsi(terminal)).append("\n");
-        terminal.flush();
-    }
-
-    /**
-     * Printf.
-     *
-     * @param key
-     *            the key
-     * @param message
-     *            the message
-     * @see TextFormatter
-     */
-    @Override
-    public void printf(String key, String message) {
-        terminal.writer().append(String.format("[%-15s] -%-30s%n\t", key, message)).append("\n");
-        terminal.flush();
-    }
+    @Autowired
+    private PrintService printService;
 
     /*
      * (non-Javadoc)
@@ -131,7 +98,7 @@ public class CommandServiceImpl implements CommandService {
             return readBufferProcess;
         } catch (Exception e) {
             LOGGER.debug(GENERIC_ERROR_MSG, e);
-            printf(new AttributedString(String.format("The command [%s] could not be executed", command)));
+            printService.print(new AttributedString(String.format("The command [%s] could not be executed", command)));
         }
         return lines;
     }
@@ -197,13 +164,13 @@ public class CommandServiceImpl implements CommandService {
         try {
             Process p = Runtime.getRuntime().exec(nc.getTestCommand());
             p.waitFor();
+            printService.info(nc.getCommand() + " is installed");
             output = readBufferProcess(p, new StringBuilderCollector());
-            LOGGER.info("[{}] is installed", nc.getCommand());
             nc.setInfoMessage(output);
             nc.setActive(true);
         } catch (Exception e) {
-            LOGGER.warn("[{}] is not installed", nc.getCommand());
             nc.setErrorMessage(String.format("You must install the command [%s]", nc.getCommand()));
+            printService.warning(nc.getErrorMessage());
         }
     }
 

@@ -23,9 +23,6 @@
  */
 package mx.infotec.dads.kukulkan.shell.commands.kukulkan;
 
-import org.jline.terminal.Terminal;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Lazy;
 import org.springframework.shell.standard.ShellComponent;
 import org.springframework.shell.standard.ShellMethod;
 
@@ -36,11 +33,6 @@ import org.springframework.shell.standard.ShellMethod;
  */
 @ShellComponent
 public class KukulkanInfo {
-
-    /** The terminal. */
-    @Autowired
-    @Lazy
-    private Terminal terminal;
 
     /**
      * Info.

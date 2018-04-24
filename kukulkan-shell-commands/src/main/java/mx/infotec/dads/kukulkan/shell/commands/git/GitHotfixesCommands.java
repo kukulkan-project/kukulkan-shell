@@ -39,7 +39,6 @@ import org.springframework.shell.standard.ShellComponent;
 import org.springframework.shell.standard.ShellMethod;
 
 import mx.infotec.dads.kukulkan.shell.component.Navigator;
-import mx.infotec.dads.kukulkan.shell.domain.NativeCommandContext;
 import mx.infotec.dads.kukulkan.shell.domain.ShellCommand;
 import mx.infotec.dads.kukulkan.shell.event.message.EventType;
 import mx.infotec.dads.kukulkan.shell.event.message.LocationUpdatedEvent;
@@ -53,19 +52,9 @@ import mx.infotec.dads.kukulkan.shell.services.CommandService;
 @ShellComponent
 public class GitHotfixesCommands {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(GitHotfixesCommands.class);
-
     /** The command service. */
     @Autowired
-    CommandService commandService;
-
-    /** The project context. */
-    @Autowired
-    NativeCommandContext projectContext;
-
-    /** The nav. */
-    @Autowired
-    Navigator nav;
+    private CommandService commandService;
 
     /** The publisher. */
     @Autowired
