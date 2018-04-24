@@ -24,20 +24,15 @@
 package mx.infotec.dads.kukulkan.shell.commands.maven;
 
 import java.util.List;
-import java.util.Optional;
 
 import javax.validation.constraints.NotNull;
 
 import org.jline.utils.AttributedString;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.shell.standard.ShellComponent;
 import org.springframework.shell.standard.ShellMethod;
 import org.springframework.shell.standard.ShellOption;
 
-import mx.infotec.dads.kukulkan.shell.component.Navigator;
-import mx.infotec.dads.kukulkan.shell.domain.Line;
-import mx.infotec.dads.kukulkan.shell.domain.NativeCommandContext;
 import mx.infotec.dads.kukulkan.shell.domain.ShellCommand;
 import mx.infotec.dads.kukulkan.shell.services.CommandService;
 import mx.infotec.dads.kukulkan.shell.util.TextFormatter;
@@ -53,19 +48,9 @@ public class MavenCommands {
     /** The Constant MVN_COMMAND. */
     public static final String MVN_COMMAND = "mvn";
 
-    /** The project context. */
-    @Autowired
-    NativeCommandContext projectContext;
-
     /** The command service. */
     @Autowired
     CommandService commandService;
-
-    @Autowired
-    Navigator navigator;
-
-    @Autowired
-    ThreadPoolTaskExecutor executor;
 
     @ShellMethod("Stop a Process")
     public void stopProcess(@ShellOption(valueProvider = JavaProcessValueProvider.class) @NotNull String id) {

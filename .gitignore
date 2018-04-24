@@ -49,3 +49,7 @@ nbdist/
 
 .vscode/*
 **/.sts4-cache
+
+# vagrant
+
+**/.vagrant

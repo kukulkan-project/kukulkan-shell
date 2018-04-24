@@ -4,7 +4,7 @@
 
 kukulkan.log
 .springBeans
-
+!**/templates/**
 
 ######################
 # Eclipse
@@ -118,8 +118,3 @@ Desktop.ini
 # ESLint
 ######################
 .eslintcache
-
-######################
-# Templates
-######################
-!**/templates/**

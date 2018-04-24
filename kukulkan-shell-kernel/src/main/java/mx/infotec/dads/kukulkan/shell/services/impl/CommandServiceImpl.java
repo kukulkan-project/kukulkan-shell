@@ -23,9 +23,6 @@
  */
 package mx.infotec.dads.kukulkan.shell.services.impl;
 
-import static mx.infotec.dads.kukulkan.shell.util.AnsiConstants.ANSI_GREEN;
-import static mx.infotec.dads.kukulkan.shell.util.AnsiConstants.ANSI_RESET;
-
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -34,12 +31,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import org.jline.terminal.Terminal;
 import org.jline.utils.AttributedString;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
 import mx.infotec.dads.kukulkan.shell.component.Navigator;
@@ -47,13 +42,13 @@ import mx.infotec.dads.kukulkan.shell.domain.Line;
 import mx.infotec.dads.kukulkan.shell.domain.NativeCommand;
 import mx.infotec.dads.kukulkan.shell.domain.ShellCommand;
 import mx.infotec.dads.kukulkan.shell.services.CommandService;
+import mx.infotec.dads.kukulkan.shell.services.PrintService;
 import mx.infotec.dads.kukulkan.shell.util.BufferCollector;
 import mx.infotec.dads.kukulkan.shell.util.CharSequenceCollector;
 import mx.infotec.dads.kukulkan.shell.util.LineCollector;
 import mx.infotec.dads.kukulkan.shell.util.LineProcessor;
 import mx.infotec.dads.kukulkan.shell.util.LineValuedProcessor;
 import mx.infotec.dads.kukulkan.shell.util.StringBuilderCollector;
-import mx.infotec.dads.kukulkan.shell.util.TextFormatter;
 
 /**
  * Useful methods to handle the main Console.
@@ -74,49 +69,13 @@ public class CommandServiceImpl implements CommandService {
     private static final String GENERIC_ERROR_MSG = "Errot at exec command";
 
     /**
-     * The terminal.
-     */
-    @Autowired
-    @Lazy
-    private Terminal terminal;
-
-    /**
      * The nav.
      */
     @Autowired
     private Navigator nav;
 
-    /**
-     * Printf.
-     *
-     * @param text
-     *            the text
-     * @deprecated prefered use TextFormatter class
-     * @see TextFormatter
-     */
-    @Override
-    @Deprecated
-    public void printf(String text) {
-        terminal.writer().append(text).append("\n");
-        terminal.flush();
-    }
-
-    /**
-     * Printf.
-     *
-     * @param key
-     *            the key
-     * @param message
-     *            the message
-     * @deprecated prefered use TextFormatter class
-     * @see TextFormatter
-     */
-    @Override
-    @Deprecated
-    public void printf(String key, String message) {
-        terminal.writer().append(String.format("%s[%-15s] %s-%-30s%n\t", ANSI_GREEN, key, ANSI_RESET, message));
-        terminal.flush();
-    }
+    @Autowired
+    private PrintService printService;
 
     /*
      * (non-Javadoc)
@@ -130,13 +89,15 @@ public class CommandServiceImpl implements CommandService {
     public List<Line> exec(final ShellCommand command, LineValuedProcessor processor) {
         List<Line> lines = new ArrayList<>();
         try {
-            Process p = Runtime.getRuntime().exec(command.getExecutableCommand(), null, nav.getCurrentPath().toFile());
+            ProcessBuilder pb = new ProcessBuilder(fixShellCommand(command).getExecutableCommand());
+            pb.directory(nav.getCurrentPath().toFile());
+            Process p = pb.start();
             List<Line> readBufferProcess = readBufferProcess(p, new LineCollector(processor));
             p.waitFor();
             return readBufferProcess;
         } catch (Exception e) {
             LOGGER.debug(GENERIC_ERROR_MSG, e);
-            printf(String.format("The command [%s] could not be executed", command));
+            printService.print(new AttributedString(String.format("The command [%s] could not be executed", command)));
         }
         return lines;
     }
@@ -177,7 +138,9 @@ public class CommandServiceImpl implements CommandService {
     public List<CharSequence> exec(final Path workingDirectory, final ShellCommand command, LineProcessor processor) {
         List<CharSequence> lines = new ArrayList<>();
         try {
-            Process p = Runtime.getRuntime().exec(command.getExecutableCommand(), null, workingDirectory.toFile());
+            ProcessBuilder pb = new ProcessBuilder(fixShellCommand(command).getExecutableCommand());
+            pb.directory(workingDirectory.toFile());
+            Process p = pb.start();
             p.waitFor();
             lines = readBufferProcess(p, new CharSequenceCollector());
         } catch (Exception e) {
@@ -200,13 +163,13 @@ public class CommandServiceImpl implements CommandService {
         try {
             Process p = Runtime.getRuntime().exec(nc.getTestCommand());
             p.waitFor();
+            printService.info(nc.getCommand() + " is installed");
             output = readBufferProcess(p, new StringBuilderCollector());
-            LOGGER.info("[{}] is installed", nc.getCommand());
             nc.setInfoMessage(output);
             nc.setActive(true);
         } catch (Exception e) {
-            LOGGER.warn("[{}] is not installed", nc.getCommand());
             nc.setErrorMessage(String.format("You must install the command [%s]", nc.getCommand()));
+            printService.warning(nc.getErrorMessage());
         }
     }
 
@@ -221,5 +184,24 @@ public class CommandServiceImpl implements CommandService {
             bufferCollector.collect(stringHolder);
         }
         return bufferCollector.getCollection();
+    }
+
+    private static boolean isWindowsOS() {
+        return System.getProperty("os.name").startsWith("Windows");
+    }
+
+    private static ShellCommand fixShellCommand(final ShellCommand command) {
+        if (isWindowsOS()) {
+            ShellCommand windowsCommand = getWindowsBaseShellCommand();
+            for (String arg : command.getExecutableCommand()) {
+                windowsCommand.addArg(arg);
+            }
+            return windowsCommand;
+        }
+        return command;
+    }
+
+    private static ShellCommand getWindowsBaseShellCommand() {
+        return new ShellCommand("cmd.exe").addArg("/C");
     }
 }

@@ -31,10 +31,9 @@ import static mx.infotec.dads.kukulkan.shell.commands.git.GitHelper.RELEASE_PREF
 
 import javax.validation.constraints.NotNull;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.shell.standard.ShellComponent;
 import org.springframework.shell.standard.ShellMethod;
 
@@ -53,15 +52,14 @@ import mx.infotec.dads.kukulkan.shell.services.CommandService;
 @ShellComponent
 public class GitReleaseCommands {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(GitReleaseCommands.class);
-
     /** The command service. */
     @Autowired
     CommandService commandService;
 
     /** The project context. */
     @Autowired
-    NativeCommandContext projectContext;
+    @Lazy
+    private NativeCommandContext projectContext;
 
     /** The nav. */
     @Autowired

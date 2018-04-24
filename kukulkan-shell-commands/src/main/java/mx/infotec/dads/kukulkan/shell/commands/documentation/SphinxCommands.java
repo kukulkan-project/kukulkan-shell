@@ -1,7 +1,7 @@
 /*
  *  
  * The MIT License (MIT)
- * Copyright (c) 2018 Roberto Villarejo Martínez <roberto.villarejom@infotec.mx>
+ * Copyright (c) 2018 Roberto Villarejo Martínez <roberto.villarejo@infotec.mx>
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -77,21 +77,18 @@ public class SphinxCommands {
 
     @ShellMethod("Generate a documentation static site")
     @ShellMethodAvailability({ "sphinxAvailability" })
-    public void initDocs(
-            @NotNull @ShellOption(defaultValue = "KukulkanProject") String project,
-            @ShellOption(defaultValue = "Kukulkan") String author, 
-            @ShellOption(defaultValue = "1.0") String version,
-            @ShellOption(defaultValue = "1.0") String release, 
-            @ShellOption(defaultValue = "es") String lang) {
+    public void initDocs(@NotNull @ShellOption(defaultValue = "KukulkanProject") String project,
+            @ShellOption(defaultValue = "Kukulkan") String author, @ShellOption(defaultValue = "1.0") String version,
+            @ShellOption(defaultValue = "1.0") String release, @ShellOption(defaultValue = "es") String lang) {
         try {
             copyResources();
-            ShellCommand command = buildSphinxCommand(project, author, version, release, lang);
+            ShellCommand command = getSphinxCommand(project, author, version, release, lang);
             commandService.exec(command);
-            LOGGER.info("Run `make html` inside generated docs folder");
-            LOGGER.info("Your documentation site will be generated in docs/build/html");
-            LOGGER.info("Then use your favorite browser to open the index.html file");
+            commandService.exec(navigator.getCurrentPath().resolve("docs"), new ShellCommand("make", "html"));
+            LOGGER.info("Your documentation site has been generated in docs/build/html");
+            LOGGER.info("Use your favorite browser to open the docs/build/html/index.html file");
             LOGGER.info("Edit the Markdown files (.md) placed in /docs/source ");
-            LOGGER.info("Run `make html` in docs folder every time you edit the contents");
+            LOGGER.info("Run `make html` in docs folder every time you edit the content");
         } catch (IOException ex) {
             LOGGER.error("Error while copying resources");
         }
@@ -107,7 +104,8 @@ public class SphinxCommands {
         }
     }
 
-    private ShellCommand buildSphinxCommand(String project, String author, String version, String release, String lang) {
+    private ShellCommand getSphinxCommand(String project, String author, String version, String release,
+            String lang) {
         return new ShellCommand(SPHINX_COMMAND, "--quiet", "--sep", "--project", project, "--author", author, "-v",
                 version, "--release", release, "--language", lang, "--makefile", "--batchfile", "-t",
                 navigator.getCurrentPath().toString() + "/docs/template-DADS",
