@@ -9,6 +9,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.junit.Test;
+import org.junit.Ignore;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
@@ -34,6 +35,7 @@ public class KukulkanShellApplicationTests {
     private Antlr4Generator generator;
 
     @Test
+    @Ignore
     public void generate() throws IOException {
         Antlr4Args params = new Antlr4Args();
         params.setGrammarExtension("3k");
