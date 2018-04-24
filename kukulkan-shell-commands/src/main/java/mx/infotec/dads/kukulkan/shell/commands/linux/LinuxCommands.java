@@ -36,6 +36,9 @@ import org.springframework.shell.standard.ShellMethod;
 
 import mx.infotec.dads.kukulkan.shell.services.CommandService;
 import mx.infotec.dads.kukulkan.shell.util.AnsiConstants;
+
+import org.jline.utils.AttributedString;
+import org.jline.utils.AttributedStyle;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.shell.standard.ShellOption;
@@ -60,12 +63,13 @@ public class LinuxCommands {
      * The navigator service.
      */
     @Autowired
-    private Navigator nav;    
-    
+    private Navigator nav;
+
     /**
      * Ping.
      *
-     * @param host the host
+     * @param host
+     *            the host
      */
     @ShellMethod("make a ping to a host")
     public void ping(String host) {
@@ -91,7 +95,7 @@ public class LinuxCommands {
 
         execCommnad(ps);
     }
-    
+
     @ShellMethod("shows the used space of all files and directories; if the directory parameter is specified, it shows only this directory")
     public void du(@ShellOption(defaultValue = "") String dir) {
         ProcessBuilder ps;
@@ -99,22 +103,22 @@ public class LinuxCommands {
         if (dir == null || dir.isEmpty()) {
             File currentDir = nav.getCurrentPath().toFile();
             ArrayList<String> list = new ArrayList<>();
-            
+
             list.add("du");
             list.add("-shc");
 
             for (File f : currentDir.listFiles()) {
                 list.add(f.getName());
             }
-            
+
             ps = new ProcessBuilder(list);
         } else {
             ps = new ProcessBuilder("du", "-sh", dir);
         }
 
-        execCommnad(ps);        
+        execCommnad(ps);
     }
-    
+
     private void execCommnad(ProcessBuilder ps) {
         ps.redirectErrorStream(true);
 
@@ -124,7 +128,7 @@ public class LinuxCommands {
             try (BufferedReader in = new BufferedReader(new InputStreamReader(pr.getInputStream()))) {
                 String line;
                 while ((line = in.readLine()) != null) {
-                    commandService.printf(line);
+                    commandService.printf(new AttributedString(line));
                 }
 
                 pr.waitFor();
@@ -132,20 +136,19 @@ public class LinuxCommands {
             }
 
         } catch (IOException | InterruptedException ex) {
-            LOGGER.error("Error at excecute " +  ps.toString() + " commad", ex);
+            LOGGER.error("Error at excecute " + ps.toString() + " commad", ex);
         }
     }
 
     @ShellMethod("showColors")
     public void showColors() {
-        commandService.printf(AnsiConstants.ANSI_BLUE, "blue");
-        commandService.printf(AnsiConstants.ANSI_BLACK, "black");
-        commandService.printf(AnsiConstants.ANSI_CYAN, "cyan");
-        commandService.printf(AnsiConstants.ANSI_GRAY, "gray");
-        commandService.printf(AnsiConstants.ANSI_GREEN, "green");
-        commandService.printf(AnsiConstants.ANSI_PURPLE, "purple");
-        commandService.printf(AnsiConstants.ANSI_RED, "red");
-        commandService.printf(AnsiConstants.ANSI_WHITE, "white");
-        commandService.printf(AnsiConstants.ANSI_YELLOW, "yellow");
+        commandService.printf(new AttributedString("blue", AttributedStyle.BOLD.foreground(AttributedStyle.BLUE)));
+        commandService.printf(new AttributedString("black", AttributedStyle.BOLD.foreground(AttributedStyle.BLACK)));
+        commandService.printf(new AttributedString("cyan", AttributedStyle.BOLD.foreground(AttributedStyle.CYAN)));
+        commandService.printf(new AttributedString("green", AttributedStyle.BOLD.foreground(AttributedStyle.GREEN)));
+        commandService.printf(new AttributedString("purple", AttributedStyle.BOLD.foreground(AttributedStyle.MAGENTA)));
+        commandService.printf(new AttributedString("red", AttributedStyle.BOLD.foreground(AttributedStyle.RED)));
+        commandService.printf(new AttributedString("white", AttributedStyle.BOLD.foreground(AttributedStyle.WHITE)));
+        commandService.printf(new AttributedString("yellow", AttributedStyle.BOLD.foreground(AttributedStyle.YELLOW)));
     }
 }

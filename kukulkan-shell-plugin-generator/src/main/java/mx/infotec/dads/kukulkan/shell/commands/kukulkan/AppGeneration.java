@@ -120,7 +120,7 @@ public class AppGeneration extends AbstractCommand {
         generationService.findGeneratorByName("angular-js-archetype-generator").ifPresent(generator -> {
             generationService.process(genCtx, generator);
             ProjectUtil.writeKukulkanFile(shellContext.getConfiguration().get());
-            commandService.printf("Execute the command", "app-config --type FRONT_END\n\n");
+            commandService.printf("Execute the command", "app-config --type FRONT_END");
         });
     }
 
@@ -133,18 +133,18 @@ public class AppGeneration extends AbstractCommand {
         if (type.equals(ConfigurationType.FRONT_END)) {
             commandService.exec(new ShellCommand(MVN_COMMAND).addArg("package").addArg("-Pprod").addArg("-DskipTests"),
                     line -> {
-                        commandService.printf(TextFormatter.formatLogText(line).toAnsi());
+                        commandService.printf(TextFormatter.formatLogText(line));
                         return Optional.ofNullable(new Line(line));
                     });
         } else {
-            commandService.printf("This configuration is not supported: " + type);
+            commandService.printf(new AttributedString("This configuration is not supported: " + type));
         }
     }
 
     @ShellMethod("Run a Spring-Boot App")
     public void appRun() {
         executor.execute(() -> commandService.exec(new ShellCommand(MVN_COMMAND).addArg("spring-boot:run"), line -> {
-            commandService.printf(TextFormatter.formatLogText(line).toAnsi());
+            commandService.printf(TextFormatter.formatLogText(line));
             return Optional.ofNullable(new Line(line));
         }));
     }
@@ -162,11 +162,11 @@ public class AppGeneration extends AbstractCommand {
         objectMapper.configure(SerializationFeature.INDENT_OUTPUT, true);
         return objectMapper.writeValueAsString(shellContext.getConfiguration().orElse(new ProjectConfiguration()));
     }
-    
-    
+
     @ShellMethod("Show the current project configuration applied to the current context")
     public AttributedCharSequence testingCommand() {
-       return new AttributedString("testing command");
+        LOGGER.info("HOLA MUNDO");
+        return new AttributedString("testing command");
     }
 
     // public Availability availabilityAppGenerateCrud() {

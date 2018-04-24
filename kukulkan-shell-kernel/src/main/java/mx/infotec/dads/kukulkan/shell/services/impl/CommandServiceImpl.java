@@ -23,9 +23,6 @@
  */
 package mx.infotec.dads.kukulkan.shell.services.impl;
 
-import static mx.infotec.dads.kukulkan.shell.util.AnsiConstants.ANSI_GREEN;
-import static mx.infotec.dads.kukulkan.shell.util.AnsiConstants.ANSI_RESET;
-
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -91,13 +88,11 @@ public class CommandServiceImpl implements CommandService {
      *
      * @param text
      *            the text
-     * @deprecated prefered use TextFormatter class
      * @see TextFormatter
      */
     @Override
-    @Deprecated
-    public void printf(String text) {
-        terminal.writer().append(text).append("\n");
+    public void printf(AttributedString text) {
+        terminal.writer().append(text.toAnsi(terminal)).append("\n");
         terminal.flush();
     }
 
@@ -108,13 +103,11 @@ public class CommandServiceImpl implements CommandService {
      *            the key
      * @param message
      *            the message
-     * @deprecated prefered use TextFormatter class
      * @see TextFormatter
      */
     @Override
-    @Deprecated
     public void printf(String key, String message) {
-        terminal.writer().append(String.format("%s[%-15s] %s-%-30s%n\t", ANSI_GREEN, key, ANSI_RESET, message));
+        terminal.writer().append(String.format("[%-15s] -%-30s%n\t", key, message)).append("\n");
         terminal.flush();
     }
 
@@ -136,7 +129,7 @@ public class CommandServiceImpl implements CommandService {
             return readBufferProcess;
         } catch (Exception e) {
             LOGGER.debug(GENERIC_ERROR_MSG, e);
-            printf(String.format("The command [%s] could not be executed", command));
+            printf(new AttributedString(String.format("The command [%s] could not be executed", command)));
         }
         return lines;
     }
