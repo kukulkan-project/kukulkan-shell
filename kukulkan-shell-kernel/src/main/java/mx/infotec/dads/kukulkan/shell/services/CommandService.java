@@ -26,8 +26,6 @@ package mx.infotec.dads.kukulkan.shell.services;
 import java.nio.file.Path;
 import java.util.List;
 
-import org.jline.utils.AttributedString;
-
 import mx.infotec.dads.kukulkan.shell.domain.Line;
 import mx.infotec.dads.kukulkan.shell.domain.NativeCommand;
 import mx.infotec.dads.kukulkan.shell.domain.ShellCommand;
