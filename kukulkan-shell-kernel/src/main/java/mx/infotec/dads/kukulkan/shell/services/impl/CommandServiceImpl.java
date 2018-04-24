@@ -123,7 +123,9 @@ public class CommandServiceImpl implements CommandService {
     public List<Line> exec(final ShellCommand command, LineValuedProcessor processor) {
         List<Line> lines = new ArrayList<>();
         try {
-            Process p = Runtime.getRuntime().exec(command.getExecutableCommand(), null, nav.getCurrentPath().toFile());
+            ProcessBuilder pb = new ProcessBuilder(fixShellCommand(command).getExecutableCommand());
+            pb.directory(nav.getCurrentPath().toFile());
+            Process p = pb.start();
             List<Line> readBufferProcess = readBufferProcess(p, new LineCollector(processor));
             p.waitFor();
             return readBufferProcess;
@@ -170,7 +172,9 @@ public class CommandServiceImpl implements CommandService {
     public List<CharSequence> exec(final Path workingDirectory, final ShellCommand command, LineProcessor processor) {
         List<CharSequence> lines = new ArrayList<>();
         try {
-            Process p = Runtime.getRuntime().exec(command.getExecutableCommand(), null, workingDirectory.toFile());
+            ProcessBuilder pb = new ProcessBuilder(fixShellCommand(command).getExecutableCommand());
+            pb.directory(workingDirectory.toFile());
+            Process p = pb.start();
             p.waitFor();
             lines = readBufferProcess(p, new CharSequenceCollector());
         } catch (Exception e) {
@@ -214,5 +218,24 @@ public class CommandServiceImpl implements CommandService {
             bufferCollector.collect(stringHolder);
         }
         return bufferCollector.getCollection();
+    }
+
+    private static boolean isWindowsOS() {
+        return System.getProperty("os.name").startsWith("Windows");
+    }
+
+    private static ShellCommand fixShellCommand(final ShellCommand command) {
+        if (isWindowsOS()) {
+            ShellCommand windowsCommand = getWindowsBaseShellCommand();
+            for (String arg : command.getExecutableCommand()) {
+                windowsCommand.addArg(arg);
+            }
+            return windowsCommand;
+        }
+        return command;
+    }
+
+    private static ShellCommand getWindowsBaseShellCommand() {
+        return new ShellCommand("cmd.exe").addArg("/C");
     }
 }
