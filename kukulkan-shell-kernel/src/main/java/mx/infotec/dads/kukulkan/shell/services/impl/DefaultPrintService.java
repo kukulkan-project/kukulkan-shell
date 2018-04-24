@@ -1,5 +1,7 @@
 package mx.infotec.dads.kukulkan.shell.services.impl;
 
+import java.util.regex.Pattern;
+
 import org.jline.terminal.Terminal;
 import org.jline.utils.AttributedString;
 import org.jline.utils.AttributedStyle;
@@ -70,6 +72,38 @@ public class DefaultPrintService implements PrintService {
 
     @Override
     public void error(String message) {
+        AttributedString text = new AttributedString(message,
+                AttributedStyle.BOLD.italic().foreground(AttributedStyle.RED));
+        print(text);
+    }
+
+    @Override
+    public void info(String message, Object... objects) {
+        String temp = message;
+        for (Object object : objects) {
+            temp = temp.replaceFirst(Pattern.quote("{}"), object.toString());
+        }
+        AttributedString text = new AttributedString(temp,
+                AttributedStyle.BOLD.italic().foreground(AttributedStyle.BLUE));
+        print(text);
+    }
+
+    @Override
+    public void warning(String message, Object... objects) {
+        AttributedString text = new AttributedString(message,
+                AttributedStyle.BOLD.italic().foreground(AttributedStyle.YELLOW));
+        print(text);
+    }
+
+    @Override
+    public void error(String message, Throwable throwable) {
+        AttributedString text = new AttributedString(message,
+                AttributedStyle.BOLD.italic().foreground(AttributedStyle.RED));
+        print(text);
+    }
+
+    @Override
+    public void error(String message, Object[] objects) {
         AttributedString text = new AttributedString(message,
                 AttributedStyle.BOLD.italic().foreground(AttributedStyle.RED));
         print(text);

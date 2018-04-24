@@ -3,7 +3,7 @@
 <configuration scan="true">
 
    <!-- Disable defaul logger-->
-   <!-- <include resource="org/springframework/boot/logging/logback/base.xml"/> -->
+ <include resource="org/springframework/boot/logging/logback/base.xml"/> 
 
 <!-- The FILE and ASYNC appenders are here as examples for a production configuration -->
 <!--
@@ -60,7 +60,7 @@
     </contextListener>
 
     <root level="#logback.loglevel#">
-       <!-- <appender-ref ref="CONSOLE"/>  disable console mode-->
+        <appender-ref ref="CONSOLE"/>  
     </root>
 
 </configuration>

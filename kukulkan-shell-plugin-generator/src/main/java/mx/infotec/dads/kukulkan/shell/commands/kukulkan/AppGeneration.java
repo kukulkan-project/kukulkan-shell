@@ -49,11 +49,12 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 
 import mx.infotec.dads.kukulkan.engine.service.EngineGenerator;
+import mx.infotec.dads.kukulkan.engine.service.FileUtil;
+import mx.infotec.dads.kukulkan.engine.service.GeneratorPrintProvider;
 import mx.infotec.dads.kukulkan.engine.service.InflectorService;
 import mx.infotec.dads.kukulkan.metamodel.context.GeneratorContext;
 import mx.infotec.dads.kukulkan.metamodel.foundation.DatabaseType;
 import mx.infotec.dads.kukulkan.metamodel.foundation.ProjectConfiguration;
-import mx.infotec.dads.kukulkan.metamodel.util.FileUtil;
 import mx.infotec.dads.kukulkan.shell.commands.AbstractCommand;
 import mx.infotec.dads.kukulkan.shell.commands.valueprovided.KukulkanFilesProvider;
 import mx.infotec.dads.kukulkan.shell.domain.Line;
@@ -88,6 +89,9 @@ public class AppGeneration extends AbstractCommand {
 
     @Autowired
     private PrintService printService;
+    
+    @Autowired
+    private GeneratorPrintProvider printProvider;
 
     /**
      * Command Shell for Generate all the entities that come from a file with .3
@@ -169,7 +173,9 @@ public class AppGeneration extends AbstractCommand {
 
     @ShellMethod("Show the current project configuration applied to the current context")
     public AttributedCharSequence testingCommand() {
-        LOGGER.info("HOLA MUNDO");
+        LOGGER.info("HOLA MUNDO logger");
+        printService.info("Hola mundo");
+        printProvider.info("wow!!!!!");
         return new AttributedString("testing command");
     }
 

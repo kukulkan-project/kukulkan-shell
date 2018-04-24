@@ -35,10 +35,10 @@ import org.springframework.stereotype.Service;
 
 import freemarker.template.Configuration;
 import freemarker.template.Template;
+import mx.infotec.dads.kukulkan.engine.service.FileUtil;
 import mx.infotec.dads.kukulkan.engine.templating.service.TemplateService;
 import mx.infotec.dads.kukulkan.engine.util.ListFileUtil;
 import mx.infotec.dads.kukulkan.engine.util.TemplateUtil;
-import mx.infotec.dads.kukulkan.metamodel.util.FileUtil;
 import mx.infotec.dads.kukulkan.shell.component.Navigator;
 import mx.infotec.dads.kukulkan.shell.services.WriterService;
 

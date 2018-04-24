@@ -2,13 +2,15 @@ package mx.infotec.dads.kukulkan.shell.services;
 
 import org.jline.utils.AttributedString;
 
+import mx.infotec.dads.kukulkan.engine.service.GeneratorPrintProvider;
+
 /**
  * Printer Service
  * 
  * @author Daniel Cortes Pichardo
  *
  */
-public interface PrintService {
+public interface PrintService extends GeneratorPrintProvider {
 
     /**
      * Printf.

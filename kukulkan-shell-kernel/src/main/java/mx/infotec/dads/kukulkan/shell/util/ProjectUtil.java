@@ -28,12 +28,17 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Optional;
 
+import javax.annotation.PostConstruct;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 
+import mx.infotec.dads.kukulkan.engine.service.GeneratorPrintProvider;
 import mx.infotec.dads.kukulkan.metamodel.foundation.ProjectConfiguration;
 
 /**
@@ -41,6 +46,7 @@ import mx.infotec.dads.kukulkan.metamodel.foundation.ProjectConfiguration;
  *
  * @author Daniel Cortes Pichardo
  */
+@Component
 public class ProjectUtil {
 
     /** The Constant LOGGER. */
@@ -48,6 +54,16 @@ public class ProjectUtil {
 
     /** The Constant KUKULKAN_FILE. */
     public static final String KUKULKAN_FILE = ".kukulkan.json";
+
+    @Autowired
+    private GeneratorPrintProvider generatorPrintProvider;
+
+    private static GeneratorPrintProvider printProvider;
+
+    @PostConstruct
+    public void init() {
+        ProjectUtil.printProvider = generatorPrintProvider;
+    }
 
     /**
      * Save kukulkan file.
@@ -58,7 +74,7 @@ public class ProjectUtil {
     public static void writeKukulkanFile(ProjectConfiguration config) {
         try {
             Path kukulkanFilePath = Paths.get(config.getOutputDir().toString(), config.getId(), KUKULKAN_FILE);
-            LOGGER.info("saveFile to: {}", kukulkanFilePath);
+            printProvider.info("saveFile to: {}", kukulkanFilePath);
             ObjectMapper objectMapper = new ObjectMapper();
             objectMapper.configure(SerializationFeature.INDENT_OUTPUT, true);
             objectMapper.writeValue(kukulkanFilePath.toFile(), config);

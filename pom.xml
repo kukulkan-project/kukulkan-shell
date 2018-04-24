@@ -34,7 +34,7 @@
         <java.version>1.8</java.version>
         <logback.loglevel>DEBUG</logback.loglevel>
         <maven-resources-plugin.version>3.0.1</maven-resources-plugin.version>
-        <spring.shell.version>2.0.0.RELEASE</spring.shell.version>
+        <spring.shell.version>2.0.1.BUILD-SNAPSHOT</spring.shell.version>
         <jcommander.version>1.48</jcommander.version>
         <flapdoodle.version>2.0.0</flapdoodle.version>
         <jline.version>2.12</jline.version>
@@ -54,8 +54,8 @@
         <checkstyle.config.location>etc/checkstyle/checkstyle.xml</checkstyle.config.location>
         <!-- Kukulkan dependencies -->
         <kukulkan-grammar.version>0.0.2-SNAPSHOT</kukulkan-grammar.version>
-        <kukulkan-metamodel.version>0.0.2-SNAPSHOT</kukulkan-metamodel.version>
-        <kukulkan-engine.version>0.0.2-SNAPSHOT</kukulkan-engine.version>
+        <kukulkan-metamodel.version>0.2.0-SNAPSHOT</kukulkan-metamodel.version>
+        <kukulkan-engine.version>0.2.0-SNAPSHOT</kukulkan-engine.version>
         <kukulkan-generator-angularjs.version>0.0.2-SNAPSHOT</kukulkan-generator-angularjs.version>
         <!-- Kukulkan Shell Modules dependencies -->
     </properties>
