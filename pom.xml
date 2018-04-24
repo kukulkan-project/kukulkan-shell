@@ -5,7 +5,7 @@
     
     <groupId>mx.infotec.dads.kukulkan</groupId>
     <artifactId>kukulkan-shell</artifactId>
-    <version>0.0.2-SNAPSHOT</version>
+    <version>0.2.0-SNAPSHOT</version>
 
     <name>Kukulkan Shell</name>
     <packaging>pom</packaging>
@@ -53,10 +53,10 @@
         <javadoc.opts>-Xdoclint:none</javadoc.opts>
         <checkstyle.config.location>etc/checkstyle/checkstyle.xml</checkstyle.config.location>
         <!-- Kukulkan dependencies -->
-        <kukulkan-grammar.version>0.0.2-SNAPSHOT</kukulkan-grammar.version>
+        <kukulkan-grammar.version>0.2.0-SNAPSHOT</kukulkan-grammar.version>
         <kukulkan-metamodel.version>0.2.0-SNAPSHOT</kukulkan-metamodel.version>
         <kukulkan-engine.version>0.2.0-SNAPSHOT</kukulkan-engine.version>
-        <kukulkan-generator-angularjs.version>0.0.2-SNAPSHOT</kukulkan-generator-angularjs.version>
+        <kukulkan-generator-angularjs.version>0.2.0-SNAPSHOT</kukulkan-generator-angularjs.version>
         <!-- Kukulkan Shell Modules dependencies -->
     </properties>
 
@@ -167,6 +167,23 @@
                 <groupId>org.jsoup</groupId>
                 <artifactId>jsoup</artifactId>
                 <version>1.11.2</version>
+            </dependency>
+            
+            <dependency>
+                <groupId>commons-io</groupId>
+                <artifactId>commons-io</artifactId>
+                <version>2.6</version>
+            </dependency>
+            <dependency>
+                <groupId>org.unix4j</groupId>
+                <artifactId>unix4j-command</artifactId>
+                <version>0.4</version>
+            </dependency>
+            
+            <dependency>
+                <groupId>mx.infotec.dads.nlp</groupId>
+                <artifactId>inflector</artifactId>
+                <version>1.0.0</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
@@ -364,6 +381,14 @@
             <id>infotec-repo</id>
             <name>INFOTEC Repository</name>
             <url>https://artifactory.dads.infotec.mx/artifactory/infotec</url>
+        </repository>
+        <repository>
+            <id>spring-milestones</id>
+            <name>Spring Milestones</name>
+            <url>https://repo.spring.io/milestone</url>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
         </repository>
     </repositories>
 </project>

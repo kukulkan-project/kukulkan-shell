@@ -23,6 +23,7 @@ import mx.infotec.dads.kukulkan.shell.commands.GraphsArgs;
 import mx.infotec.dads.kukulkan.shell.generator.GraphsContext;
 import mx.infotec.dads.kukulkan.shell.generator.GraphsGenerator;
 import mx.infotec.dads.kukulkan.shell.util.MapperG;
+import org.junit.Ignore;
 
 @RunWith(SpringRunner.class)
 @EnableAutoConfiguration
@@ -34,6 +35,7 @@ public class KukulkanShellApplicationTests {
     private GraphsGenerator generator;
 
     @Test
+    @Ignore
     public void generate() throws IOException {
         GraphsArgs params = new GraphsArgs();
 
