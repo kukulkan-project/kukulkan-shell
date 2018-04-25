@@ -37,9 +37,12 @@ public class Matcher {
 
     /** The Constant INITIAL_TAB. */
     public static final Pattern INITIAL_TAB = Pattern.compile("(\\t)(.*)");
-    
+
     /** The Constant MAVEN_LOG_PATTERN. */
     public static final Pattern MAVEN_LOG_PATTERN = Pattern.compile("^\\[\\w+\\][^\n]*");
+
+    /** The Constant MAVEN_LOG_PATTERN. */
+    public static final Pattern BRACES = Pattern.compile("\\{\\}");
 
     /**
      * Instantiates a new matcher.

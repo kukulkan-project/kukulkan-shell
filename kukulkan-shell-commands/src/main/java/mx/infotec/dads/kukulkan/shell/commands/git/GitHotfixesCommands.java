@@ -31,14 +31,11 @@ import static mx.infotec.dads.kukulkan.shell.commands.git.GitHelper.GIT_COMMAND;
 
 import javax.validation.constraints.NotNull;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.shell.standard.ShellComponent;
 import org.springframework.shell.standard.ShellMethod;
 
-import mx.infotec.dads.kukulkan.shell.component.Navigator;
 import mx.infotec.dads.kukulkan.shell.domain.ShellCommand;
 import mx.infotec.dads.kukulkan.shell.event.message.EventType;
 import mx.infotec.dads.kukulkan.shell.event.message.LocationUpdatedEvent;

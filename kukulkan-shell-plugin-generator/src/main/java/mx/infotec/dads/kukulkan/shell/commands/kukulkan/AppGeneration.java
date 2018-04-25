@@ -173,9 +173,6 @@ public class AppGeneration extends AbstractCommand {
 
     @ShellMethod("Show the current project configuration applied to the current context")
     public AttributedCharSequence testingCommand() {
-        LOGGER.info("HOLA MUNDO logger");
-        printService.info("Hola mundo");
-        printProvider.info("wow!!!!!");
         return new AttributedString("testing command");
     }
 

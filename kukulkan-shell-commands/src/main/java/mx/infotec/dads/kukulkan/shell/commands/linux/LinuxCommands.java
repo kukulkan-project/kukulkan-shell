@@ -140,10 +140,20 @@ public class LinuxCommands {
         printService.print(new AttributedString("blue", AttributedStyle.BOLD.foreground(AttributedStyle.BLUE)));
         printService.print(new AttributedString("black", AttributedStyle.BOLD.foreground(AttributedStyle.BLACK)));
         printService.print(new AttributedString("cyan", AttributedStyle.BOLD.foreground(AttributedStyle.CYAN)));
-        printService.print(new AttributedString("green", AttributedStyle.BOLD.foreground(AttributedStyle.GREEN)));
+        printService.print(new AttributedString("green", AttributedStyle.BOLD_OFF.foreground(AttributedStyle.GREEN)));
         printService.print(new AttributedString("purple", AttributedStyle.BOLD.foreground(AttributedStyle.MAGENTA)));
         printService.print(new AttributedString("red", AttributedStyle.BOLD.foreground(AttributedStyle.RED)));
         printService.print(new AttributedString("white", AttributedStyle.BOLD.foreground(AttributedStyle.WHITE)));
         printService.print(new AttributedString("yellow", AttributedStyle.BOLD.foreground(AttributedStyle.YELLOW)));
+    }
+
+    @ShellMethod("showColors")
+    public void logger() {
+        printService.info("{}-{}", "hola", "mundo");
+        printService.info("{}-{}-{}", "hola", "mundo");
+        printService.info("{}", "hola", "mundo");
+
+        
+        
     }
 }
