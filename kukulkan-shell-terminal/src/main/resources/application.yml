@@ -31,6 +31,6 @@ logging:
     org.springframework.web: false
     org.hibernate: false
     org.hibernate.SQL: false
-  pattern:
-    console: "[%green(%-5level)] : %white(%msg%n)"
-    file: "%d %-5level [%thread] %logger : %msg%n"
+#pattern:
+#    console: "[%green(%-5level)] : %white(%msg%n)"
+#   file: "%d %-5level [%thread] %logger : %msg%n"
