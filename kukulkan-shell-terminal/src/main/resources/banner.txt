@@ -7,5 +7,5 @@
                                                                         			
                                     ${AnsiColor.BLUE}:: INFOTEC-DADS :: 
 ${AnsiColor.YELLOW}:: Running kukulkan - Shell::  
-${AnsiColor.BRIGHT_YELLOW}:: Release      v1.0.0::${AnsiColor.DEFAULT}
+${AnsiColor.BRIGHT_YELLOW}:: v${application.version} ::${AnsiColor.DEFAULT}
 
