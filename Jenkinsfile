@@ -5,16 +5,10 @@ pipeline {
         jdk 'jdk8'
     }
     stages {
-        stage ('Initialize') {
-            steps {
-                sh '''
-                    echo "PATH = ${PATH}"
-                    echo "M2_HOME = ${M2_HOME}"
-                '''
-            }
-        }
-
         stage ('Build') {
+            options {
+                timeout(time: 1, unit: 'HOURS')
+            }
             steps {
                 sh 'mvn -Dmaven.test.failure.ignore=true install' 
             }
@@ -26,24 +20,20 @@ pipeline {
         }
 
         stage ('Sonar') {
-            when {
-                branch 'master'
+            options {
+                timeout(time: 1, unit: 'HOURS')
             }
             steps {
                withSonarQubeEnv('SonarQube') {
-                sh 'mvn sonar:sonar -Dsonar.projectVersion=0.0.1-${BUILD_NUMBER}'
+                sh 'mvn sonar:sonar -Dsonar.projectVersion=${POM_VERSION}-${BUILD_NUMBER}'
                }
             }
         }
 
-        stage('Quality Gate') {
-            when {
-                branch 'master'
-            }
+        stage("Quality Gate") {
             steps {
-                withSonarQubeEnv('SonarQube') {
-                    sh 'curl -u $SONAR_AUTH_TOKEN $SONAR_HOST_URL/api/user_tokens/search'
-                    waitForQualityGate()
+                timeout(time: 1, unit: 'HOURS') {
+                    waitForQualityGate abortPipeline: true
                 }
             }
         }
