@@ -33,6 +33,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import mx.infotec.dads.kukulkan.engine.service.GenerationService;
 import mx.infotec.dads.kukulkan.metamodel.annotation.GeneratorComponent;
 import mx.infotec.dads.kukulkan.metamodel.context.GeneratorContext;
 import mx.infotec.dads.kukulkan.metamodel.generator.Generator;
@@ -48,9 +49,9 @@ public class DslProjectGenerator implements Generator {
 
     @Autowired
     private WriterService writer;
-    
+
     @Autowired
-    private XtextProjectGenerator xtextGenerator;
+    private GenerationService generationService;
 
     private static final Logger LOGGER = LoggerFactory.getLogger(DslProjectGenerator.class);
 
@@ -80,8 +81,9 @@ public class DslProjectGenerator implements Generator {
         // Writing XText project
         XtextProjectContext xtextCtx = buildXtextContext(dslContext);
         context.put(XtextProjectContext.class, xtextCtx);
-        xtextGenerator.process(context);
-        
+        generationService.findGeneratorByName("xtext-grammar-generator")
+                .ifPresent(generator -> generator.process(context));
+
         // Writing Theia extension
         writer.copyTemplate(DIRECTORY + "name-extension/package.json.ftl", "${project.name}-extension/package.json",
                 model);
@@ -96,9 +98,9 @@ public class DslProjectGenerator implements Generator {
                 "${project.name}-extension/src/node/${project.name}-backend-module.ts", model);
 
     }
-    
-    private XtextProjectContext buildXtextContext(DslProjectContext context){
-    	XtextProjectContext xtextCtx = new XtextProjectContext();
+
+    private XtextProjectContext buildXtextContext(DslProjectContext context) {
+        XtextProjectContext xtextCtx = new XtextProjectContext();
         xtextCtx.setBasePackage(context.getBasePackage());
         xtextCtx.setExtension(context.getExtension());
         xtextCtx.setName(context.getName());
