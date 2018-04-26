@@ -36,7 +36,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import mx.infotec.dads.kukulkan.metamodel.annotation.GeneratorComponent;
 import mx.infotec.dads.kukulkan.metamodel.context.GeneratorContext;
 import mx.infotec.dads.kukulkan.metamodel.generator.Generator;
-import mx.infotec.dads.kukulkan.shell.services.WriterService;
+import mx.infotec.dads.kukulkan.shell.services.WriterHelper;
 
 /**
  * 
@@ -47,7 +47,7 @@ import mx.infotec.dads.kukulkan.shell.services.WriterService;
 public class XtextProjectGenerator implements Generator {
 
     @Autowired
-    private WriterService writer;
+    private WriterHelper writer;
 
     private static final Logger LOGGER = LoggerFactory.getLogger(XtextProjectGenerator.class);
 

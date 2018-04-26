@@ -37,7 +37,7 @@ import mx.infotec.dads.kukulkan.engine.service.GenerationService;
 import mx.infotec.dads.kukulkan.metamodel.annotation.GeneratorComponent;
 import mx.infotec.dads.kukulkan.metamodel.context.GeneratorContext;
 import mx.infotec.dads.kukulkan.metamodel.generator.Generator;
-import mx.infotec.dads.kukulkan.shell.services.WriterService;
+import mx.infotec.dads.kukulkan.shell.services.WriterHelper;
 
 /**
  * 
@@ -48,7 +48,7 @@ import mx.infotec.dads.kukulkan.shell.services.WriterService;
 public class DslProjectGenerator implements Generator {
 
     @Autowired
-    private WriterService writer;
+    private WriterHelper writer;
 
     @Autowired
     private GenerationService generationService;

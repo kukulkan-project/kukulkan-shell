@@ -20,7 +20,7 @@ import mx.infotec.dads.kukulkan.metamodel.generator.Generator;
 import mx.infotec.dads.kukulkan.metamodel.template.TemplateInfo;
 import mx.infotec.dads.kukulkan.metamodel.util.PathProcessor;
 import mx.infotec.dads.kukulkan.shell.commands.GraphsCommand;
-import mx.infotec.dads.kukulkan.shell.services.WriterService;
+import mx.infotec.dads.kukulkan.shell.services.WriterHelper;
 import mx.infotec.dads.kukulkan.shell.template.GraphsTemplateFactory;
 import mx.infotec.dads.kukulkan.shell.util.GraphsUtil;
 import mx.infotec.dads.kukulkan.shell.util.ProjectUtil;
@@ -33,10 +33,10 @@ import mx.infotec.dads.kukulkan.shell.util.ProjectUtil;
 @GeneratorComponent
 public class GraphsGenerator implements Generator {
 
-    private WriterService writer;
+    private WriterHelper writer;
 
     public static final String GRAPHS_ARCHETYPE = "archetypes/graphs/";
-    public GraphsGenerator(WriterService writer) {
+    public GraphsGenerator(WriterHelper writer) {
         this.writer = writer;
     }
     private static final Logger LOGGER = LoggerFactory.getLogger(GraphsCommand.class);

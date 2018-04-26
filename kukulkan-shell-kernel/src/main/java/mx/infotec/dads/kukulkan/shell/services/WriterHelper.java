@@ -24,24 +24,27 @@
 
 package mx.infotec.dads.kukulkan.shell.services;
 
-public interface WriterService {
+import java.io.File;
+import java.util.Optional;
+
+public interface WriterHelper {
 
     /**
      * Fill the template with the model and save to the current path of navigator
      * resolved to relative The relative is processed as a template
      */
-    public void copyTemplate(String template, String relative, Object model);
+    public Optional<File> copyTemplate(String template, String relative, Object model);
 
     /**
      * Copy the resource to the current path of navigator resolved to relative
      */
-    public void copy(String resource, String relative);
+    public Optional<File> copy(String resource, String relative);
 
     /**
      * Copy the resource to the current path of navigator resolved to relative The
      * relative is processed as a template
      */
-    public void copy(String resource, String relative, Object model);
+    public Optional<File> copy(String resource, String relative, Object model);
 
     /**
      * Search in jar containing the class, then copy the files in directory matching

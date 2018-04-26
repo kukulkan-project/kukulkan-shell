@@ -34,7 +34,7 @@ import org.slf4j.LoggerFactory;
 import mx.infotec.dads.kukulkan.metamodel.annotation.GeneratorComponent;
 import mx.infotec.dads.kukulkan.metamodel.context.GeneratorContext;
 import mx.infotec.dads.kukulkan.metamodel.generator.Generator;
-import mx.infotec.dads.kukulkan.shell.services.WriterService;
+import mx.infotec.dads.kukulkan.shell.services.WriterHelper;
 
 /**
  * Generator for Chatbot
@@ -49,9 +49,9 @@ public class ChatbotGenerator implements Generator {
 
     private static final String CHATBOT_ARCHETYPE = "archetypes/chatbot/";
 
-    private WriterService writer;
+    private WriterHelper writer;
 
-    public ChatbotGenerator(WriterService writer) {
+    public ChatbotGenerator(WriterHelper writer) {
         this.writer = writer;
     }
 
@@ -72,7 +72,7 @@ public class ChatbotGenerator implements Generator {
         model.put("project", chatbotCtx);
 
         // Common files
-        writer.copy(CHATBOT_ARCHETYPE + "yarn.lock", "yarn.lock");
+        writer.copy(CHATBOT_ARCHETYPE + "yarn.lock", "yarn.lock").ifPresent(file -> file.exists());
         writer.copyTemplate(CHATBOT_ARCHETYPE + "README.md.ftl", "README.md", model);
         writer.copy(CHATBOT_ARCHETYPE + "Procfile", "Procfile");
         writer.copyTemplate(CHATBOT_ARCHETYPE + "package.json.ftl", "package.json", model);
@@ -84,12 +84,14 @@ public class ChatbotGenerator implements Generator {
         writer.copyDir(ChatbotGenerator.class, CHATBOT_ARCHETYPE + "public", "public");
         writer.copy(CHATBOT_ARCHETYPE + "bin/www", "bin/www");
         writer.copyTemplate(CHATBOT_ARCHETYPE + "bots/index.js.ftl", "bots/index.js", model);
-        
+
         // Facebook bot
         if (chatbotCtx.isFacebookBot()) {
-            writer.copyTemplate(CHATBOT_ARCHETYPE + "bots/facebook/controller.js.ftl", "bots/facebook/controller.js", model);
+            writer.copyTemplate(CHATBOT_ARCHETYPE + "bots/facebook/controller.js.ftl", "bots/facebook/controller.js",
+                    model);
             writer.copyTemplate(CHATBOT_ARCHETYPE + "bots/facebook/menu.js.ftl", "bots/facebook/menu.js", model);
-            writer.copyTemplate(CHATBOT_ARCHETYPE + "bots/facebook/middlewares.js.ftl", "bots/facebook/middlewares.js", model);
+            writer.copyTemplate(CHATBOT_ARCHETYPE + "bots/facebook/middlewares.js.ftl", "bots/facebook/middlewares.js",
+                    model);
             writer.copyTemplate(CHATBOT_ARCHETYPE + "bots/facebook/skills.js.ftl", "bots/facebook/skills.js", model);
         }
 
@@ -102,8 +104,10 @@ public class ChatbotGenerator implements Generator {
 
         // DialogFlow conversation scripts
         if (chatbotCtx.getNlpService().equals(NlpService.DIALOGFLOW)) {
-            writer.copyTemplate(CHATBOT_ARCHETYPE + "bots/conversation/create-conversation.js.ftl", "bots/conversation/create-conversation.js", model);
-            writer.copyTemplate(CHATBOT_ARCHETYPE + "bots/conversation/starter-conversation.js.ftl", "bots/conversation/starter-conversation.js", model);
+            writer.copyTemplate(CHATBOT_ARCHETYPE + "bots/conversation/create-conversation.js.ftl",
+                    "bots/conversation/create-conversation.js", model);
+            writer.copyTemplate(CHATBOT_ARCHETYPE + "bots/conversation/starter-conversation.js.ftl",
+                    "bots/conversation/starter-conversation.js", model);
         }
 
         LOGGER.info("Finished!");

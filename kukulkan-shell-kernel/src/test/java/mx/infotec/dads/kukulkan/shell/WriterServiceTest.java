@@ -17,15 +17,15 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import freemarker.template.Configuration;
 import mx.infotec.dads.kukulkan.engine.templating.service.TemplateServiceImpl;
 import mx.infotec.dads.kukulkan.shell.component.Navigator;
-import mx.infotec.dads.kukulkan.shell.services.WriterService;
-import mx.infotec.dads.kukulkan.shell.services.impl.WriterServiceImpl;
+import mx.infotec.dads.kukulkan.shell.services.WriterHelper;
+import mx.infotec.dads.kukulkan.shell.services.impl.WriterHelperImpl;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@SpringBootTest(classes = { Navigator.class, WriterServiceImpl.class, Configuration.class, TemplateServiceImpl.class })
+@SpringBootTest(classes = { Navigator.class, WriterHelperImpl.class, Configuration.class, TemplateServiceImpl.class })
 public class WriterServiceTest {
     
     @Autowired
-    WriterService writer;
+    WriterHelper writer;
     
     @Autowired
     Navigator navigator;
