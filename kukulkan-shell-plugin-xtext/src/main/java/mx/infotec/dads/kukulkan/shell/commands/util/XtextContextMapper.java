@@ -24,7 +24,6 @@
 
 package mx.infotec.dads.kukulkan.shell.commands.util;
 
-import mx.infotec.dads.kukulkan.shell.commands.dsl.XtextProjectArgs;
 import mx.infotec.dads.kukulkan.shell.generator.XtextProjectContext;
 
 /**
@@ -38,12 +37,12 @@ public class XtextContextMapper {
 
     }
 
-    public static XtextProjectContext toXtextContext(XtextProjectArgs params) {
+    public static XtextProjectContext toXtextContext(String name, String basePackage, String extension) {
         XtextProjectContext context = new XtextProjectContext();
-        context.setExtension(params.getExtension());
-        context.setName(params.getName());
-        context.setVersion(params.getVersion());
-        context.setBasePackage(params.getBasePackage());
+        context.setExtension(extension);
+        context.setName(name);
+        context.setVersion("0.0.1");
+        context.setBasePackage(basePackage);
         return context;
     }
 

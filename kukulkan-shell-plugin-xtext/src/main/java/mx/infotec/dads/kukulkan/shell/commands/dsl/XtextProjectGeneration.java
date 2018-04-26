@@ -24,14 +24,11 @@
 
 package mx.infotec.dads.kukulkan.shell.commands.dsl;
 
-import javax.validation.Valid;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.shell.standard.ShellComponent;
 import org.springframework.shell.standard.ShellMethod;
-import org.springframework.shell.standard.ShellOption;
 
 import mx.infotec.dads.kukulkan.metamodel.context.GeneratorContext;
 import mx.infotec.dads.kukulkan.shell.commands.AbstractCommand;
@@ -53,11 +50,12 @@ public class XtextProjectGeneration extends AbstractCommand {
     private static final Logger LOGGER = LoggerFactory.getLogger(XtextProjectGenerator.class);
 
     @ShellMethod("Generates a Xtext project")
-    public void xtextProject(@ShellOption(optOut = true) @Valid XtextProjectArgs params) {
-        XtextProjectContext context = XtextContextMapper.toXtextContext(params);
+    public void xtextProject(String name, String packaging, String extension) {
+        XtextProjectContext context = XtextContextMapper.toXtextContext(name, packaging, extension);
         context.setOutputDir(navigator.getCurrentPath());
         GeneratorContext genContext = new GeneratorContext();
         genContext.put(XtextProjectContext.class, context);
+        genContext.put("name", "EXTERNO");
         generator.process(genContext);
     }
 

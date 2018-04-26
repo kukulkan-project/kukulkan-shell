@@ -24,7 +24,6 @@
 
 package mx.infotec.dads.kukulkan.shell.commands.util;
 
-import mx.infotec.dads.kukulkan.shell.commands.dsl.DslProjectArgs;
 import mx.infotec.dads.kukulkan.shell.generator.DslProjectContext;
 
 /**
@@ -38,15 +37,15 @@ public class DslContextMapper {
 
     }
 
-    public static DslProjectContext toDslContext(DslProjectArgs params) {
+    public static DslProjectContext toDslContext(String name, String packaging, String extension) {
         DslProjectContext context = new DslProjectContext();
-        context.setExtension(params.getExtension());
-        context.setGithubUrl(params.getGithubUrl());
-        context.setLicense(params.getLicense());
-        context.setName(params.getName());
-        context.setTheiaVersion(params.getTheiaVersion());
-        context.setVersion(params.getVersion());
-        context.setBasePackage(params.getBasePackage());
+        context.setExtension(extension);
+        context.setGithubUrl("");
+        context.setLicense("MIT");
+        context.setName(name);
+        context.setTheiaVersion("latest");
+        context.setVersion("0.0.1");
+        context.setBasePackage(packaging);
         return context;
     }
 

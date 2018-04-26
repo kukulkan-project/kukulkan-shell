@@ -55,7 +55,7 @@ public class XtextProjectGenerator implements Generator {
 
     @Override
     public String getName() {
-        return "dsl-generator";
+        return "xtext-grammar-generator";
     }
 
     @Override

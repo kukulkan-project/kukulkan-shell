@@ -24,14 +24,11 @@
 
 package mx.infotec.dads.kukulkan.shell.commands.dsl;
 
-import javax.validation.Valid;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.shell.standard.ShellComponent;
 import org.springframework.shell.standard.ShellMethod;
-import org.springframework.shell.standard.ShellOption;
 
 import mx.infotec.dads.kukulkan.metamodel.context.GeneratorContext;
 import mx.infotec.dads.kukulkan.shell.commands.AbstractCommand;
@@ -53,8 +50,8 @@ public class DslProjectGeneration extends AbstractCommand {
     private static final Logger LOGGER = LoggerFactory.getLogger(DslProjectGenerator.class);
 
     @ShellMethod("Generates a DSL project")
-    public void dslProject(@ShellOption(optOut = true) @Valid DslProjectArgs params) {
-        DslProjectContext context = DslContextMapper.toDslContext(params);
+    public void dslProject(String name, String packaging, String extension) {
+        DslProjectContext context = DslContextMapper.toDslContext(name, packaging, extension);
         context.setOutputDir(navigator.getCurrentPath());
         GeneratorContext genContext = new GeneratorContext();
         genContext.put(DslProjectContext.class, context);
