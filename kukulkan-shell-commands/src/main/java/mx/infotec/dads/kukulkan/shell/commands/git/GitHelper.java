@@ -61,6 +61,8 @@ public class GitHelper {
 
     public static final String LOG = "log";
 
+    public static final String MASTER_BRANCH = "master";
+    
     public static final String DEVELOP_BRANCH = "develop";
 
     public static final String FEATURE_PREFIX = "feature-";

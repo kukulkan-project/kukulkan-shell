@@ -56,6 +56,8 @@ import mx.infotec.dads.kukulkan.metamodel.context.GeneratorContext;
 import mx.infotec.dads.kukulkan.metamodel.foundation.DatabaseType;
 import mx.infotec.dads.kukulkan.metamodel.foundation.ProjectConfiguration;
 import mx.infotec.dads.kukulkan.shell.commands.AbstractCommand;
+import mx.infotec.dads.kukulkan.shell.commands.git.GitCommands;
+import mx.infotec.dads.kukulkan.shell.commands.navigation.FileNavigationCommands;
 import mx.infotec.dads.kukulkan.shell.commands.valueprovided.KukulkanFilesProvider;
 import mx.infotec.dads.kukulkan.shell.domain.Line;
 import mx.infotec.dads.kukulkan.shell.domain.ShellCommand;
@@ -72,7 +74,9 @@ import mx.infotec.dads.kukulkan.shell.util.TextFormatter;
 @ShellComponent
 public class AppGeneration extends AbstractCommand {
 
-    /** The Constant LOGGER. */
+    /**
+     * The Constant LOGGER.
+     */
     private static final Logger LOGGER = LoggerFactory.getLogger(AppGeneration.class);
 
     @Autowired
@@ -89,16 +93,21 @@ public class AppGeneration extends AbstractCommand {
 
     @Autowired
     private PrintService printService;
-    
+
     @Autowired
     private GeneratorPrintProvider printProvider;
+
+    @Autowired
+    private GitCommands gitCommands;
+
+    @Autowired
+    private FileNavigationCommands fileNavigationCommands;
 
     /**
      * Command Shell for Generate all the entities that come from a file with .3
      * extension
      *
-     * @param file
-     *            the file
+     * @param file the file
      */
     @ShellMethod("Generate all the entities that come from a file with .3k or .kukulkan extension")
     public void appGenerateCrud(@ShellOption(valueProvider = KukulkanFilesProvider.class) String fileName) {
@@ -111,10 +120,11 @@ public class AppGeneration extends AbstractCommand {
     /**
      * Command Shell that Generate a Project from an Archetype Catalog.
      *
-     * @param appName
-     *            the app name
-     * @param packaging
-     *            the packaging
+     * @param appName the app name
+     * @param packaging the packaging
+     * @param databaseType the database type DatabaseType.NO_SQL_MONGODB /
+     * DatabaseType.SQL_MYSQL
+     * @see DatabaseType
      */
     @ShellMethod("Generate a Project from an Archetype Catalog")
     // @ShellMethodAvailability("availabilityAppGenerateProject")
@@ -128,6 +138,20 @@ public class AppGeneration extends AbstractCommand {
         generationService.findGeneratorByName("angular-js-archetype-generator").ifPresent(generator -> {
             generationService.process(genCtx, generator);
             ProjectUtil.writeKukulkanFile(shellContext.getConfiguration().get());
+
+            fileNavigationCommands.cd(appName);
+
+            if (gitCommands.availabilityCheck().isAvailable()) {
+                printService.info("Init git repository");
+                gitCommands.gitInit().forEach((a) -> LOGGER.debug(a.toString()));
+                gitCommands.gitAdd("--all").forEach((a) -> LOGGER.debug(a.toString()));
+                gitCommands.gitCommit("Firts version of project", "Kukulkan Team <suport@kukulkan.org.mx>").forEach((a) -> LOGGER.debug(a.toString()));
+                gitCommands.gitDevelop().forEach((a) -> LOGGER.debug(a.toString()));
+                printService.info("End init git repository");
+            } else {
+                printService.warning("Git not availability");
+            }
+
             printService.print("Execute the command", "app-config --type FRONT_END");
         });
     }

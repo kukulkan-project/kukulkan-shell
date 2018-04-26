@@ -48,6 +48,10 @@
         </dependency>
         <dependency>
             <groupId>mx.infotec.dads.kukulkan</groupId>
+            <artifactId>kukulkan-shell-commands</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>mx.infotec.dads.kukulkan</groupId>
             <artifactId>kukulkan-generator-angularjs</artifactId>
         </dependency>
     </dependencies>

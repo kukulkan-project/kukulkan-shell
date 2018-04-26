@@ -26,6 +26,7 @@ package mx.infotec.dads.kukulkan.shell.commands.git;
 import static mx.infotec.dads.kukulkan.shell.commands.git.GitHelper.ADD;
 import static mx.infotec.dads.kukulkan.shell.commands.git.GitHelper.CLONE;
 import static mx.infotec.dads.kukulkan.shell.commands.git.GitHelper.GIT_COMMAND;
+import static mx.infotec.dads.kukulkan.shell.commands.git.GitHelper.INIT;
 import static mx.infotec.dads.kukulkan.shell.commands.git.GitHelper.STATUS;
 
 import java.util.List;
@@ -66,6 +67,13 @@ public class GitCommands extends GitBaseCommands {
         return execGitCommand(new ShellCommand(GIT_COMMAND, STATUS));
     }
 
+    @ShellMethod("Init an git repositoty")
+    public List<AttributedString> gitInit() {
+        LOGGER.debug(LOGGER_EXEC, GIT_COMMAND, INIT);
+
+        return execGitCommand(new ShellCommand(GIT_COMMAND, INIT));
+    }
+
     @ShellMethod("Clones a repository into a newly created directory, creates remote-tracking branches for each branch in the cloned repository")
     public List<AttributedString> gitClone(@NotNull String repositoryPath) {
         LOGGER.debug(LOGGER_EXEC, GIT_COMMAND, CLONE);
@@ -79,9 +87,13 @@ public class GitCommands extends GitBaseCommands {
     }
 
     @ShellMethod("Stores the current contents of the index in a new commit along with a log message from the user describing the changes")
-    public List<AttributedString> gitCommit(@NotNull String message) {
+    public List<AttributedString> gitCommit(@NotNull String message, @ShellOption(value = {"--author"}) String author) {
         LOGGER.debug(LOGGER_EXEC, GIT_COMMAND, GitHelper.COMMIT);
-        return execGitCommand(new ShellCommand(GIT_COMMAND, GitHelper.COMMIT).addArg("-m").addArg(message));
+        if (author != null && !author.isEmpty()) {
+            return execGitCommand(new ShellCommand(GIT_COMMAND, GitHelper.COMMIT).addArg("-m").addArg(message).addArg("--author").addArg(author));
+        } else {
+            return execGitCommand(new ShellCommand(GIT_COMMAND, GitHelper.COMMIT).addArg("-m").addArg(message));
+        }
     }
 
     @ShellMethod("Updates remote refs using local refs, while sending objects necessary to complete the given refs")
@@ -111,6 +123,35 @@ public class GitCommands extends GitBaseCommands {
     public List<AttributedString> gitBranches() {
         LOGGER.debug(LOGGER_EXEC, GIT_COMMAND, GitHelper.BRANCH);
         return execGitCommand(new ShellCommand(GIT_COMMAND, GitHelper.BRANCH));
+    }
+
+    @ShellMethod("Checkout to develop branch, create develop branch if not exits")
+    public List<AttributedString> gitDevelop() {
+        List<AttributedString> tmp = gitBranches();
+
+        boolean create = true;
+
+        for (AttributedString attr : tmp) {
+            if (attr.toString().replace("*", "").trim().equals(GitHelper.DEVELOP_BRANCH)) {
+                create = false;
+                break;
+            }
+        }
+
+        if (create) {
+            LOGGER.debug("Create develop branch");
+            LOGGER.debug(LOGGER_EXEC, GIT_COMMAND, GitHelper.BRANCH);
+            execGitCommand(new ShellCommand(GIT_COMMAND, GitHelper.BRANCH, GitHelper.DEVELOP_BRANCH));
+        }
+
+        LOGGER.debug(LOGGER_EXEC, GIT_COMMAND, GitHelper.CHECKOUT);
+        return execGitCommand(new ShellCommand(GIT_COMMAND, GitHelper.CHECKOUT, GitHelper.DEVELOP_BRANCH));
+    }
+
+    @ShellMethod("List all the branches in the local repository")
+    public List<AttributedString> gitMaster() {
+        LOGGER.debug(LOGGER_EXEC, GIT_COMMAND, GitHelper.CHECKOUT);
+        return execGitCommand(new ShellCommand(GIT_COMMAND, GitHelper.CHECKOUT, GitHelper.MASTER_BRANCH));
     }
 
     private List<AttributedString> execGitCommand(ShellCommand shellCommand) {
