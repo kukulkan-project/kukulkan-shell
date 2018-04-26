@@ -23,7 +23,6 @@
  */
 package mx.infotec.dads.kukulkan.shell.commands.util;
 
-import mx.infotec.dads.kukulkan.shell.commands.chatbot.ChatbotArgs;
 import mx.infotec.dads.kukulkan.shell.generator.ChatbotContext;
 import mx.infotec.dads.kukulkan.shell.generator.NlpService;
 
@@ -38,20 +37,15 @@ public class Mapper {
     private Mapper() {
     }
 
-    /**
-     * 
-     * @param The args read from console
-     * @return The ChatbotContext
-     */
-    public static ChatbotContext toContext(ChatbotArgs params) {
+    public static ChatbotContext toContext(String name) {
         ChatbotContext ctx = new ChatbotContext();
-        ctx.setName(params.getName());
-        ctx.setPage(params.getHomepage());
-        ctx.setAuthor(params.getAuthor());
-        ctx.setDescription(params.getDescription());
-        ctx.setFacebookBot(!params.isNoFacebookBot());
-        ctx.setWebBot(!params.isNoWebBot());
-        ctx.setLicense(params.getLicense());
+        ctx.setName(name);
+        ctx.setPage("https://github.com/kukulkan-project");
+        ctx.setAuthor("Kukulkán");
+        ctx.setDescription(name + " bot");
+        ctx.setFacebookBot(true);
+        ctx.setWebBot(true);
+        ctx.setLicense("MIT");
         ctx.setNlpService(NlpService.DIALOGFLOW);
         return ctx;
     }

@@ -34,9 +34,9 @@ Fist, make sure you're done with all environment variables in your `.env` file.
 - **VERIFY_TOKEN**: The Facebook verify token (this token is defined by the user)
 </#if>
 
-Once all variables defined, run `npm install` and dependencies will be downloaded.
+Once all variables defined, run `npm install` or `yarn install` and dependencies will be downloaded.
 
-Finally, to run the project simply execute `npm start`.
+Finally, to run the project simply execute `npm start` or `yarn start`.
 
 ### Creating Conversation
 

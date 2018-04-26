@@ -23,14 +23,11 @@
  */
 package mx.infotec.dads.kukulkan.shell.commands.chatbot;
 
-import javax.validation.Valid;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.shell.standard.ShellComponent;
 import org.springframework.shell.standard.ShellMethod;
-import org.springframework.shell.standard.ShellOption;
 
 import mx.infotec.dads.kukulkan.metamodel.context.GeneratorContext;
 import mx.infotec.dads.kukulkan.shell.commands.AbstractCommand;
@@ -46,23 +43,19 @@ import mx.infotec.dads.kukulkan.shell.generator.ChatbotGenerator;
 @ShellComponent
 public class ChatbotGeneration extends AbstractCommand {
 
-	@Autowired
-	private ChatbotGenerator generator;
+    @Autowired
+    private ChatbotGenerator generator;
 
-	/** The Constant LOGGER. */
-	private static final Logger LOGGER = LoggerFactory.getLogger(ChatbotGeneration.class);
+    /** The Constant LOGGER. */
+    private static final Logger LOGGER = LoggerFactory.getLogger(ChatbotGeneration.class);
 
-	/**
-	 * 
-	 * @param ChatbotArgs
-	 */
-	@ShellMethod("Generate a chatbot broker")
-	public void chatbotProject(@ShellOption(optOut = true) @Valid ChatbotArgs params) {
-		ChatbotContext chatbotContext = Mapper.toContext(params);
-		chatbotContext.setOutputDir(navigator.getCurrentPath());
-		GeneratorContext genContext = new GeneratorContext();
-		genContext.put(ChatbotContext.class, chatbotContext);
-		generator.process(genContext);
-	}
+    @ShellMethod("Generate a chatbot broker")
+    public void chatbotProject(String name) {
+        ChatbotContext chatbotContext = Mapper.toContext(name);
+        chatbotContext.setOutputDir(navigator.getCurrentPath());
+        GeneratorContext genContext = new GeneratorContext();
+        genContext.put(ChatbotContext.class, chatbotContext);
+        generator.process(genContext);
+    }
 
 }
