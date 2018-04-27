@@ -143,11 +143,14 @@ public class AppGeneration extends AbstractCommand {
 
             if (gitCommands.availabilityCheck().isAvailable()) {
                 printService.info("Init git repository");
-                gitCommands.gitInit().forEach((a) -> LOGGER.debug(a.toString()));
-                gitCommands.gitAdd("--all").forEach((a) -> LOGGER.debug(a.toString()));
-                gitCommands.gitCommit("Firts version of project", "Kukulkan Team <suport@kukulkan.org.mx>").forEach((a) -> LOGGER.debug(a.toString()));
-                gitCommands.gitDevelop().forEach((a) -> LOGGER.debug(a.toString()));
-                printService.info("End init git repository");
+                gitCommands.gitInit();
+                printService.info("Add files");
+                gitCommands.gitAdd("--all");
+                printService.info("Commit firts version");
+                gitCommands.gitCommit("Firts version of project", "Kukulkan Team <suport@kukulkan.org.mx>");
+                printService.info("Create branch develop");
+                gitCommands.gitDevelop();
+                printService.info("End git init");
             } else {
                 printService.warning("Git not availability");
             }

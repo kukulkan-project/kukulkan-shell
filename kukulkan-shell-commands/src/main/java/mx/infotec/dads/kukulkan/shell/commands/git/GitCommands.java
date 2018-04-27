@@ -30,10 +30,10 @@ import static mx.infotec.dads.kukulkan.shell.commands.git.GitHelper.INIT;
 import static mx.infotec.dads.kukulkan.shell.commands.git.GitHelper.STATUS;
 
 import java.util.List;
+import java.util.Optional;
 
 import javax.validation.constraints.NotNull;
 
-import org.jline.utils.AttributedString;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.shell.standard.ShellComponent;
@@ -41,10 +41,13 @@ import org.springframework.shell.standard.ShellMethod;
 import org.springframework.shell.standard.ShellOption;
 
 import mx.infotec.dads.kukulkan.shell.commands.git.valueprovided.GitValueProvider;
+import mx.infotec.dads.kukulkan.shell.domain.Line;
 import mx.infotec.dads.kukulkan.shell.domain.ShellCommand;
 import mx.infotec.dads.kukulkan.shell.event.message.EventType;
 import mx.infotec.dads.kukulkan.shell.event.message.LocationUpdatedEvent;
+import mx.infotec.dads.kukulkan.shell.services.PrintService;
 import mx.infotec.dads.kukulkan.shell.util.TextFormatter;
+import org.springframework.beans.factory.annotation.Autowired;
 
 /**
  * Docker Commands.
@@ -56,82 +59,82 @@ public class GitCommands extends GitBaseCommands {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(GitCommands.class);
 
+    @Autowired
+    private PrintService printService;
+
     /**
      * Git status.
-     *
-     * @return the list
      */
     @ShellMethod("Displays paths that have differences between the index file and the current HEAD commit")
-    public List<AttributedString> gitStatus() {
+    public void gitStatus() {
         LOGGER.debug(LOGGER_EXEC, GIT_COMMAND, STATUS);
-        return execGitCommand(new ShellCommand(GIT_COMMAND, STATUS));
+        execGitCommand(new ShellCommand(GIT_COMMAND, STATUS));
     }
 
     @ShellMethod("Init an git repositoty")
-    public List<AttributedString> gitInit() {
+    public void gitInit() {
         LOGGER.debug(LOGGER_EXEC, GIT_COMMAND, INIT);
-
-        return execGitCommand(new ShellCommand(GIT_COMMAND, INIT));
+        execGitCommand(new ShellCommand(GIT_COMMAND, INIT));
     }
 
     @ShellMethod("Clones a repository into a newly created directory, creates remote-tracking branches for each branch in the cloned repository")
-    public List<AttributedString> gitClone(@NotNull String repositoryPath) {
+    public void gitClone(@NotNull String repositoryPath) {
         LOGGER.debug(LOGGER_EXEC, GIT_COMMAND, CLONE);
-        return execGitCommand(new ShellCommand(GIT_COMMAND, CLONE).addArg(repositoryPath));
+        execGitCommand(new ShellCommand(GIT_COMMAND, CLONE).addArg(repositoryPath));
     }
 
     @ShellMethod("Updates the index using the current content found in the working tree, to prepare the content staged for the next commit")
-    public List<AttributedString> gitAdd(@NotNull String fileName) {
+    public void gitAdd(@NotNull String fileName) {
         LOGGER.debug(LOGGER_EXEC, GIT_COMMAND, ADD);
-        return execGitCommand(new ShellCommand(GIT_COMMAND, ADD).addArg(fileName));
+        execGitCommand(new ShellCommand(GIT_COMMAND, ADD).addArg(fileName));
     }
 
     @ShellMethod("Stores the current contents of the index in a new commit along with a log message from the user describing the changes")
-    public List<AttributedString> gitCommit(@NotNull String message, @ShellOption(value = {"--author"}) String author) {
+    public void gitCommit(@NotNull String message, @ShellOption(value = {"--author"}) String author) {
         LOGGER.debug(LOGGER_EXEC, GIT_COMMAND, GitHelper.COMMIT);
         if (author != null && !author.isEmpty()) {
-            return execGitCommand(new ShellCommand(GIT_COMMAND, GitHelper.COMMIT).addArg("-m").addArg(message).addArg("--author").addArg(author));
+            execGitCommand(new ShellCommand(GIT_COMMAND, GitHelper.COMMIT).addArg("-m").addArg(message).addArg("--author").addArg(author));
         } else {
-            return execGitCommand(new ShellCommand(GIT_COMMAND, GitHelper.COMMIT).addArg("-m").addArg(message));
+            execGitCommand(new ShellCommand(GIT_COMMAND, GitHelper.COMMIT).addArg("-m").addArg(message));
         }
     }
 
     @ShellMethod("Updates remote refs using local refs, while sending objects necessary to complete the given refs")
-    public List<AttributedString> gitPush(boolean setUpstream) {
+    public void gitPush(boolean setUpstream) {
         LOGGER.debug(LOGGER_EXEC, GIT_COMMAND, GitHelper.PUSH);
         ShellCommand shellCommand = new ShellCommand(GIT_COMMAND, GitHelper.PUSH);
         if (setUpstream) {
             shellCommand.addArg("--set-upstream").addArg("origin").addArg(gitContext.getCurrentBranchName());
         }
-        return execGitCommand(shellCommand);
+        execGitCommand(shellCommand);
     }
 
     @ShellMethod("Fetch from and integrate with another repository or a local branch")
-    public List<AttributedString> gitPull() {
+    public void gitPull() {
         LOGGER.debug(LOGGER_EXEC, GIT_COMMAND, GitHelper.PULL);
-        return execGitCommand(new ShellCommand(GIT_COMMAND, GitHelper.PULL));
+        execGitCommand(new ShellCommand(GIT_COMMAND, GitHelper.PULL));
     }
 
     @ShellMethod("Updates files in the working tree to match the version in the index or the specified tree")
-    public List<AttributedString> gitCheckout(
+    public void gitCheckout(
             @ShellOption(valueProvider = GitValueProvider.GitBranchValueProvider.class) @NotNull String branchName) {
         LOGGER.debug(LOGGER_EXEC, GIT_COMMAND, GitHelper.CHECKOUT);
-        return execGitCommand(new ShellCommand(GIT_COMMAND, GitHelper.CHECKOUT).addArg(branchName));
+        execGitCommand(new ShellCommand(GIT_COMMAND, GitHelper.CHECKOUT).addArg(branchName));
     }
 
     @ShellMethod("List all the branches in the local repository")
-    public List<AttributedString> gitBranches() {
+    public void gitBranches() {
         LOGGER.debug(LOGGER_EXEC, GIT_COMMAND, GitHelper.BRANCH);
-        return execGitCommand(new ShellCommand(GIT_COMMAND, GitHelper.BRANCH));
+        execGitCommand(new ShellCommand(GIT_COMMAND, GitHelper.BRANCH));
     }
 
     @ShellMethod("Checkout to develop branch, create develop branch if not exits")
-    public List<AttributedString> gitDevelop() {
-        List<AttributedString> tmp = gitBranches();
+    public void gitDevelop() {
+        List<CharSequence> branches = commandService.exec(new ShellCommand(GIT_COMMAND, GitHelper.BRANCH));
 
         boolean create = true;
 
-        for (AttributedString attr : tmp) {
+        for (CharSequence attr : branches) {
             if (attr.toString().replace("*", "").trim().equals(GitHelper.DEVELOP_BRANCH)) {
                 create = false;
                 break;
@@ -145,18 +148,26 @@ public class GitCommands extends GitBaseCommands {
         }
 
         LOGGER.debug(LOGGER_EXEC, GIT_COMMAND, GitHelper.CHECKOUT);
-        return execGitCommand(new ShellCommand(GIT_COMMAND, GitHelper.CHECKOUT, GitHelper.DEVELOP_BRANCH));
+        execGitCommand(new ShellCommand(GIT_COMMAND, GitHelper.CHECKOUT, GitHelper.DEVELOP_BRANCH));
     }
 
     @ShellMethod("List all the branches in the local repository")
-    public List<AttributedString> gitMaster() {
+    public void gitMaster() {
         LOGGER.debug(LOGGER_EXEC, GIT_COMMAND, GitHelper.CHECKOUT);
-        return execGitCommand(new ShellCommand(GIT_COMMAND, GitHelper.CHECKOUT, GitHelper.MASTER_BRANCH));
+        execGitCommand(new ShellCommand(GIT_COMMAND, GitHelper.CHECKOUT, GitHelper.MASTER_BRANCH));
     }
 
-    private List<AttributedString> execGitCommand(ShellCommand shellCommand) {
-        List<CharSequence> exec = commandService.exec(shellCommand);
+    private void execGitCommand(ShellCommand shellCommand) {
+        commandService.exec(shellCommand, line -> {
+            printService.print(TextFormatter.formatLogText(line));
+            return Optional.ofNullable(new Line(line));
+        });
+
         publisher.publishEvent(new LocationUpdatedEvent(EventType.FILE_NAVIGATION));
-        return TextFormatter.formatToGitOutput(exec);
+    }
+
+    private Optional<Line> print(String line) {
+        printService.print(TextFormatter.formatLogText(line));
+        return Optional.ofNullable(new Line(line));
     }
 }
