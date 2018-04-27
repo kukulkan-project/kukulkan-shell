@@ -141,18 +141,21 @@ public class AppGeneration extends AbstractCommand {
 
             fileNavigationCommands.cd(appName);
 
-            if (gitCommands.availabilityCheck().isAvailable()) {
-                printService.info("Init git repository");
-                gitCommands.gitInit(true);
-                printService.info("Add files");
-                gitCommands.gitAddAll(false);
-                printService.info("Commit firts version");
-                gitCommands.gitCommit("Firts version of project", "Kukulkan Team <suport@kukulkan.org.mx>");
-                printService.info("Create branch develop");
-                gitCommands.gitDevelop();
-                printService.info("End git init");
-            } else {
-                printService.warning("Git not availability");
+            // TODO: Remover esta validación
+            if (isNotWindowsOS()) {
+                if (gitCommands.availabilityCheck().isAvailable()) {
+                    printService.info("Init git repository");
+                    gitCommands.gitInit(true);
+                    printService.info("Add files");
+                    gitCommands.gitAddAll(false);
+                    printService.info("Commit firts version");
+                    gitCommands.gitCommit("Firts version of project", "Kukulkan Team <suport@kukulkan.org.mx>");
+                    printService.info("Create branch develop");
+                    gitCommands.gitDevelop();
+                    printService.info("End git init");
+                } else {
+                    printService.warning("Git not availability");
+                }
             }
 
             printService.print("Execute the command", "app-config --type FRONT_END");
@@ -212,4 +215,9 @@ public class AppGeneration extends AbstractCommand {
     // return Availability.unavailable("You must create a project before. try
     // using <app-generate-project> command");
     // }
+    
+    private static boolean isNotWindowsOS() {
+        return !System.getProperty("os.name").startsWith("Windows");
+    }
+
 }
