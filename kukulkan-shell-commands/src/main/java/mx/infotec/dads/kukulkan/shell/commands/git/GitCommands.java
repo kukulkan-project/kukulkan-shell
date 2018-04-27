@@ -72,9 +72,15 @@ public class GitCommands extends GitBaseCommands {
     }
 
     @ShellMethod("Init an git repositoty")
-    public void gitInit() {
+    public void gitInit(@ShellOption(value = {"-q", "--quiet"}) boolean quiet) {
         LOGGER.debug(LOGGER_EXEC, GIT_COMMAND, INIT);
-        execGitCommand(new ShellCommand(GIT_COMMAND, INIT));
+        ShellCommand shellCommand = new ShellCommand(GIT_COMMAND, INIT);
+        
+        if (quiet) {
+            shellCommand.addArg("-q");
+        }
+        
+        execGitCommand(shellCommand);
     }
 
     @ShellMethod("Clones a repository into a newly created directory, creates remote-tracking branches for each branch in the cloned repository")
@@ -83,20 +89,41 @@ public class GitCommands extends GitBaseCommands {
         execGitCommand(new ShellCommand(GIT_COMMAND, CLONE).addArg(repositoryPath));
     }
 
-    @ShellMethod("Updates the index using the current content found in the working tree, to prepare the content staged for the next commit")
-    public void gitAdd(@NotNull String fileName) {
+    @ShellMethod("Add the fileName to the stage, to prepare the content staged for the next commit")
+    public void gitAdd(@ShellOption(value = {"-f", "--force"}) boolean force, @ShellOption(value = {"--fileName"}) @NotNull String fileName) {
         LOGGER.debug(LOGGER_EXEC, GIT_COMMAND, ADD);
-        execGitCommand(new ShellCommand(GIT_COMMAND, ADD).addArg(fileName));
+        ShellCommand shellCommand = new ShellCommand(GIT_COMMAND, ADD);
+        
+        if (force) {
+            shellCommand.addArg("-f");
+        }
+
+        execGitCommand(shellCommand.addArg(fileName));
     }
+
+    @ShellMethod("Add all files to the stage, to prepare the content staged for the next commit")
+    public void gitAddAll(@ShellOption(value = {"-f", "--force"}) boolean force) {
+        LOGGER.debug(LOGGER_EXEC, GIT_COMMAND, ADD);
+        ShellCommand shellCommand = new ShellCommand(GIT_COMMAND, ADD).addArg("-A");
+        
+        if (force) {
+            shellCommand.addArg("-f");
+        }
+        
+        execGitCommand(shellCommand);
+    }
+
 
     @ShellMethod("Stores the current contents of the index in a new commit along with a log message from the user describing the changes")
     public void gitCommit(@NotNull String message, @ShellOption(value = {"--author"}) String author) {
         LOGGER.debug(LOGGER_EXEC, GIT_COMMAND, GitHelper.COMMIT);
+        ShellCommand shellCommand = new ShellCommand(GIT_COMMAND, GitHelper.COMMIT).addArg("-m").addArg(message);
+        
         if (author != null && !author.isEmpty()) {
-            execGitCommand(new ShellCommand(GIT_COMMAND, GitHelper.COMMIT).addArg("-m").addArg(message).addArg("--author").addArg(author));
-        } else {
-            execGitCommand(new ShellCommand(GIT_COMMAND, GitHelper.COMMIT).addArg("-m").addArg(message));
+            shellCommand.addArg("--author").addArg(author);
         }
+        
+        execGitCommand(shellCommand);
     }
 
     @ShellMethod("Updates remote refs using local refs, while sending objects necessary to complete the given refs")
@@ -166,8 +193,4 @@ public class GitCommands extends GitBaseCommands {
         publisher.publishEvent(new LocationUpdatedEvent(EventType.FILE_NAVIGATION));
     }
 
-    private Optional<Line> print(String line) {
-        printService.print(TextFormatter.formatLogText(line));
-        return Optional.ofNullable(new Line(line));
-    }
 }

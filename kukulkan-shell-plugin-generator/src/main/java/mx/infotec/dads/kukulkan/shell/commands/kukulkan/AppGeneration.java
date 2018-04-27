@@ -143,9 +143,9 @@ public class AppGeneration extends AbstractCommand {
 
             if (gitCommands.availabilityCheck().isAvailable()) {
                 printService.info("Init git repository");
-                gitCommands.gitInit();
+                gitCommands.gitInit(true);
                 printService.info("Add files");
-                gitCommands.gitAdd("--all");
+                gitCommands.gitAddAll(false);
                 printService.info("Commit firts version");
                 gitCommands.gitCommit("Firts version of project", "Kukulkan Team <suport@kukulkan.org.mx>");
                 printService.info("Create branch develop");
