@@ -29,14 +29,30 @@ public class GitChangeLocationAwareness extends AbstractChangeLocationAwareness 
         String branchName = commandService.exec(currentLocation,
                 new ShellCommand(GIT_COMMAND).addArg("rev-parse").addArg("--abbrev-ref").addArg("HEAD"),
                 line -> Optional.ofNullable(new AttributedString(line))).get(0).toString();
+        
+        int color;
+        
+        context.setMaster(false);
+        context.setDevelop(false);
+
+        switch (branchName) {
+            case "master":
+                context.setMaster(true);
+                color = AttributedStyle.RED;
+                break;
+            case "develop":
+                context.setDevelop(true);
+                color = AttributedStyle.CYAN;
+                break;
+            default:
+                color = AttributedStyle.MAGENTA;
+        }
+
         AttributedString dirPrompt = AttributedString.join(new AttributedString(""),
                 new AttributedString("@", AttributedStyle.BOLD.foreground(AttributedStyle.YELLOW)),
-                new AttributedString("git/" + branchName, AttributedStyle.BOLD_OFF.foreground(AttributedStyle.YELLOW)));
-        if (branchName.equals("master")) {
-            context.setMaster(true);
-        } else if (branchName.equals("develop")) {
-            context.setDevelop(true);
-        }
+                new AttributedString("git/", AttributedStyle.BOLD_OFF.foreground(AttributedStyle.YELLOW)),
+                new AttributedString(branchName, AttributedStyle.BOLD.foreground(color)));
+        
         context.setCurrentBranchName(branchName);
         return Optional.of(dirPrompt);
     }
