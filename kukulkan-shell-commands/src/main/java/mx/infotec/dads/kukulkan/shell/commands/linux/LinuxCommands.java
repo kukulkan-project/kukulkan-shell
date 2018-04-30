@@ -23,12 +23,6 @@
  */
 package mx.infotec.dads.kukulkan.shell.commands.linux;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.util.Optional;
-import mx.infotec.dads.kukulkan.shell.component.Navigator;
-import mx.infotec.dads.kukulkan.shell.domain.Line;
 import mx.infotec.dads.kukulkan.shell.domain.ShellCommand;
 import mx.infotec.dads.kukulkan.shell.services.CommandService;
 
@@ -36,12 +30,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.shell.standard.ShellComponent;
 import org.springframework.shell.standard.ShellMethod;
 import mx.infotec.dads.kukulkan.shell.services.PrintService;
-import mx.infotec.dads.kukulkan.shell.util.TextFormatter;
 
 import org.jline.utils.AttributedString;
 import org.jline.utils.AttributedStyle;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.shell.standard.ShellOption;
 
 /**
@@ -51,14 +42,6 @@ import org.springframework.shell.standard.ShellOption;
  */
 @ShellComponent
 public class LinuxCommands {
-
-    private static final Logger LOGGER = LoggerFactory.getLogger(LinuxCommands.class);
-
-    /**
-     * The navigator service.
-     */
-    @Autowired
-    private Navigator nav;
 
     @Autowired
     private PrintService printService;
