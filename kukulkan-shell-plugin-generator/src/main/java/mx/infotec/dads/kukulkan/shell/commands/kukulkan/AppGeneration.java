@@ -56,6 +56,8 @@ import mx.infotec.dads.kukulkan.metamodel.foundation.DatabaseType;
 import mx.infotec.dads.kukulkan.metamodel.foundation.ProjectConfiguration;
 import mx.infotec.dads.kukulkan.shell.commands.AbstractCommand;
 import mx.infotec.dads.kukulkan.shell.commands.git.GitCommands;
+import mx.infotec.dads.kukulkan.shell.commands.git.GitHelper;
+import mx.infotec.dads.kukulkan.shell.commands.git.service.GitCommandsService;
 import mx.infotec.dads.kukulkan.shell.commands.navigation.FileNavigationCommands;
 import mx.infotec.dads.kukulkan.shell.commands.valueprovided.KukulkanFilesProvider;
 import mx.infotec.dads.kukulkan.shell.domain.Line;
@@ -89,6 +91,9 @@ public class AppGeneration extends AbstractCommand {
     @Autowired
     private PrintService printService;
 
+    @Autowired
+    private GitCommandsService gitCommandsService;
+    
     @Autowired
     private GitCommands gitCommands;
 
@@ -134,15 +139,19 @@ public class AppGeneration extends AbstractCommand {
             fileNavigationCommands.cd(appName);
 
             if (gitCommands.availabilityCheck().isAvailable()) {
-                printService.info("Init git repository");
-                gitCommands.gitInit(true);
-                printService.info("Add files");
-                gitCommands.gitAddAll(false);
-                printService.info("Commit firts version");
-                gitCommands.gitCommit("Firts version of project", "Kukulkan Team <suport@kukulkan.org.mx>");
-                printService.info("Create branch develop");
-                gitCommands.gitDevelop();
-                printService.info("End git init");
+                boolean res;
+                
+                res = gitCommandsService.init(true);
+                
+                if (res) {
+                    res = gitCommandsService.add(false, GitHelper.ADD_ALL_PARAM);
+                    if (res) {
+                        res = gitCommandsService.commit("Firts version of project", "Kukulkan Team <suport@kukulkan.org.mx>");
+                        if (res) {
+                            gitCommandsService.branchOrCheckout(GitHelper.DEVELOP_BRANCH);
+                        }
+                    }
+                }
             } else {
                 printService.warning("Git not availability");
             }
