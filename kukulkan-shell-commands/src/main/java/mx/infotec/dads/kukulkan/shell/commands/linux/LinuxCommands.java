@@ -24,16 +24,19 @@
 package mx.infotec.dads.kukulkan.shell.commands.linux;
 
 import java.io.BufferedReader;
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.ArrayList;
+import java.util.Optional;
 import mx.infotec.dads.kukulkan.shell.component.Navigator;
+import mx.infotec.dads.kukulkan.shell.domain.Line;
+import mx.infotec.dads.kukulkan.shell.domain.ShellCommand;
+import mx.infotec.dads.kukulkan.shell.services.CommandService;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.shell.standard.ShellComponent;
 import org.springframework.shell.standard.ShellMethod;
 import mx.infotec.dads.kukulkan.shell.services.PrintService;
+import mx.infotec.dads.kukulkan.shell.util.TextFormatter;
 
 import org.jline.utils.AttributedString;
 import org.jline.utils.AttributedStyle;
@@ -59,6 +62,9 @@ public class LinuxCommands {
 
     @Autowired
     private PrintService printService;
+    
+    @Autowired
+    private CommandService commandService;
 
     /**
      * Ping.
@@ -68,9 +74,7 @@ public class LinuxCommands {
      */
     @ShellMethod("make a ping to a host")
     public void ping(String host) {
-        ProcessBuilder ps = new ProcessBuilder("ping", "-c", "3", host);
-
-        execCommnad(ps);
+        commandService.execToConsole(new ShellCommand("ping", "-c", "3", host));
     }
 
     /**
@@ -80,59 +84,24 @@ public class LinuxCommands {
      */
     @ShellMethod("shows the used space of all partitions; if the directory parameter is specified, it shows the information of its partition")
     public void df(@ShellOption(defaultValue = "") String dir) {
-        ProcessBuilder ps;
+        ShellCommand shellCommand = new ShellCommand("df", "-f");
 
-        if (dir == null || dir.isEmpty()) {
-            ps = new ProcessBuilder("df", "-h");
-        } else {
-            ps = new ProcessBuilder("df", "-h", dir);
+        if (dir != null && !dir.isEmpty()) {
+            shellCommand.addArg(dir);
         }
-
-        execCommnad(ps);
+        
+        commandService.execToConsole(shellCommand);
     }
 
     @ShellMethod("shows the used space of all files and directories; if the directory parameter is specified, it shows only this directory")
     public void du(@ShellOption(defaultValue = "") String dir) {
-        ProcessBuilder ps;
-
-        if (dir == null || dir.isEmpty()) {
-            File currentDir = nav.getCurrentPath().toFile();
-            ArrayList<String> list = new ArrayList<>();
-
-            list.add("du");
-            list.add("-shc");
-
-            for (File f : currentDir.listFiles()) {
-                list.add(f.getName());
-            }
-
-            ps = new ProcessBuilder(list);
-        } else {
-            ps = new ProcessBuilder("du", "-sh", dir);
+        ShellCommand shellCommand = new ShellCommand("du");
+        
+        if (dir != null && !dir.isEmpty()) {
+            shellCommand.addArg("-sh").addArg(dir);
         }
-
-        execCommnad(ps);
-    }
-
-    private void execCommnad(ProcessBuilder ps) {
-        ps.redirectErrorStream(true);
-
-        try {
-            Process pr = ps.start();
-
-            try (BufferedReader in = new BufferedReader(new InputStreamReader(pr.getInputStream()))) {
-                String line;
-                while ((line = in.readLine()) != null) {
-                    printService.print(new AttributedString(line));
-                }
-
-                pr.waitFor();
-                LOGGER.debug("End ping command");
-            }
-
-        } catch (IOException | InterruptedException ex) {
-            LOGGER.error("Error at excecute " + ps.toString() + " commad", ex);
-        }
+        
+        commandService.execToConsole(shellCommand);
     }
 
     @ShellMethod("showColors")
@@ -152,8 +121,5 @@ public class LinuxCommands {
         printService.info("{}-{}", "hola", "mundo");
         printService.info("{}-{}-{}", "hola", "mundo");
         printService.info("{}", "hola", "mundo");
-
-        
-        
     }
 }

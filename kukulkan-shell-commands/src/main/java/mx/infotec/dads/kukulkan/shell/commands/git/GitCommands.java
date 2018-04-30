@@ -30,7 +30,6 @@ import static mx.infotec.dads.kukulkan.shell.commands.git.GitHelper.INIT;
 import static mx.infotec.dads.kukulkan.shell.commands.git.GitHelper.STATUS;
 
 import java.util.List;
-import java.util.Optional;
 
 import javax.validation.constraints.NotNull;
 
@@ -41,13 +40,9 @@ import org.springframework.shell.standard.ShellMethod;
 import org.springframework.shell.standard.ShellOption;
 
 import mx.infotec.dads.kukulkan.shell.commands.git.valueprovided.GitValueProvider;
-import mx.infotec.dads.kukulkan.shell.domain.Line;
 import mx.infotec.dads.kukulkan.shell.domain.ShellCommand;
 import mx.infotec.dads.kukulkan.shell.event.message.EventType;
 import mx.infotec.dads.kukulkan.shell.event.message.LocationUpdatedEvent;
-import mx.infotec.dads.kukulkan.shell.services.PrintService;
-import mx.infotec.dads.kukulkan.shell.util.TextFormatter;
-import org.springframework.beans.factory.annotation.Autowired;
 
 /**
  * Docker Commands.
@@ -58,9 +53,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 public class GitCommands extends GitBaseCommands {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(GitCommands.class);
-
-    @Autowired
-    private PrintService printService;
 
     /**
      * Git status.
@@ -115,7 +107,7 @@ public class GitCommands extends GitBaseCommands {
 
 
     @ShellMethod("Stores the current contents of the index in a new commit along with a log message from the user describing the changes")
-    public void gitCommit(@NotNull String message, @ShellOption(value = {"--author"}) String author) {
+    public void gitCommit(@ShellOption(value = {"--message", "-m"}) @NotNull String message, @ShellOption(value = {"--author"}, defaultValue = "") String author) {
         LOGGER.debug(LOGGER_EXEC, GIT_COMMAND, GitHelper.COMMIT);
         ShellCommand shellCommand = new ShellCommand(GIT_COMMAND, GitHelper.COMMIT).addArg("-m").addArg(message);
         
@@ -185,11 +177,7 @@ public class GitCommands extends GitBaseCommands {
     }
 
     private void execGitCommand(ShellCommand shellCommand) {
-        commandService.exec(shellCommand, line -> {
-            printService.print(TextFormatter.formatLogText(line));
-            return Optional.ofNullable(new Line(line));
-        });
-
+        commandService.execToConsole(shellCommand);
         publisher.publishEvent(new LocationUpdatedEvent(EventType.FILE_NAVIGATION));
     }
 
