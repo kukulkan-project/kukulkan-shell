@@ -50,7 +50,6 @@ import com.fasterxml.jackson.databind.SerializationFeature;
 
 import mx.infotec.dads.kukulkan.engine.service.EngineGenerator;
 import mx.infotec.dads.kukulkan.engine.service.FileUtil;
-import mx.infotec.dads.kukulkan.engine.service.GeneratorPrintProvider;
 import mx.infotec.dads.kukulkan.engine.service.InflectorService;
 import mx.infotec.dads.kukulkan.metamodel.context.GeneratorContext;
 import mx.infotec.dads.kukulkan.metamodel.foundation.DatabaseType;
@@ -61,7 +60,6 @@ import mx.infotec.dads.kukulkan.shell.commands.navigation.FileNavigationCommands
 import mx.infotec.dads.kukulkan.shell.commands.valueprovided.KukulkanFilesProvider;
 import mx.infotec.dads.kukulkan.shell.domain.Line;
 import mx.infotec.dads.kukulkan.shell.domain.ShellCommand;
-import mx.infotec.dads.kukulkan.shell.services.CommandService;
 import mx.infotec.dads.kukulkan.shell.services.PrintService;
 import mx.infotec.dads.kukulkan.shell.util.ProjectUtil;
 import mx.infotec.dads.kukulkan.shell.util.TextFormatter;
@@ -89,13 +87,7 @@ public class AppGeneration extends AbstractCommand {
     private InflectorService inflectorService;
 
     @Autowired
-    private CommandService commandService;
-
-    @Autowired
     private PrintService printService;
-
-    @Autowired
-    private GeneratorPrintProvider printProvider;
 
     @Autowired
     private GitCommands gitCommands;
@@ -107,7 +99,7 @@ public class AppGeneration extends AbstractCommand {
      * Command Shell for Generate all the entities that come from a file with .3
      * extension
      *
-     * @param file the file
+     * @param fileName the file
      */
     @ShellMethod("Generate all the entities that come from a file with .3k or .kukulkan extension")
     public void appGenerateCrud(@ShellOption(valueProvider = KukulkanFilesProvider.class) String fileName) {
@@ -141,21 +133,18 @@ public class AppGeneration extends AbstractCommand {
 
             fileNavigationCommands.cd(appName);
 
-            // TODO: Remover esta validación
-            if (isNotWindowsOS()) {
-                if (gitCommands.availabilityCheck().isAvailable()) {
-                    printService.info("Init git repository");
-                    gitCommands.gitInit(true);
-                    printService.info("Add files");
-                    gitCommands.gitAddAll(false);
-                    printService.info("Commit firts version");
-                    gitCommands.gitCommit("Firts version of project", "Kukulkan Team <suport@kukulkan.org.mx>");
-                    printService.info("Create branch develop");
-                    gitCommands.gitDevelop();
-                    printService.info("End git init");
-                } else {
-                    printService.warning("Git not availability");
-                }
+            if (gitCommands.availabilityCheck().isAvailable()) {
+                printService.info("Init git repository");
+                gitCommands.gitInit(true);
+                printService.info("Add files");
+                gitCommands.gitAddAll(false);
+                printService.info("Commit firts version");
+                gitCommands.gitCommit("Firts version of project", "Kukulkan Team <suport@kukulkan.org.mx>");
+                printService.info("Create branch develop");
+                gitCommands.gitDevelop();
+                printService.info("End git init");
+            } else {
+                printService.warning("Git not availability");
             }
 
             printService.print("Execute the command", "app-config --type FRONT_END");
@@ -165,6 +154,7 @@ public class AppGeneration extends AbstractCommand {
     /**
      * Configurate a front end application, It execute the command "mvn package
      * -Pprod -DskiptTests".
+     * @param type Config type
      */
     @ShellMethod("Configurate the project")
     public void appConfig(@ShellOption(defaultValue = "FRONT_END") ConfigurationType type) {
@@ -191,7 +181,7 @@ public class AppGeneration extends AbstractCommand {
      * Command Shell that show the current project configuration applied to the
      * current context.
      *
-     * @return List<AttributedString>
+     * @return Configuration
      * @throws JsonProcessingException
      */
     @ShellMethod("Show the current project configuration applied to the current context")
@@ -204,20 +194,6 @@ public class AppGeneration extends AbstractCommand {
     @ShellMethod("Show the current project configuration applied to the current context")
     public AttributedCharSequence testingCommand() {
         return new AttributedString("testing command");
-    }
-
-    // public Availability availabilityAppGenerateCrud() {
-    // return Availability.unavailable("You must create a project before. try
-    // using <app-generate-project> command");
-    // }
-    //
-    // public Availability availabilityAppGenerateProject() {
-    // return Availability.unavailable("You must create a project before. try
-    // using <app-generate-project> command");
-    // }
-    
-    private static boolean isNotWindowsOS() {
-        return !System.getProperty("os.name").startsWith("Windows");
     }
 
 }
