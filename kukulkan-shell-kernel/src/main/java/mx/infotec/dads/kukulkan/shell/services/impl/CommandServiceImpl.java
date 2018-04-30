@@ -91,9 +91,11 @@ public class CommandServiceImpl implements CommandService {
             pb.directory(nav.getCurrentPath().toFile());
             pb.redirectErrorStream(true);
             Process p = pb.start();
-            List<Line> readBufferProcess = readBufferProcess(p, new LineCollector(processor));
-            p.waitFor();
-            return readBufferProcess;
+            try (InputStream is = p.getInputStream()) {
+                List<Line> readBufferProcess = readBufferProcess(is, new LineCollector(processor));
+                p.waitFor();
+                return readBufferProcess;
+            }
         } catch (Exception e) {
             LOGGER.debug(GENERIC_ERROR_MSG, e);
             printService.print(new AttributedString(String.format("The command [%s] could not be executed", command)));
@@ -141,8 +143,10 @@ public class CommandServiceImpl implements CommandService {
             pb.directory(workingDirectory.toFile());
             pb.redirectErrorStream(true);
             Process p = pb.start();
-            p.waitFor();
-            lines = readBufferProcess(p, new CharSequenceCollector());
+            try (InputStream is = p.getInputStream()) {
+                p.waitFor();
+                lines = readBufferProcess(is, new CharSequenceCollector());
+            }
         } catch (Exception e) {
             LOGGER.debug(GENERIC_ERROR_MSG, e);
             lines.add(e.getMessage());
@@ -162,26 +166,29 @@ public class CommandServiceImpl implements CommandService {
         String output;
         try {
             Process p = Runtime.getRuntime().exec(nc.getTestCommand());
-            p.waitFor();
-            printService.info(nc.getCommand() + " is installed");
-            output = readBufferProcess(p, new StringBuilderCollector());
-            nc.setInfoMessage(output);
-            nc.setActive(true);
+            try (InputStream is = p.getInputStream()) {
+                p.waitFor();
+                printService.info(nc.getCommand() + " is installed");
+                output = readBufferProcess(is, new StringBuilderCollector());
+                nc.setInfoMessage(output);
+                nc.setActive(true);
+            }
         } catch (Exception e) {
             nc.setErrorMessage(String.format("You must install the command [%s]", nc.getCommand()));
             printService.warning(nc.getErrorMessage());
         }
     }
-    
-    private static <L> L readBufferProcess(Process p, BufferCollector<L> bufferCollector) throws IOException {
+
+    private static <L> L readBufferProcess(InputStream is, BufferCollector<L> bufferCollector) throws IOException {
         String stringHolder;
-        BufferedReader stdInput = new BufferedReader(new InputStreamReader(p.getInputStream()));
-        while ((stringHolder = stdInput.readLine()) != null) {
-            bufferCollector.collect(stringHolder);
+        try (BufferedReader stdInput = new BufferedReader(new InputStreamReader(is))) {
+            while ((stringHolder = stdInput.readLine()) != null) {
+                bufferCollector.collect(stringHolder);
+            }
         }
         return bufferCollector.getCollection();
-    }    
-    
+    }
+
     @Override
     public boolean execToConsole(ShellCommand command) {
         return execToConsole(nav.getCurrentPath(), command);
@@ -192,32 +199,25 @@ public class CommandServiceImpl implements CommandService {
         ProcessBuilder pb = new ProcessBuilder(fixShellCommand(command).getExecutableCommand());
         pb.directory(nav.getCurrentPath().toFile());
 
-        InputStream inputStream = null;
-        InputStream errorStream = null;
-
         try {
             Process p = pb.start();
 
-            inputStream = p.getInputStream();
-            errorStream = p.getErrorStream();
-            
-            InputStreamHandler inputStreamHandler = new InputStreamHandler(inputStream, printService);
-            InputStreamHandler errorStreamHandler = new InputStreamHandler(errorStream, printService, true);
+            try (InputStream inputStream = p.getInputStream(); InputStream errorStream = p.getErrorStream()) {
+                InputStreamHandler inputStreamHandler = new InputStreamHandler(inputStream, printService);
+                InputStreamHandler errorStreamHandler = new InputStreamHandler(errorStream, printService, true);
 
-            inputStreamHandler.start();
-            errorStreamHandler.start();
+                inputStreamHandler.start();
+                errorStreamHandler.start();
 
-            return p.waitFor() == 0;
+                return p.waitFor() == 0;
+            }
         } catch (IOException | InterruptedException ex) {
             LOGGER.error("Error at execute command", ex);
-        } finally {
-            close(inputStream);
-            close(errorStream);
         }
 
         return false;
     }
-    
+
     private void close(InputStream is) {
         if (is != null) {
             try {
@@ -227,7 +227,7 @@ public class CommandServiceImpl implements CommandService {
             }
         }
     }
-    
+
     private static boolean isWindowsOS() {
         return System.getProperty("os.name").startsWith("Windows");
     }
