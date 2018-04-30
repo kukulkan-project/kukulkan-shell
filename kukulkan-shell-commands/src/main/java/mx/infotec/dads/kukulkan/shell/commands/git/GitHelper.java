@@ -44,6 +44,8 @@ public class GitHelper {
     public static final String CLONE = "clone";
 
     public static final String ADD = "add";
+    
+    public static final String ADD_ALL_PARAM = "-A";
 
     public static final String COMMIT = "commit";
 

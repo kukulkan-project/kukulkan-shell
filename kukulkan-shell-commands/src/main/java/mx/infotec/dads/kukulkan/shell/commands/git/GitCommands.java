@@ -23,26 +23,13 @@
  */
 package mx.infotec.dads.kukulkan.shell.commands.git;
 
-import static mx.infotec.dads.kukulkan.shell.commands.git.GitHelper.ADD;
-import static mx.infotec.dads.kukulkan.shell.commands.git.GitHelper.CLONE;
-import static mx.infotec.dads.kukulkan.shell.commands.git.GitHelper.GIT_COMMAND;
-import static mx.infotec.dads.kukulkan.shell.commands.git.GitHelper.INIT;
-import static mx.infotec.dads.kukulkan.shell.commands.git.GitHelper.STATUS;
-
-import java.util.List;
-
 import javax.validation.constraints.NotNull;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.shell.standard.ShellComponent;
 import org.springframework.shell.standard.ShellMethod;
 import org.springframework.shell.standard.ShellOption;
 
 import mx.infotec.dads.kukulkan.shell.commands.git.valueprovided.GitValueProvider;
-import mx.infotec.dads.kukulkan.shell.domain.ShellCommand;
-import mx.infotec.dads.kukulkan.shell.event.message.EventType;
-import mx.infotec.dads.kukulkan.shell.event.message.LocationUpdatedEvent;
 
 /**
  * Docker Commands.
@@ -52,133 +39,68 @@ import mx.infotec.dads.kukulkan.shell.event.message.LocationUpdatedEvent;
 @ShellComponent
 public class GitCommands extends GitBaseCommands {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(GitCommands.class);
-
     /**
      * Git status.
      */
     @ShellMethod("Displays paths that have differences between the index file and the current HEAD commit")
     public void gitStatus() {
-        LOGGER.debug(LOGGER_EXEC, GIT_COMMAND, STATUS);
-        execGitCommand(new ShellCommand(GIT_COMMAND, STATUS));
+        gitCommandsService.status();
     }
 
     @ShellMethod("Init an git repositoty")
     public void gitInit(@ShellOption(value = {"-q", "--quiet"}) boolean quiet) {
-        LOGGER.debug(LOGGER_EXEC, GIT_COMMAND, INIT);
-        ShellCommand shellCommand = new ShellCommand(GIT_COMMAND, INIT);
-        
-        if (quiet) {
-            shellCommand.addArg("-q");
-        }
-        
-        execGitCommand(shellCommand);
+        gitCommandsService.init(quiet);
     }
 
     @ShellMethod("Clones a repository into a newly created directory, creates remote-tracking branches for each branch in the cloned repository")
     public void gitClone(@NotNull String repositoryPath) {
-        LOGGER.debug(LOGGER_EXEC, GIT_COMMAND, CLONE);
-        execGitCommand(new ShellCommand(GIT_COMMAND, CLONE).addArg(repositoryPath));
+        gitCommandsService.clone(repositoryPath);
     }
 
     @ShellMethod("Add the fileName to the stage, to prepare the content staged for the next commit")
     public void gitAdd(@ShellOption(value = {"-f", "--force"}) boolean force, @ShellOption(value = {"--fileName"}) @NotNull String fileName) {
-        LOGGER.debug(LOGGER_EXEC, GIT_COMMAND, ADD);
-        ShellCommand shellCommand = new ShellCommand(GIT_COMMAND, ADD);
-        
-        if (force) {
-            shellCommand.addArg("-f");
-        }
-
-        execGitCommand(shellCommand.addArg(fileName));
+        gitCommandsService.add(force, fileName);
     }
 
     @ShellMethod("Add all files to the stage, to prepare the content staged for the next commit")
     public void gitAddAll(@ShellOption(value = {"-f", "--force"}) boolean force) {
-        LOGGER.debug(LOGGER_EXEC, GIT_COMMAND, ADD);
-        ShellCommand shellCommand = new ShellCommand(GIT_COMMAND, ADD).addArg("-A");
-        
-        if (force) {
-            shellCommand.addArg("-f");
-        }
-        
-        execGitCommand(shellCommand);
+        gitCommandsService.add(force, GitHelper.ADD_ALL_PARAM);
     }
-
 
     @ShellMethod("Stores the current contents of the index in a new commit along with a log message from the user describing the changes")
     public void gitCommit(@ShellOption(value = {"--message", "-m"}) @NotNull String message, @ShellOption(value = {"--author"}, defaultValue = "") String author) {
-        LOGGER.debug(LOGGER_EXEC, GIT_COMMAND, GitHelper.COMMIT);
-        ShellCommand shellCommand = new ShellCommand(GIT_COMMAND, GitHelper.COMMIT).addArg("-m").addArg(message);
-        
-        if (author != null && !author.isEmpty()) {
-            shellCommand.addArg("--author").addArg(author);
-        }
-        
-        execGitCommand(shellCommand);
+        gitCommandsService.commit(message, author);
     }
 
     @ShellMethod("Updates remote refs using local refs, while sending objects necessary to complete the given refs")
     public void gitPush(boolean setUpstream) {
-        LOGGER.debug(LOGGER_EXEC, GIT_COMMAND, GitHelper.PUSH);
-        ShellCommand shellCommand = new ShellCommand(GIT_COMMAND, GitHelper.PUSH);
-        if (setUpstream) {
-            shellCommand.addArg("--set-upstream").addArg("origin").addArg(gitContext.getCurrentBranchName());
-        }
-        execGitCommand(shellCommand);
+        gitCommandsService.push(setUpstream);
     }
 
     @ShellMethod("Fetch from and integrate with another repository or a local branch")
     public void gitPull() {
-        LOGGER.debug(LOGGER_EXEC, GIT_COMMAND, GitHelper.PULL);
-        execGitCommand(new ShellCommand(GIT_COMMAND, GitHelper.PULL));
+        gitCommandsService.pull();
     }
 
     @ShellMethod("Updates files in the working tree to match the version in the index or the specified tree")
     public void gitCheckout(
             @ShellOption(valueProvider = GitValueProvider.GitBranchValueProvider.class) @NotNull String branchName) {
-        LOGGER.debug(LOGGER_EXEC, GIT_COMMAND, GitHelper.CHECKOUT);
-        execGitCommand(new ShellCommand(GIT_COMMAND, GitHelper.CHECKOUT).addArg(branchName));
+        gitCommandsService.checkout(branchName);
     }
 
     @ShellMethod("List all the branches in the local repository")
     public void gitBranches() {
-        LOGGER.debug(LOGGER_EXEC, GIT_COMMAND, GitHelper.BRANCH);
-        execGitCommand(new ShellCommand(GIT_COMMAND, GitHelper.BRANCH));
+        gitCommandsService.branch(null);
     }
 
     @ShellMethod("Checkout to develop branch, create develop branch if not exits")
     public void gitDevelop() {
-        List<CharSequence> branches = commandService.exec(new ShellCommand(GIT_COMMAND, GitHelper.BRANCH));
-
-        boolean create = true;
-
-        for (CharSequence attr : branches) {
-            if (attr.toString().replace("*", "").trim().equals(GitHelper.DEVELOP_BRANCH)) {
-                create = false;
-                break;
-            }
-        }
-
-        if (create) {
-            LOGGER.debug("Create develop branch");
-            LOGGER.debug(LOGGER_EXEC, GIT_COMMAND, GitHelper.BRANCH);
-            execGitCommand(new ShellCommand(GIT_COMMAND, GitHelper.BRANCH, GitHelper.DEVELOP_BRANCH));
-        }
-
-        LOGGER.debug(LOGGER_EXEC, GIT_COMMAND, GitHelper.CHECKOUT);
-        execGitCommand(new ShellCommand(GIT_COMMAND, GitHelper.CHECKOUT, GitHelper.DEVELOP_BRANCH));
+        gitCommandsService.branchOrCheckout(GitHelper.DEVELOP_BRANCH);
     }
 
     @ShellMethod("List all the branches in the local repository")
     public void gitMaster() {
-        LOGGER.debug(LOGGER_EXEC, GIT_COMMAND, GitHelper.CHECKOUT);
-        execGitCommand(new ShellCommand(GIT_COMMAND, GitHelper.CHECKOUT, GitHelper.MASTER_BRANCH));
-    }
-
-    private void execGitCommand(ShellCommand shellCommand) {
-        commandService.execToConsole(shellCommand);
-        publisher.publishEvent(new LocationUpdatedEvent(EventType.FILE_NAVIGATION));
+        gitCommandsService.checkout(GitHelper.MASTER_BRANCH);
     }
 
 }
