@@ -27,6 +27,7 @@ import static mx.infotec.dads.kukulkan.metamodel.util.Validator.requiredNotEmpty
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.function.Function;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -71,43 +72,41 @@ public class ChatbotGenerator implements Generator {
         Map<String, Object> model = new HashMap<>();
         model.put("project", chatbotCtx);
 
+        Function<String, String> pathBuilder = template -> template.replace(".ftl", "").replace(CHATBOT_ARCHETYPE, "");
+
         // Common files
-        writer.copy(CHATBOT_ARCHETYPE + "yarn.lock", "yarn.lock").ifPresent(file -> file.exists());
-        writer.copyTemplate(CHATBOT_ARCHETYPE + "README.md.ftl", "README.md", model);
-        writer.copy(CHATBOT_ARCHETYPE + "Procfile", "Procfile");
-        writer.copyTemplate(CHATBOT_ARCHETYPE + "package.json.ftl", "package.json", model);
-        writer.copy(CHATBOT_ARCHETYPE + "app.js", "app.js");
-        writer.copy(CHATBOT_ARCHETYPE + ".gitignore", ".gitignore");
-        writer.copyTemplate(CHATBOT_ARCHETYPE + ".env.ftl", ".env", model);
+        writer.copySmart(CHATBOT_ARCHETYPE + "yarn.lock", pathBuilder, model);
+        writer.copySmart(CHATBOT_ARCHETYPE + "README.md.ftl", pathBuilder, model);
+        writer.copySmart(CHATBOT_ARCHETYPE + "Procfile", pathBuilder, model);
+        writer.copySmart(CHATBOT_ARCHETYPE + "package.json.ftl", pathBuilder, model);
+        writer.copySmart(CHATBOT_ARCHETYPE + "app.js", pathBuilder, model);
+        writer.copySmart(CHATBOT_ARCHETYPE + ".gitignore", pathBuilder, model);
+        writer.copySmart(CHATBOT_ARCHETYPE + ".env.ftl", pathBuilder, model);
         writer.copyDir(ChatbotGenerator.class, CHATBOT_ARCHETYPE + "views", "views");
         writer.copyDir(ChatbotGenerator.class, CHATBOT_ARCHETYPE + "routes", "routes");
         writer.copyDir(ChatbotGenerator.class, CHATBOT_ARCHETYPE + "public", "public");
-        writer.copy(CHATBOT_ARCHETYPE + "bin/www", "bin/www");
-        writer.copyTemplate(CHATBOT_ARCHETYPE + "bots/index.js.ftl", "bots/index.js", model);
+        writer.copySmart(CHATBOT_ARCHETYPE + "bin/www", pathBuilder, model);
+        writer.copySmart(CHATBOT_ARCHETYPE + "bots/index.js.ftl", pathBuilder, model);
 
         // Facebook bot
         if (chatbotCtx.isFacebookBot()) {
-            writer.copyTemplate(CHATBOT_ARCHETYPE + "bots/facebook/controller.js.ftl", "bots/facebook/controller.js",
-                    model);
-            writer.copyTemplate(CHATBOT_ARCHETYPE + "bots/facebook/menu.js.ftl", "bots/facebook/menu.js", model);
-            writer.copyTemplate(CHATBOT_ARCHETYPE + "bots/facebook/middlewares.js.ftl", "bots/facebook/middlewares.js",
-                    model);
-            writer.copyTemplate(CHATBOT_ARCHETYPE + "bots/facebook/skills.js.ftl", "bots/facebook/skills.js", model);
+            writer.copySmart(CHATBOT_ARCHETYPE + "bots/facebook/controller.js.ftl", pathBuilder, model);
+            writer.copySmart(CHATBOT_ARCHETYPE + "bots/facebook/menu.js.ftl", pathBuilder, model);
+            writer.copySmart(CHATBOT_ARCHETYPE + "bots/facebook/middlewares.js.ftl", pathBuilder, model);
+            writer.copySmart(CHATBOT_ARCHETYPE + "bots/facebook/skills.js.ftl", pathBuilder, model);
         }
 
         // Web bot
         if (chatbotCtx.isWebBot()) {
-            writer.copyTemplate(CHATBOT_ARCHETYPE + "bots/web/controller.js.ftl", "bots/web/controller.js", model);
-            writer.copyTemplate(CHATBOT_ARCHETYPE + "bots/web/middlewares.js.ftl", "bots/web/middlewares.js", model);
-            writer.copyTemplate(CHATBOT_ARCHETYPE + "bots/web/skills.js.ftl", "bots/web/skills.js", model);
+            writer.copySmart(CHATBOT_ARCHETYPE + "bots/web/controller.js.ftl", pathBuilder, model);
+            writer.copySmart(CHATBOT_ARCHETYPE + "bots/web/middlewares.js.ftl", pathBuilder, model);
+            writer.copySmart(CHATBOT_ARCHETYPE + "bots/web/skills.js.ftl", pathBuilder, model);
         }
 
         // DialogFlow conversation scripts
         if (chatbotCtx.getNlpService().equals(NlpService.DIALOGFLOW)) {
-            writer.copyTemplate(CHATBOT_ARCHETYPE + "bots/conversation/create-conversation.js.ftl",
-                    "bots/conversation/create-conversation.js", model);
-            writer.copyTemplate(CHATBOT_ARCHETYPE + "bots/conversation/starter-conversation.js.ftl",
-                    "bots/conversation/starter-conversation.js", model);
+            writer.copySmart(CHATBOT_ARCHETYPE + "bots/conversation/create-conversation.js.ftl", pathBuilder, model);
+            writer.copySmart(CHATBOT_ARCHETYPE + "bots/conversation/starter-conversation.js.ftl", pathBuilder, model);
         }
 
         LOGGER.info("Finished!");

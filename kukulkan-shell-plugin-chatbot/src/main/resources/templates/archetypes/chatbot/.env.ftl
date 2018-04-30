@@ -5,7 +5,7 @@
 # reference these in your code with process.env.SECRET
 
 <#if project.nlpService == "DIALOGFLOW">
-DIALOGFLOW_CLIENT_TOKEN=
+DIALOGFLOW_CLIENT_TOKEN=IM_A_FAKE_TOKEN_PLEASE_CHANGE_ME
 DIALOGFLOW_DEVELOPER_TOKEN=
 </#if>
 <#if project.facebookBot>
