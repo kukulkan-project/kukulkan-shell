@@ -35,19 +35,20 @@ public class GitChangeLocationAwareness extends AbstractChangeLocationAwareness 
         context.setMaster(false);
         context.setDevelop(false);
 
-        switch (branchName) {
-            case "master":
-                context.setMaster(true);
-                color = AttributedStyle.RED;
-                break;
-            case "develop":
-                context.setDevelop(true);
-                color = AttributedStyle.CYAN;
-                break;
-            default:
-                color = AttributedStyle.MAGENTA;
+        if (branchName.equals("master")) {
+            context.setMaster(true);
+            color = AttributedStyle.RED;            
+        } else if (branchName.equals("develop")) {
+            context.setDevelop(true);
+            color = AttributedStyle.GREEN;
+        } else if (branchName.startsWith("feature") || branchName.startsWith("release")) {
+            color = AttributedStyle.CYAN;
+        } else if (branchName.startsWith("hotfix")) {
+            color = AttributedStyle.MAGENTA;
+        } else {
+            color = AttributedStyle.WHITE;
         }
-
+        
         AttributedString dirPrompt = AttributedString.join(new AttributedString(""),
                 new AttributedString("@", AttributedStyle.BOLD.foreground(AttributedStyle.YELLOW)),
                 new AttributedString("git/", AttributedStyle.BOLD_OFF.foreground(AttributedStyle.YELLOW)),
