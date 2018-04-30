@@ -25,6 +25,7 @@ package mx.infotec.dads.kukulkan.shell.services;
 
 import java.nio.file.Path;
 import java.util.List;
+import mx.infotec.dads.kukulkan.shell.component.Navigator;
 
 import mx.infotec.dads.kukulkan.shell.domain.Line;
 import mx.infotec.dads.kukulkan.shell.domain.NativeCommand;
@@ -47,7 +48,7 @@ public interface CommandService {
      *            the command
      * @return the list
      */
-    public List<CharSequence> exec(final ShellCommand command);
+    List<CharSequence> exec(final ShellCommand command);
 
     /**
      * Exec.
@@ -58,7 +59,7 @@ public interface CommandService {
      *            the processor
      * @return the list
      */
-    public List<Line> exec(final ShellCommand command, LineValuedProcessor processor);
+    List<Line> exec(final ShellCommand command, LineValuedProcessor processor);
 
     /**
      * Exec.
@@ -69,7 +70,7 @@ public interface CommandService {
      *            the command
      * @return the list
      */
-    public List<CharSequence> exec(final Path workingDirectory, final ShellCommand command);
+    List<CharSequence> exec(final Path workingDirectory, final ShellCommand command);
 
     /**
      * Exec.
@@ -82,7 +83,27 @@ public interface CommandService {
      *            the processor
      * @return the list
      */
-    public List<CharSequence> exec(final Path workingDirectory, final ShellCommand command, LineProcessor processor);
+    List<CharSequence> exec(final Path workingDirectory, final ShellCommand command, LineProcessor processor);
+
+    /**
+     * Exec a command in the current directory (from Navigator class), and write the output to console with PrintService.
+     * 
+     * @param command The Command to excecute.
+     * @return True if command end with no error.
+     * @see PrintService
+     * @see Navigator
+     */
+    boolean execToConsole(final ShellCommand command);
+
+    /**
+     * Exec a command in the workingDirectory, and write the output to console with PrintService.
+     * 
+     * @param workingDirectory The working directory.
+     * @param command The Command to excecute.
+     * @return True if command end with no error.
+     * @see PrintService
+     */
+    boolean execToConsole(final Path workingDirectory, final ShellCommand command);
 
     /**
      * Test native command.
@@ -90,5 +111,5 @@ public interface CommandService {
      * @param nc
      *            the nc
      */
-    public void testNativeCommand(NativeCommand nc);
+    void testNativeCommand(NativeCommand nc);
 }

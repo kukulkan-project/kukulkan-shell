@@ -25,6 +25,7 @@ package mx.infotec.dads.kukulkan.shell.services.impl;
 
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.nio.file.Path;
 import java.util.ArrayList;
@@ -54,9 +55,6 @@ import mx.infotec.dads.kukulkan.shell.util.StringBuilderCollector;
  * Useful methods to handle the main Console.
  *
  * @author Daniel Cortes Pichardo
- * @param <A>
- * @param <R>
- * @param <T>
  */
 @Service
 public class CommandServiceImpl implements CommandService {
@@ -91,6 +89,7 @@ public class CommandServiceImpl implements CommandService {
         try {
             ProcessBuilder pb = new ProcessBuilder(fixShellCommand(command).getExecutableCommand());
             pb.directory(nav.getCurrentPath().toFile());
+            pb.redirectErrorStream(true);
             Process p = pb.start();
             List<Line> readBufferProcess = readBufferProcess(p, new LineCollector(processor));
             p.waitFor();
@@ -140,6 +139,7 @@ public class CommandServiceImpl implements CommandService {
         try {
             ProcessBuilder pb = new ProcessBuilder(fixShellCommand(command).getExecutableCommand());
             pb.directory(workingDirectory.toFile());
+            pb.redirectErrorStream(true);
             Process p = pb.start();
             p.waitFor();
             lines = readBufferProcess(p, new CharSequenceCollector());
@@ -172,20 +172,62 @@ public class CommandServiceImpl implements CommandService {
             printService.warning(nc.getErrorMessage());
         }
     }
-
-    public static <L> L readBufferProcess(Process p, BufferCollector<L> bufferCollector) throws IOException {
+    
+    private static <L> L readBufferProcess(Process p, BufferCollector<L> bufferCollector) throws IOException {
         String stringHolder;
         BufferedReader stdInput = new BufferedReader(new InputStreamReader(p.getInputStream()));
-        BufferedReader stdError = new BufferedReader(new InputStreamReader(p.getErrorStream()));
         while ((stringHolder = stdInput.readLine()) != null) {
             bufferCollector.collect(stringHolder);
         }
-        while ((stringHolder = stdError.readLine()) != null) {
-            bufferCollector.collect(stringHolder);
-        }
         return bufferCollector.getCollection();
+    }    
+    
+    @Override
+    public boolean execToConsole(ShellCommand command) {
+        return execToConsole(nav.getCurrentPath(), command);
     }
 
+    @Override
+    public boolean execToConsole(Path workingDirectory, ShellCommand command) {
+        ProcessBuilder pb = new ProcessBuilder(fixShellCommand(command).getExecutableCommand());
+        pb.directory(nav.getCurrentPath().toFile());
+
+        InputStream inputStream = null;
+        InputStream errorStream = null;
+
+        try {
+            Process p = pb.start();
+
+            inputStream = p.getInputStream();
+            errorStream = p.getErrorStream();
+            
+            InputStreamHandler inputStreamHandler = new InputStreamHandler(inputStream, printService);
+            InputStreamHandler errorStreamHandler = new InputStreamHandler(errorStream, printService, true);
+
+            inputStreamHandler.start();
+            errorStreamHandler.start();
+
+            return p.waitFor() == 0;
+        } catch (IOException | InterruptedException ex) {
+            LOGGER.error("Error at execute command", ex);
+        } finally {
+            close(inputStream);
+            close(errorStream);
+        }
+
+        return false;
+    }
+    
+    private void close(InputStream is) {
+        if (is != null) {
+            try {
+                is.close();
+            } catch (IOException ex) {
+                LOGGER.warn("Error al close stream", ex);
+            }
+        }
+    }
+    
     private static boolean isWindowsOS() {
         return System.getProperty("os.name").startsWith("Windows");
     }
