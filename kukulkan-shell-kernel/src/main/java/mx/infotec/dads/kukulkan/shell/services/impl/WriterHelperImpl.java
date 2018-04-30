@@ -25,7 +25,9 @@
 package mx.infotec.dads.kukulkan.shell.services.impl;
 
 import java.io.File;
+import java.nio.file.Paths;
 import java.util.Optional;
+import java.util.function.Function;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -49,8 +51,18 @@ public class WriterHelperImpl implements WriterHelper {
     private WriterService writerService;
 
     @Override
+    public Optional<File> save(String path, String content) {
+        return writerService.save(navigator.getCurrentPath().resolve(path), content);
+    }
+
+    @Override
     public Optional<File> copyTemplate(String template, String relative, Object model) {
         return writerService.copyTemplate(template, navigator.getCurrentPath(), relative, model);
+    }
+
+    @Override
+    public Optional<File> copyTemplate(String template, Function<String, String> function, Object model) {
+        return writerService.copyTemplate(template, navigator.getCurrentPath(), function, model);
     }
 
     @Override
@@ -59,8 +71,18 @@ public class WriterHelperImpl implements WriterHelper {
     }
 
     @Override
-    public void copyDir(Class clazz, String directory, String relative) {
-        writerService.copyDir(clazz, directory, navigator.getCurrentPath(), relative);
+    public Optional<File> copy(String resource, Function<String, String> function) {
+        return writerService.copy(resource, navigator.getCurrentPath(), function);
+    }
+
+    @Override
+    public Optional<File> copy(String resource, String relative, Object model) {
+        return writerService.copy(resource, navigator.getCurrentPath(), relative, model);
+    }
+
+    @Override
+    public Optional<File> copy(String resource, Function<String, String> function, Object model) {
+        return writerService.copy(resource, navigator.getCurrentPath(), function, model);
     }
 
     @Override
@@ -69,23 +91,28 @@ public class WriterHelperImpl implements WriterHelper {
     }
 
     @Override
-    public void copyDir(Class clazz, String directory, String pattern, String relative, Object model) {
+    public void copyDir(Class clazz, String directory, String relative) {
         writerService.copyDir(clazz, directory, navigator.getCurrentPath(), relative);
     }
 
     @Override
     public void copyDir(Class clazz, String directory, String relative, Object model) {
-        writerService.copyDir(clazz, directory, navigator.getCurrentPath(), relative);
+        writerService.copyDir(clazz, directory, navigator.getCurrentPath(), relative, model);
     }
 
     @Override
-    public void copySmart(String resource, String toSave, Object model) {
-        writerService.copySmart(resource, navigator.getCurrentPath(), toSave, model);
+    public void copyDir(Class clazz, String directory, String pattern, String relative, Object model) {
+        writerService.copyDir(clazz, directory, pattern, navigator.getCurrentPath(), relative);
     }
 
     @Override
-    public Optional<File> copy(String resource, String toSave, Object model) {
-        return writerService.copy(resource, navigator.getCurrentPath(), toSave, model);
+    public Optional<File> copySmart(String resourceOrTemplate, String relative, Object model) {
+        return writerService.copySmart(resourceOrTemplate, navigator.getCurrentPath(), relative, model);
+    }
+
+    @Override
+    public Optional<File> copySmart(String template, Function<String, String> function, Object model) {
+        return writerService.copySmart(template, navigator.getCurrentPath(), function, model);
     }
 
 }
