@@ -10,17 +10,19 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.context.annotation.Import;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import mx.infotec.dads.kukulkan.shell.config.ProjectContextConfiguration;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = ProjectContextConfiguration.class)
+@Import(TestConfig.class)
 public class KukulkanShellApplicationTests {
 
     private static final String RESOURCE = "/templates/error.html";
+
     @Autowired
-    
     private Terminal terminal;
 
     @Test

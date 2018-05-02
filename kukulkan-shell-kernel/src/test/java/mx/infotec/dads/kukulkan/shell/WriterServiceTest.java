@@ -12,28 +12,34 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.context.annotation.Import;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import freemarker.template.Configuration;
+import mx.infotec.dads.kukulkan.engine.config.PrintProviderConfiguration;
+import mx.infotec.dads.kukulkan.engine.service.FileUtil;
+import mx.infotec.dads.kukulkan.engine.service.WriterServiceImpl;
 import mx.infotec.dads.kukulkan.engine.templating.service.TemplateServiceImpl;
 import mx.infotec.dads.kukulkan.shell.component.Navigator;
 import mx.infotec.dads.kukulkan.shell.services.WriterHelper;
 import mx.infotec.dads.kukulkan.shell.services.impl.WriterHelperImpl;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@SpringBootTest(classes = { Navigator.class, WriterHelperImpl.class, Configuration.class, TemplateServiceImpl.class })
+@SpringBootTest(classes = { Navigator.class, WriterHelperImpl.class, Configuration.class, TemplateServiceImpl.class,
+        WriterServiceImpl.class, FileUtil.class })
+@Import(PrintProviderConfiguration.class)
 public class WriterServiceTest {
-    
+
     @Autowired
     WriterHelper writer;
-    
+
     @Autowired
     Navigator navigator;
-    
+
     Path workingDir;
-    
+
     Map<Object, Object> model;
-    
+
     @Before
     public void prepare() {
         try {
@@ -45,21 +51,21 @@ public class WriterServiceTest {
             e.printStackTrace();
         }
     }
-    
+
     @Test
     public void testCopy() {
         writer.copy("testFile.txt", "tested.txt");
         File file = workingDir.resolve("tested.txt").toFile();
-        assert(file.exists());
+        assert (file.exists());
     }
-    
+
     @Test
     public void testCopyWithModel() {
-        writer.copy("testFile.txt", "${name}/${packaging}/tested.txt", model);
-        File file = workingDir.resolve("testProject/mx.infotec.dads/tested.txt").toFile();
-        assert(file.exists());
+        writer.copy("testFile.txt", "${name}/${packaging?replace(\".\", \"/\")}/tested.txt", model);
+        File file = workingDir.resolve("testProject/mx/infotec/dads/tested.txt").toFile();
+        assert (file.exists());
     }
-    
+
     private Map<Object, Object> getDefaultModel() {
         Map<Object, Object> model = new HashMap<Object, Object>();
         model.put("name", "testProject");
