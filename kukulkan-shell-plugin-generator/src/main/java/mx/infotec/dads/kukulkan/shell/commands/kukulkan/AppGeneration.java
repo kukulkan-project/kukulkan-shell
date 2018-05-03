@@ -78,6 +78,8 @@ public class AppGeneration extends AbstractCommand {
      * The Constant LOGGER.
      */
     private static final Logger LOGGER = LoggerFactory.getLogger(AppGeneration.class);
+    
+    public static final String MVN_WRAPPER_COMMAND = "mvnw";
 
     @Autowired
     ThreadPoolTaskExecutor executor;
@@ -168,7 +170,7 @@ public class AppGeneration extends AbstractCommand {
     @ShellMethod("Configurate the project")
     public void appConfig(@ShellOption(defaultValue = "FRONT_END") ConfigurationType type) {
         if (type.equals(ConfigurationType.FRONT_END)) {
-            commandService.exec(new ShellCommand(MVN_COMMAND).addArg("package").addArg("-Pprod").addArg("-DskipTests"),
+            commandService.exec(new ShellCommand(MVN_WRAPPER_COMMAND, "package", "-Pprod", "-DskipTests"),
                     line -> {
                         printService.print(TextFormatter.formatLogText(line));
                         return Optional.ofNullable(new Line(line));
@@ -180,7 +182,7 @@ public class AppGeneration extends AbstractCommand {
 
     @ShellMethod("Run a Spring-Boot App")
     public void appRun() {
-        executor.execute(() -> commandService.exec(new ShellCommand(MVN_COMMAND).addArg("spring-boot:run"), line -> {
+        executor.execute(() -> commandService.exec(new ShellCommand(MVN_WRAPPER_COMMAND, "spring-boot:run"), line -> {
             printService.print(TextFormatter.formatLogText(line));
             return Optional.ofNullable(new Line(line));
         }));
