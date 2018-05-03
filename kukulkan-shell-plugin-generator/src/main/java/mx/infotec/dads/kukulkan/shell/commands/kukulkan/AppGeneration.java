@@ -111,6 +111,7 @@ public class AppGeneration extends AbstractCommand {
     @ShellMethod("Generate all the entities that come from a file with .3k or .kukulkan extension")
     public void appGenerateCrud(@ShellOption(valueProvider = KukulkanFilesProvider.class) String fileName) {
         File file = Paths.get(navigator.getCurrentPath().toString(), fileName).toFile();
+        shellContext.getConfiguration().ifPresent(config->config.setOutputDir(navigator.getCurrentPath().getParent()));
         GeneratorContext genCtx = createGeneratorContext(shellContext.getConfiguration(), file, inflectorService);
         engineGenerator.process(genCtx);
         FileUtil.saveToFile(genCtx);
