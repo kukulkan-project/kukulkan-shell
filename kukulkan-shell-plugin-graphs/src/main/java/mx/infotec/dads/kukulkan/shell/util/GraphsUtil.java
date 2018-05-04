@@ -79,6 +79,11 @@ public class GraphsUtil {
         {
             System.out.println("The /src/main/webapp/app/app.module.js file was not found or it does not have the correct format");
         }
+        if (!addJsonGraphs("ALL",  projectPathPath))
+        {
+            System.out.println("The /src/main/webapp/app/app.module.js file was not found or it does not have the correct format");
+            return false;
+        }
         return  true;
     }
 
@@ -218,5 +223,60 @@ public class GraphsUtil {
             ioe.printStackTrace();
         }
         return success;
+    }
+
+    public static boolean addJsonGraphs(String typeGraph, Path projectPathPath)
+    {
+        boolean success = false;
+        String menu = "<li id=\"graphs\" ng-class=\"{active: vm.$state.includes('admin')}\" uib-dropdown\n" +
+                "                    dropdown ng-switch-when=\"true\">\n" +
+                "                    <a class=\"dropdown-toggle\" uib-dropdown-toggle href=\"\">\n" +
+                "                        <span>\n" +
+                "                            <span class=\"glyphicon glyphicon-stats\"></span> <span class=\"hidden-sm\">Graphs</span> <b class=\"caret\"></b>\n" +
+                "                        </span>\n" +
+                "                    </a>\n" +
+                "                    <ul class=\"dropdown-menu\" uib-dropdown-menu>\n" +
+                "                        <li ui-sref-active=\"active\">\n" +
+                "                            <a ui-sref=\"graphs\"\n" +
+                "                               ng-click=\"vm.collapseNavbar()\">\n" +
+                "                                <span class=\"glyphicon glyphicon-stats\"></span>&nbsp; <span >\n" +
+                "                                    Graphs\n" +
+                "                                </span>\n" +
+                "                            </a>\n" +
+                "                        </li>\n" +
+                "                    </ul>\n" +
+                "                </li>";
+        try
+        {
+            File file = new File( projectPathPath.toString() + "/src/main/webapp/app/entities/d3/defaultCharts.js");
+            if(file.exists()){
+                BufferedReader reader = new BufferedReader(new FileReader(file));
+                //            String line, oldText = "";
+//            while((line = reader.readLine()) != null)
+//            {
+//                oldText += line + "\r\n";
+//            }
+//            reader.close();
+//
+//            if(!oldText.contains(typeGraph))
+//            {
+//                String replacedText  = oldText.replaceAll("'angular-loading-bar'", "'angular-loading-bar',\r\n'" + typeGraph +"'");
+//
+//                FileWriter writer = new FileWriter(projectPathPath.toString() + "/src/main/webapp/app/app.module.js");
+//                writer.write(replacedText);
+//                writer.flush();
+//                writer.close();
+//            }
+            }else{
+                 success = false;
+            }
+            success = true;
+        }
+        catch (IOException ioe)
+        {
+            ioe.printStackTrace();
+        }
+        return success;
+
     }
 }

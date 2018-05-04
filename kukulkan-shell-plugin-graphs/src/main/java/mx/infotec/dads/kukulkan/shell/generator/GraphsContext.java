@@ -24,7 +24,6 @@
 package mx.infotec.dads.kukulkan.shell.generator;
 
 import mx.infotec.dads.kukulkan.metamodel.context.BaseContext;
-import mx.infotec.dads.kukulkan.shell.commands.GraphType;
 
 /**
  * GraphsContext.

@@ -98,7 +98,6 @@ public class ProjectUtil {
         } catch (IOException e) {
             return Optional.empty();
         }
-
     }
 
     /**
