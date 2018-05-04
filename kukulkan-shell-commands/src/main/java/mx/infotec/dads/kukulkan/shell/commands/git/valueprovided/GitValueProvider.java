@@ -32,10 +32,9 @@ import mx.infotec.dads.kukulkan.shell.domain.ShellCommand;
 
 /**
  * The Class GitValueProvider.
- * 
+ *
  * @author Daniel Cortes Pichardo
  */
-
 public class GitValueProvider {
 
     @Component
@@ -60,7 +59,7 @@ public class GitValueProvider {
         public ShellCommand getShellCommand() {
             return new ShellCommand(GitHelper.GIT_COMMAND).addArg(GitHelper.BRANCH);
         }
-        
+
         @Override
         public GitLineFormatter getLineFormatter() {
             return (line) -> String.valueOf(line).replace("*", "").trim();
@@ -71,5 +70,31 @@ public class GitValueProvider {
             return (charSequence) -> String.valueOf(charSequence).contains("feature-");
         }
 
+    }
+    
+    @Component
+    public static class GitAddValueProvider extends GitBaseValueProvider {
+
+        private final ShellCommand shellCommand = new ShellCommand(GitHelper.GIT_COMMAND).addArg(GitHelper.STATUS).addArg("-s");
+        
+        @Override
+        public ShellCommand getShellCommand() {
+            return shellCommand;
+        }
+
+        @Override
+        public GitLineFormatter getLineFormatter() {
+            return (line) -> String.valueOf(line).substring(3).trim();
+        }
+
+        @Override
+        public Predicate<CharSequence> getFilter() {
+            return (charSequence) -> {
+                String tmp = String.valueOf(charSequence);
+                return tmp.startsWith(" M") || tmp.startsWith("??");
+            };
+        }
+        
+        
     }
 }
