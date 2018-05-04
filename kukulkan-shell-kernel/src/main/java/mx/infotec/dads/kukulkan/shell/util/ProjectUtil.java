@@ -94,7 +94,10 @@ public class ProjectUtil {
         try {
             Path kukulkanFilePath = Paths.get(projectPath.toString(), KUKULKAN_FILE);
             ObjectMapper objectMapper = new ObjectMapper();
-            return Optional.of(objectMapper.readValue(kukulkanFilePath.toFile(), ProjectConfiguration.class));
+            Optional<ProjectConfiguration> pConf = Optional
+                    .of(objectMapper.readValue(kukulkanFilePath.toFile(), ProjectConfiguration.class));
+            pConf.ifPresent(conf -> conf.setOutputDir(projectPath.getParent()));
+            return pConf;
         } catch (IOException e) {
             return Optional.empty();
         }

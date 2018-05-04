@@ -23,7 +23,7 @@ import mx.infotec.dads.kukulkan.shell.util.ProjectUtil;
 public class AppChangeLocationAwareness extends AbstractChangeLocationAwareness {
 
     @Autowired
-    private KukulkanShellContext context;
+    private KukulkanShellContext shellContext;
 
     @Override
     public Optional<AttributedString> createPrompt(Path currentLocation) {
@@ -35,7 +35,7 @@ public class AppChangeLocationAwareness extends AbstractChangeLocationAwareness 
 
     @Override
     public void doAction(Path currentLocation) {
-        context.setConfiguration(ProjectUtil.readKukulkanFile(currentLocation));
+        shellContext.setConfiguration(ProjectUtil.readKukulkanFile(currentLocation));
     }
 
     @Override
