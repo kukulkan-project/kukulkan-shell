@@ -58,7 +58,7 @@ public class GitCommands extends GitBaseCommands {
     }
 
     @ShellMethod("Add the fileName to the stage, to prepare the content staged for the next commit")
-    public void gitAdd(@ShellOption(value = {"-f", "--force"}) boolean force, @ShellOption(value = {"--fileName"}) @NotNull String fileName) {
+    public void gitAdd(@ShellOption(value = {"-f", "--force"}) boolean force, @ShellOption(value = {"--fileName"}, valueProvider = GitValueProvider.GitAddValueProvider.class) @NotNull String fileName) {
         gitCommandsService.add(force, fileName);
     }
 

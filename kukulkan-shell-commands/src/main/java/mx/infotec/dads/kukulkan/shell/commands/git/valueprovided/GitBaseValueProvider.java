@@ -39,11 +39,11 @@ import mx.infotec.dads.kukulkan.shell.services.CommandService;
 
 /**
  * The Class GitValueProvider.
- * 
+ *
  * @author Daniel Cortes Pichardo
  */
-
 public abstract class GitBaseValueProvider extends ValueProviderSupport {
+
     @Autowired
     private CommandService commandService;
 
@@ -54,7 +54,7 @@ public abstract class GitBaseValueProvider extends ValueProviderSupport {
     private Predicate<CharSequence> predicate;
 
     @PostConstruct
-    private void init() {
+    protected void init() {
         shellCommand = getShellCommand();
         formatter = getLineFormatter();
         predicate = getFilter();
