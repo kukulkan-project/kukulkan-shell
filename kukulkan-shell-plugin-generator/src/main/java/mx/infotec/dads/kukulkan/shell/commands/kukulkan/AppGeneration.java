@@ -62,6 +62,7 @@ import mx.infotec.dads.kukulkan.shell.commands.valueprovided.KukulkanFilesProvid
 import mx.infotec.dads.kukulkan.shell.domain.Line;
 import mx.infotec.dads.kukulkan.shell.domain.ShellCommand;
 import mx.infotec.dads.kukulkan.shell.services.PrintService;
+import mx.infotec.dads.kukulkan.shell.services.impl.CommandServiceImpl;
 import mx.infotec.dads.kukulkan.shell.util.ProjectUtil;
 import mx.infotec.dads.kukulkan.shell.util.TextFormatter;
 
@@ -176,10 +177,11 @@ public class AppGeneration extends AbstractCommand {
     @ShellMethod("Configurate the project")
     public void appConfig(@ShellOption(defaultValue = "FRONT_END") ConfigurationType type) {
         if (type.equals(ConfigurationType.FRONT_END)) {
-            commandService.exec(new ShellCommand(MVN_WRAPPER_COMMAND, "package", "-Pprod", "-DskipTests"), line -> {
-                printService.print(TextFormatter.formatLogText(line));
-                return Optional.ofNullable(new Line(line));
-            });
+            commandService.exec(new ShellCommand(getMavenWrapperCommand(), "package", "-Pprod", "-DskipTests"),
+                    line -> {
+                        printService.print(TextFormatter.formatLogText(line));
+                        return Optional.ofNullable(new Line(line));
+                    });
         } else {
             printService.print(new AttributedString("This configuration is not supported: " + type));
         }
@@ -187,10 +189,11 @@ public class AppGeneration extends AbstractCommand {
 
     @ShellMethod("Run a Spring-Boot App")
     public void appRun() {
-        executor.execute(() -> commandService.exec(new ShellCommand(MVN_WRAPPER_COMMAND, "spring-boot:run"), line -> {
-            printService.print(TextFormatter.formatLogText(line));
-            return Optional.ofNullable(new Line(line));
-        }));
+        executor.execute(
+                () -> commandService.exec(new ShellCommand(getMavenWrapperCommand(), "spring-boot:run"), line -> {
+                    printService.print(TextFormatter.formatLogText(line));
+                    return Optional.ofNullable(new Line(line));
+                }));
     }
 
     /**
@@ -210,6 +213,13 @@ public class AppGeneration extends AbstractCommand {
     @ShellMethod("Show the current project configuration applied to the current context")
     public AttributedCharSequence testingCommand() {
         return new AttributedString("testing command");
+    }
+
+    public static String getMavenWrapperCommand() {
+        if (CommandServiceImpl.isWindowsOS()) {
+            return MVN_WRAPPER_COMMAND;
+        }
+        return "./" + MVN_WRAPPER_COMMAND;
     }
 
 }
