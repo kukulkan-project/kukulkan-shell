@@ -1,5 +1,5 @@
 /*
- *  
+ *
  * The MIT License (MIT)
  * Copyright (c) 2018
  *
@@ -25,6 +25,7 @@ package mx.infotec.dads.kukulkan.shell.commands;
 
 import javax.validation.Valid;
 
+import mx.infotec.dads.kukulkan.metamodel.foundation.Plugin;
 import mx.infotec.dads.kukulkan.metamodel.foundation.ProjectConfiguration;
 import mx.infotec.dads.kukulkan.shell.util.MapperG;
 import mx.infotec.dads.kukulkan.shell.util.ProjectUtil;

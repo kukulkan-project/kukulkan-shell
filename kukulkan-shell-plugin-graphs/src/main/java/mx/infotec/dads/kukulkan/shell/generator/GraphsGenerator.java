@@ -8,6 +8,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ArrayNode;
+import com.fasterxml.jackson.databind.node.ObjectNode;
+import mx.infotec.dads.kukulkan.metamodel.foundation.Plugin;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +27,7 @@ import mx.infotec.dads.kukulkan.metamodel.template.TemplateInfo;
 import mx.infotec.dads.kukulkan.metamodel.util.PathProcessor;
 import mx.infotec.dads.kukulkan.shell.commands.GraphsCommand;
 import mx.infotec.dads.kukulkan.shell.services.WriterHelper;
+import mx.infotec.dads.kukulkan.shell.template.GraphsTemplateFactory;
 import mx.infotec.dads.kukulkan.shell.util.GraphsUtil;
 import mx.infotec.dads.kukulkan.shell.util.ProjectUtil;
 
@@ -35,7 +41,7 @@ public class GraphsGenerator implements Generator {
 
     private WriterHelper writer;
 
-    public static final String GRAPHS_ARCHETYPE = "archetypes/graphs/";
+    public static final String GRAPHS_ARCHETYPE = "archetypes/graphs/src/main/webapp/";
     public GraphsGenerator(WriterHelper writer) {
         this.writer = writer;
     }
@@ -64,29 +70,57 @@ public class GraphsGenerator implements Generator {
 
         String graphType = graphsContext.getGraphType().name();
 
-        if(project.get().getPlugins().isEmpty())
-            //if(project.get().containsPlugin("Graphs"))
+        Plugin plugin = project.get().getPlugin("GraphsD3");
+        if( plugin == null )
         {
-            PluginGraphs plugin = new PluginGraphs();
-            plugin.addGraphs(graphsContext.getGraphType());
-            for(GraphType graphName : plugin.getGraphs()){
-                System.out.print(graphName.name());
-            }
+            plugin = new Plugin();
+            plugin.setName("GraphsD3");
             project.get().addPlugin(plugin);
-            ProjectUtil.writeKukulkanFile(project.get());
+        }
+        ObjectNode data = plugin.getData();
+        if (data == null)
+        {
+            ObjectMapper mapper = new ObjectMapper();
+            data = mapper.createObjectNode();
+            data.putArray("Graphs");
+            plugin.setData(data);
+        }
+        ArrayNode installedGraphs = (ArrayNode) data.get("Graphs");
+
+        for (int i = 0; i< installedGraphs.size(); i ++)
+        {
+            if (installedGraphs.get(i).textValue().equals(graphType) ||
+                    installedGraphs.get(i).textValue().equals("ALL"))
+            {
+                LOGGER.info(graphType + " is already installed");
+                System.out.println(graphType + " is already installed");
+                return;
+            }
         }
 
+        if(graphType.equals("ALL")){
+            installedGraphs.removeAll();
+            writer.copyDir(GraphsGenerator.class, GRAPHS_ARCHETYPE + "content/images/graficasD3","src/main/webapp/content/images/graficasD3");
+            writer.copy(GRAPHS_ARCHETYPE + "app/entities/d3/defaultCharts.json","src/main/webapp/app/entities/d3/defaultCharts.json");
+        }
+        else
+        {
+            writer.copy(GRAPHS_ARCHETYPE + "content/images/graficasD3/"+graphType+".png",
+                    "src/main/webapp/content/images/graficasD3/"+graphType+".png");
+        }
+        installedGraphs.add(graphType);
+        ProjectUtil.writeKukulkanFile(project.get());
+
         Map<String, String> dependencies = new HashMap<>();
-        GraphsUtil.editFiles(graphsContext.getOutputDir());
+        GraphsUtil.editFiles(graphsContext.getOutputDir(), graphType);
         model.put("project", requiredNotEmpty(context.get(GraphsContext.class)));
-//        for (TemplateInfo template : GraphsTemplateFactory.getGraphsTemplates()) {
-//            String content = templateService.fillTemplate(template.getTemplatePath(), model);
-//            FileUtil.saveToFile(createOutputPath(graphsContext, template), content);
-//        }
-        writer.copyDir(GraphsGenerator.class, GRAPHS_ARCHETYPE + "src/main/webapp/content/images/graficasD3","src/main/webapp/content/images/graficasD3");
-        writer.copy(GRAPHS_ARCHETYPE + "src/main/webapp/app/entities/d3/d3.html","src/main/webapp/app/entities/d3/d3.html");
-        //writer.copy(GRAPHS_ARCHETYPE + "src/main/webapp/app/entities/d3/defaultCharts.json","src/main/webapp/app/entities/d3/defaultCharts.json");
-        writer.copy(GRAPHS_ARCHETYPE + "src/main/webapp/app/entities/d3/charts/graph.html", "src/main/webapp/app/entities/d3/charts/graph.html");
+        for (TemplateInfo template : GraphsTemplateFactory.getGraphsTemplates(graphType)) {
+            String content = templateService.fillTemplate(template.getTemplatePath(), model);
+            FileUtil.saveToFile(createOutputPath(graphsContext, template), content);
+        }
+
+        writer.copy(GRAPHS_ARCHETYPE + "app/entities/d3/d3.html","src/main/webapp/app/entities/d3/d3.html");
+        writer.copy(GRAPHS_ARCHETYPE + "app/entities/d3/charts/graph.html", "src/main/webapp/app/entities/d3/charts/graph.html");
     }
 
     /**
