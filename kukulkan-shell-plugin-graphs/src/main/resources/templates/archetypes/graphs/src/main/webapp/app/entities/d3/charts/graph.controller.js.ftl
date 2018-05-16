@@ -1,3 +1,5 @@
+
+<#assign graph="${project.graphType}">
 (function () {
     'use strict';
 
@@ -5,19 +7,90 @@
         .module('${project.grammarName}App')
         .controller('ViewGraphController', ViewGraphController);
 
-    ViewGraphController.$inject = ['$stateParams','$scope','$state',
-        'lineChart','cumulativeLine','stackedArea','multiBar','bullet','discreteBar',
-        'historicalBar','multiBarHorizontal','pieChart','scatter','lineFocus','scatterLine',
-        'lineBar','donutChart','sparkLine','paralell','multiChart','candlestick',
-        'sunburst','ohcl','boxPlot','forceDirected'];
+    ViewGraphController.$inject = ['$stateParams','$scope','$state'
+    <#if graph  == "LINE_CHART">
+        ,'lineChart'
+    </#if>
+    <#if graph  == "CUMULATIVE_LINE">
+        ,'cumulativeLine'
+    </#if>
+    <#if graph  == "STACKED_AREA">
+        ,'stackedArea'
+    </#if>
+    <#if graph  == "MULTIBAR">
+        ,'multiBar'
+    </#if>
+    <#if graph  == "BULLET">
+        ,'bullet'
+    </#if>
+    <#if graph  == "DISCRETE_BAR">
+    ,'discreteBar'
+    </#if>
+    <#if graph  == "HISTORICAL_BAR">
+    ,'historicalBar'
+    </#if>
+    <#if graph  == "MULTIBAR_HORIZONTAL">
+    ,'multiBarHorizontal'
+    </#if>
+    <#if graph  == "PIE_CHART">
+    ,'pieChart'
+    </#if>
+    <#if graph  == "SCATTER">
+    ,'scatter'
+    </#if>
+    <#if graph  == "LINE_FOCUS">
+    ,'lineFocus'
+    </#if>
+    <#if graph  == "SCATTER_LINE">
+    ,'scatterLine'
+    </#if>
+    <#if graph  == "LINE_BAR">
+    ,'lineBar'
+    </#if>
+    <#if graph  == "DONUT_CHART">
+    ,'donutChart'
+    </#if>
+    <#if graph  == "SPARK_LINE">
+    ,'sparkLine'
+    </#if>
+    <#if graph  == "PARALELL">
+    ,'paralell'
+    </#if>
+    <#if graph  == "MULTI_CHART">
+    ,'multiChart'
+    </#if>
+    <#if graph  == "CANDLESTICK">
+    ,'candlestick'
+    </#if>
+    <#if graph  == "SUNBURST">
+    ,'sunburst'
+    </#if>
+    <#if graph  == "OHCL">
+    ,'ohcl'
+    </#if>
+    <#if graph  == "BOX_PLOT">
+    ,'boxPlot'
+    </#if>
+    <#if graph  == "FORCE_DIRECTED">
+    ,'forceDirected'
+    </#if>
+    <#if graph  == "MULTI_CHART">
+    ,'multiChart'
+    </#if>
+    <#if graph  == "ALL">
+    ,'lineChart','cumulativeLine','stackedArea','multiBar','bullet','discreteBar',
+                  'historicalBar','multiBarHorizontal','pieChart','scatter','lineFocus',
+                  'scatterLine','lineBar','donutChart','sparkLine','paralell','multiChart',
+                  'candlestick','sunburst','ohcl','boxPlot','forceDirected'
+    </#if>
+      ];
 
-    function ViewGraphController($stateParams, $scope, $state, lineChart,
-        cumulativeLine, stackedArea, multiBar, bullet, discreteBar, historicalBar, multiBarHorizontal, pieChart,
-        scatter, lineFocus, scatterLine, lineBar, donutChart, sparkLine, paralell, multiChart, candlestick,
-        sunburst, ohcl, boxPlot, forceDirected) {
+    function ViewGraphController($stateParams, $scope, $state,
+        <#if graph  == "LINE_CHART">
+              ,lineChart
+        </#if>) {
+
         var vm = this;
-
-        
         vm.type = $stateParams.type;
         
 

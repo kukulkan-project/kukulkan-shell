@@ -23,7 +23,9 @@
  */
 package mx.infotec.dads.kukulkan.shell.generator;
 
+import com.fasterxml.jackson.databind.node.ArrayNode;
 import mx.infotec.dads.kukulkan.metamodel.context.BaseContext;
+import java.util.*;
 
 /**
  * GraphsContext.
@@ -37,6 +39,9 @@ public class GraphsContext extends BaseContext {
 
     /** The grammar name. */
     private String grammarName;
+
+    public GraphsContext() {
+    }
 
     /**
      * Gets the grammar name.
@@ -75,7 +80,6 @@ public class GraphsContext extends BaseContext {
      *            the new graph type
      */
     public void setGraphType(GraphType graphType) { this.graphType = graphType; }
-
 
     /*
      * (non-Javadoc)

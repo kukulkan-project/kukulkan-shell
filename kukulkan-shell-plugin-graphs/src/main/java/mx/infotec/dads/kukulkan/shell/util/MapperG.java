@@ -15,7 +15,6 @@ public class MapperG {
     }
 
     public static GraphsContext toContext(GraphsArgs params) {
-        GraphsContext context = new GraphsContext();
-        return context;
+        return new GraphsContext();
     }
 }

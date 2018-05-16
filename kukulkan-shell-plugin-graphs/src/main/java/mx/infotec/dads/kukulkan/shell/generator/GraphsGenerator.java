@@ -3,10 +3,7 @@ package mx.infotec.dads.kukulkan.shell.generator;
 import static mx.infotec.dads.kukulkan.metamodel.util.Validator.requiredNotEmpty;
 
 import java.nio.file.Path;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -60,8 +57,6 @@ public class GraphsGenerator implements Generator {
     public void process(GeneratorContext context) {
         GraphsContext graphsContext = requiredNotEmpty(context.get(GraphsContext.class));
 
-        boolean pluginExist = false;
-
         Map<String, Object> model = new HashMap<>();
         Optional<ProjectConfiguration> project = ProjectUtil.readKukulkanFile(graphsContext.getOutputDir());
         String id = project.get().getId();
@@ -86,7 +81,7 @@ public class GraphsGenerator implements Generator {
             plugin.setData(data);
         }
         ArrayNode installedGraphs = (ArrayNode) data.get("Graphs");
-
+        Map<String, Object> map = new HashMap<String, Object>();
         for (int i = 0; i< installedGraphs.size(); i ++)
         {
             if (installedGraphs.get(i).textValue().equals(graphType) ||
@@ -96,6 +91,7 @@ public class GraphsGenerator implements Generator {
                 System.out.println(graphType + " is already installed");
                 return;
             }
+            map.put("listGraphs",installedGraphs.get(i).textValue() );
         }
 
         if(graphType.equals("ALL")){
@@ -111,10 +107,10 @@ public class GraphsGenerator implements Generator {
         installedGraphs.add(graphType);
         ProjectUtil.writeKukulkanFile(project.get());
 
-        Map<String, String> dependencies = new HashMap<>();
         GraphsUtil.editFiles(graphsContext.getOutputDir(), graphType);
         model.put("project", requiredNotEmpty(context.get(GraphsContext.class)));
-        for (TemplateInfo template : GraphsTemplateFactory.getGraphsTemplates(graphType)) {
+        model.put("listGraphs", map);
+        for (TemplateInfo template : GraphsTemplateFactory.getGraphsTemplates( graphsContext.getGraphType())) {
             String content = templateService.fillTemplate(template.getTemplatePath(), model);
             FileUtil.saveToFile(createOutputPath(graphsContext, template), content);
         }

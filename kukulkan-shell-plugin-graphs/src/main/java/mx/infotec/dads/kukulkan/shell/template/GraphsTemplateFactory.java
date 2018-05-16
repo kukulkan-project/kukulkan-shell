@@ -44,7 +44,7 @@ public class GraphsTemplateFactory {
     private GraphsTemplateFactory() {
     }
 
-    public static List<TemplateInfo> getGraphsTemplates(String graphType) {
+    public static List<TemplateInfo> getGraphsTemplates(GraphType graphType) {
         List<TemplateInfo> templates = new ArrayList<>();
 
         templates.add(new TemplateInfo(GRAPHS_TEMPLATE, "src/main/webapp/app/entities/d3/d3.controller.js.ftl"));
@@ -53,7 +53,7 @@ public class GraphsTemplateFactory {
         templates.add(new TemplateInfo(GRAPHS_TEMPLATE, "src/main/webapp/app/entities/d3/charts/graph.state.js.ftl"));
         templates.add(new TemplateInfo(GRAPHS_TEMPLATE, "src/main/webapp/app/entities/d3/charts/graph.controller.js.ftl"));
 
-        switch (graphType) {
+        switch (graphType.name()) {
             case "BOX_PLOT": templates.add(new TemplateInfo(GRAPHS_TEMPLATE, "src/main/webapp/app/entities/d3/charts/js/boxPlotService.js.ftl"));
                 break;
             case "BULLET": templates.add(new TemplateInfo(GRAPHS_TEMPLATE, "src/main/webapp/app/entities/d3/charts/js/bulletService.js.ftl"));

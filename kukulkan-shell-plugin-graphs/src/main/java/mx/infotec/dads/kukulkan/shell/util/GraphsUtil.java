@@ -24,7 +24,6 @@
 package mx.infotec.dads.kukulkan.shell.util;
 
 import com.google.gson.*;
-import javafx.beans.binding.StringBinding;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.select.Elements;
@@ -75,7 +74,7 @@ public class GraphsUtil {
         return true;
     }
 
-    public static boolean addBowerDependencies(Map<String, String> dependencies, Path projectPathPath) {
+    private static boolean addBowerDependencies(Map<String, String> dependencies, Path projectPathPath) {
         boolean success = false;
         JsonParser parser = new JsonParser();
         try {
@@ -101,7 +100,7 @@ public class GraphsUtil {
         return success;
     }
 
-    public static boolean addBowerOverrides(Map<String, String> overrides, Path projectPathPath) {
+    private static boolean addBowerOverrides(Map<String, String> overrides, Path projectPathPath) {
         boolean success = false;
         JsonParser parser = new JsonParser();
         try {
@@ -128,7 +127,7 @@ public class GraphsUtil {
         return success;
     }
 
-    public static boolean addGraphsMenu(Path projectPathPath) {
+    private static boolean addGraphsMenu(Path projectPathPath) {
         boolean success = false;
         String menu = "<li id=\"graphs\" ng-class=\"{active: vm.$state.includes('admin')}\" uib-dropdown\n" +
                 "                    dropdown ng-switch-when=\"true\">\n" +
@@ -172,7 +171,7 @@ public class GraphsUtil {
         return success;
     }
 
-    public static boolean addModule(String module, Path projectPathPath) {
+    private static boolean addModule(String module, Path projectPathPath) {
         boolean success = false;
         try {
             File file = new File(projectPathPath.toString() + "/src/main/webapp/app/app.module.js");
@@ -198,12 +197,10 @@ public class GraphsUtil {
         return success;
     }
 
-    public static boolean addJsonGraphs(Path projectPathPath, String graphType) {
-        boolean success = false;
+    private static void addJsonGraphs(Path projectPathPath, String graphType) {
         String pathCharts = "/src/main/webapp/app/entities/d3/defaultCharts.json";
         if (!graphType.equals("ALL")) {
             JsonParser parser = new JsonParser();
-            Map<String, String> graph = jsonGraph(graphType);
             JsonArray charArr = null;
             Gson gson = new Gson();
             try {
@@ -217,8 +214,8 @@ public class GraphsUtil {
                         JsonObject data = charArr.get(i).getAsJsonObject();
                         if (!data.get("id").getAsString().equals(graphType)) {
                             String json = gson.toJson(jsonGraph(graphType));
-                            JsonObject o = parser.parse(json).getAsJsonObject();
-                            charArr.add(o);
+                            JsonObject obj = parser.parse(json).getAsJsonObject();
+                            charArr.add(obj);
                         }
                     }
                 } else {
@@ -239,7 +236,6 @@ public class GraphsUtil {
                 file.write(prettyJson);
                 file.flush();
                 file.close();
-                success = true;
 
             } catch (FileNotFoundException e) {
                 e.printStackTrace();
@@ -248,7 +244,6 @@ public class GraphsUtil {
             }
         }
 
-        return success;
     }
 
     public static Map<String, String> jsonGraph(String graphType) {

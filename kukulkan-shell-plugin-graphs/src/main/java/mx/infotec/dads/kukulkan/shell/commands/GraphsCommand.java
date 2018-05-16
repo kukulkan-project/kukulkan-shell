@@ -25,7 +25,6 @@ package mx.infotec.dads.kukulkan.shell.commands;
 
 import javax.validation.Valid;
 
-import mx.infotec.dads.kukulkan.metamodel.foundation.Plugin;
 import mx.infotec.dads.kukulkan.metamodel.foundation.ProjectConfiguration;
 import mx.infotec.dads.kukulkan.shell.util.MapperG;
 import mx.infotec.dads.kukulkan.shell.util.ProjectUtil;
@@ -41,7 +40,6 @@ import mx.infotec.dads.kukulkan.shell.generator.GraphsContext;
 import mx.infotec.dads.kukulkan.shell.generator.GraphsGenerator;
 import mx.infotec.dads.kukulkan.shell.generator.GraphType;
 
-import java.util.ArrayList;
 import java.util.Optional;
 
 
