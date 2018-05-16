@@ -81,7 +81,8 @@ public class GraphsGenerator implements Generator {
             plugin.setData(data);
         }
         ArrayNode installedGraphs = (ArrayNode) data.get("Graphs");
-        Map<String, Object> map = new HashMap<String, Object>();
+        List<String> lista = new ArrayList<String>();
+
         for (int i = 0; i< installedGraphs.size(); i ++)
         {
             if (installedGraphs.get(i).textValue().equals(graphType) ||
@@ -91,11 +92,12 @@ public class GraphsGenerator implements Generator {
                 System.out.println(graphType + " is already installed");
                 return;
             }
-            map.put("listGraphs",installedGraphs.get(i).textValue() );
+            lista.add(installedGraphs.get(i).textValue());
         }
 
         if(graphType.equals("ALL")){
             installedGraphs.removeAll();
+            lista.clear();
             writer.copyDir(GraphsGenerator.class, GRAPHS_ARCHETYPE + "content/images/graficasD3","src/main/webapp/content/images/graficasD3");
             writer.copy(GRAPHS_ARCHETYPE + "app/entities/d3/defaultCharts.json","src/main/webapp/app/entities/d3/defaultCharts.json");
         }
@@ -104,12 +106,12 @@ public class GraphsGenerator implements Generator {
             writer.copy(GRAPHS_ARCHETYPE + "content/images/graficasD3/"+graphType+".png",
                     "src/main/webapp/content/images/graficasD3/"+graphType+".png");
         }
+        lista.add(graphType);
         installedGraphs.add(graphType);
-        ProjectUtil.writeKukulkanFile(project.get());
 
         GraphsUtil.editFiles(graphsContext.getOutputDir(), graphType);
         model.put("project", requiredNotEmpty(context.get(GraphsContext.class)));
-        model.put("listGraphs", map);
+        model.put("listGraphs", lista);
         for (TemplateInfo template : GraphsTemplateFactory.getGraphsTemplates( graphsContext.getGraphType())) {
             String content = templateService.fillTemplate(template.getTemplatePath(), model);
             FileUtil.saveToFile(createOutputPath(graphsContext, template), content);
@@ -117,6 +119,7 @@ public class GraphsGenerator implements Generator {
 
         writer.copy(GRAPHS_ARCHETYPE + "app/entities/d3/d3.html","src/main/webapp/app/entities/d3/d3.html");
         writer.copy(GRAPHS_ARCHETYPE + "app/entities/d3/charts/graph.html", "src/main/webapp/app/entities/d3/charts/graph.html");
+        ProjectUtil.writeKukulkanFile(project.get());
     }
 
     /**

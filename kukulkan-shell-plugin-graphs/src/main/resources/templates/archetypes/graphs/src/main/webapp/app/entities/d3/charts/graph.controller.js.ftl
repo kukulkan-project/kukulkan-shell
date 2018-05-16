@@ -1,5 +1,3 @@
-
-<#assign graph="${project.graphType}">
 (function () {
     'use strict';
 
@@ -8,87 +6,116 @@
         .controller('ViewGraphController', ViewGraphController);
 
     ViewGraphController.$inject = ['$stateParams','$scope','$state'
-    <#if graph  == "LINE_CHART">
-        ,'lineChart'
-    </#if>
-    <#if graph  == "CUMULATIVE_LINE">
-        ,'cumulativeLine'
-    </#if>
-    <#if graph  == "STACKED_AREA">
-        ,'stackedArea'
-    </#if>
-    <#if graph  == "MULTIBAR">
-        ,'multiBar'
-    </#if>
-    <#if graph  == "BULLET">
-        ,'bullet'
-    </#if>
-    <#if graph  == "DISCRETE_BAR">
-    ,'discreteBar'
-    </#if>
-    <#if graph  == "HISTORICAL_BAR">
-    ,'historicalBar'
-    </#if>
-    <#if graph  == "MULTIBAR_HORIZONTAL">
-    ,'multiBarHorizontal'
-    </#if>
-    <#if graph  == "PIE_CHART">
-    ,'pieChart'
-    </#if>
-    <#if graph  == "SCATTER">
-    ,'scatter'
-    </#if>
-    <#if graph  == "LINE_FOCUS">
-    ,'lineFocus'
-    </#if>
-    <#if graph  == "SCATTER_LINE">
-    ,'scatterLine'
-    </#if>
-    <#if graph  == "LINE_BAR">
-    ,'lineBar'
-    </#if>
-    <#if graph  == "DONUT_CHART">
-    ,'donutChart'
-    </#if>
-    <#if graph  == "SPARK_LINE">
-    ,'sparkLine'
-    </#if>
-    <#if graph  == "PARALELL">
-    ,'paralell'
-    </#if>
-    <#if graph  == "MULTI_CHART">
-    ,'multiChart'
-    </#if>
-    <#if graph  == "CANDLESTICK">
-    ,'candlestick'
-    </#if>
-    <#if graph  == "SUNBURST">
-    ,'sunburst'
-    </#if>
-    <#if graph  == "OHCL">
-    ,'ohcl'
-    </#if>
-    <#if graph  == "BOX_PLOT">
-    ,'boxPlot'
-    </#if>
-    <#if graph  == "FORCE_DIRECTED">
-    ,'forceDirected'
-    </#if>
-    <#if graph  == "MULTI_CHART">
-    ,'multiChart'
-    </#if>
-    <#if graph  == "ALL">
-    ,'lineChart','cumulativeLine','stackedArea','multiBar','bullet','discreteBar',
-                  'historicalBar','multiBarHorizontal','pieChart','scatter','lineFocus',
-                  'scatterLine','lineBar','donutChart','sparkLine','paralell','multiChart',
-                  'candlestick','sunburst','ohcl','boxPlot','forceDirected'
-    </#if>
+    <#list listGraphs as name>
+        <#if name == "LINE_CHART">
+            ,'lineChart'
+        <#elseif  name == "CUMULATIVE_LINE">
+            ,'cumulativeLine'
+        <#elseif  name == "STACKED_AREA">
+            ,'stackedArea'
+        <#elseif  name == "MULTIBAR">
+            ,'multiBar'
+        <#elseif name == "BULLET">
+            ,'bullet'
+        <#elseif name == "DISCRETE_BAR">
+            ,'discreteBar'
+        <#elseif name == "HISTORICAL_BAR">
+            ,'historicalBar'
+        <#elseif name  == "MULTIBAR_HORIZONTAL">
+            ,'multiBarHorizontal'
+        <#elseif name == "PIE_CHART">
+            ,'pieChart'
+        <#elseif name == "SCATTER">
+            ,'scatter'
+        <#elseif name == "LINE_FOCUS">
+            ,'lineFocus'
+        <#elseif name == "SCATTER_LINE">
+            ,'scatterLine'
+        <#elseif name == "LINE_BAR">
+            ,'lineBar'
+        <#elseif name == "DONUT_CHART">
+            ,'donutChart'
+        <#elseif name == "SPARK_LINE">
+            ,'sparkLine'
+        <#elseif name == "PARALELL">
+            ,'paralell'
+        <#elseif name == "MULTI_CHART">
+            ,'multiChart'
+        <#elseif name == "CANDLESTICK">
+            ,'candlestick'
+        <#elseif name == "SUNBURST">
+            ,'sunburst'
+        <#elseif name == "OHCL">
+            ,'ohcl'
+        <#elseif name == "BOX_PLOT">
+            ,'boxPlot'
+        <#elseif name == "FORCE_DIRECTED">
+            ,'forceDirected'
+        <#elseif name == "MULTI_CHART">
+            ,'multiChart'
+        <#elseif name == "ALL">
+            ,'lineChart','cumulativeLine','stackedArea','multiBar','bullet','discreteBar',
+            'historicalBar','multiBarHorizontal','pieChart','scatter','lineFocus',
+            'scatterLine','lineBar','donutChart','sparkLine','paralell','multiChart',
+            'candlestick','sunburst','ohcl','boxPlot','forceDirected'
+        </#if>
+    </#list>
       ];
 
-    function ViewGraphController($stateParams, $scope, $state,
-        <#if graph  == "LINE_CHART">
-              ,lineChart
-        </#if>) {
+    function ViewGraphController($stateParams, $scope, $state
+    <#list listGraphs as name>
+        <#if name == "LINE_CHART">
+            ,lineChart
+        <#elseif name == "CUMULATIVE_LINE">
+            ,cumulativeLine
+        <#elseif name == "STACKED_AREA">
+            ,stackedArea
+        <#elseif name == "MULTIBAR">
+            ,multiBar
+        <#elseif name == "BULLET">
+            ,bullet
+        <#elseif name == "DISCRETE_BAR">
+            ,discreteBar
+        <#elseif name == "HISTORICAL_BAR">
+            ,historicalBar
+        <#elseif name == "MULTIBAR_HORIZONTAL">
+            ,multiBarHorizontal
+        <#elseif name == "PIE_CHART">
+            ,pieChart
+        <#elseif name == "SCATTER">
+            ,scatter
+        <#elseif name == "LINE_FOCUS">
+            ,lineFocus
+        <#elseif name == "SCATTER_LINE">
+            ,scatterLine
+        <#elseif name == "LINE_BAR">
+            ,lineBar
+        <#elseif name == "DONUT_CHART">
+            ,donutChart
+        <#elseif name == "SPARK_LINE">
+            ,sparkLine
+        <#elseif name == "PARALELL">
+            ,paralell
+        <#elseif name == "MULTI_CHART">
+            ,multiChart
+        <#elseif name == "CANDLESTICK">
+            ,candlestick
+        <#elseif name == "SUNBURST">
+            ,sunburst
+        <#elseif name == "OHCL">
+            ,ohcl
+        <#elseif name == "BOX_PLOT">
+            ,boxPlot
+        <#elseif name == "FORCE_DIRECTED">
+            ,forceDirected
+        <#elseif name == "MULTI_CHART">
+            ,multiChart
+        <#elseif name == "ALL">
+            ,lineChart,cumulativeLine, stackedArea, multiBar, bullet, discreteBar, historicalBar, multiBarHorizontal, pieChart,
+            scatter, lineFocus, scatterLine, lineBar, donutChart, sparkLine, paralell, multiChart, candlestick,
+            sunburst, ohcl, boxPlot, forceDirected
+         </#if>
+     </#list>) {
 
         var vm = this;
         vm.type = $stateParams.type;

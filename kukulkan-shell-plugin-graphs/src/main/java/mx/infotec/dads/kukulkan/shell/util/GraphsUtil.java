@@ -198,25 +198,31 @@ public class GraphsUtil {
     }
 
     private static void addJsonGraphs(Path projectPathPath, String graphType) {
-        String pathCharts = "/src/main/webapp/app/entities/d3/defaultCharts.json";
+        String pathCharts = projectPathPath.toString() + "/src/main/webapp/app/entities/d3/";
+        String pathFile = pathCharts + "defaultCharts.json";
+
         if (!graphType.equals("ALL")) {
             JsonParser parser = new JsonParser();
             JsonArray charArr = null;
             Gson gson = new Gson();
             try {
-                File f = new File(projectPathPath.toString() + pathCharts);
+                File f = new File(pathFile);
                 JsonObject chartsFile = null;
+                boolean existGraph = false;
                 if (f.exists()) {
-                    JsonElement element = parser.parse(new FileReader(projectPathPath.toString() + pathCharts));
+                    JsonElement element = parser.parse(new FileReader(pathFile));
                     chartsFile = element.getAsJsonObject();
                     charArr = chartsFile.getAsJsonArray("charts");
                     for (int i = 0; i < charArr.size(); i++) {
                         JsonObject data = charArr.get(i).getAsJsonObject();
-                        if (!data.get("id").getAsString().equals(graphType)) {
-                            String json = gson.toJson(jsonGraph(graphType));
-                            JsonObject obj = parser.parse(json).getAsJsonObject();
-                            charArr.add(obj);
+                        if (data.get("id").getAsString().equals(graphType)) {
+                                existGraph = true;
                         }
+                    }
+                    if(!existGraph){
+                        String json = gson.toJson(jsonGraph(graphType));
+                        JsonObject obj = parser.parse(json).getAsJsonObject();
+                        charArr.add(obj);
                     }
                 } else {
                     String jsonCharts = "{\n" +
@@ -229,8 +235,13 @@ public class GraphsUtil {
                     String json = gson.toJson(jsonGraph(graphType));
                     JsonObject obj = parser.parse(json).getAsJsonObject();
                     charArr.add(obj);
+
+                    File directory = new File(pathCharts);
+                    if (! directory.exists()){
+                        directory.mkdirs();
+                    }
                 }
-                FileWriter file = new FileWriter(projectPathPath.toString() + pathCharts);
+                FileWriter file = new FileWriter(pathFile);
                 Gson gsonPretty = new GsonBuilder().setPrettyPrinting().create();
                 String prettyJson = gsonPretty.toJson(chartsFile);
                 file.write(prettyJson);
