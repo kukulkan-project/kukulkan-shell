@@ -35,6 +35,7 @@ import org.springframework.shell.standard.ShellOption;
 
 import mx.infotec.dads.kukulkan.shell.domain.ShellCommand;
 import mx.infotec.dads.kukulkan.shell.services.CommandService;
+import mx.infotec.dads.kukulkan.shell.services.impl.CommandServiceImpl;
 import mx.infotec.dads.kukulkan.shell.util.TextFormatter;
 
 /**
@@ -54,7 +55,11 @@ public class MavenCommands {
 
     @ShellMethod("Stop a Process")
     public void stopProcess(@ShellOption(valueProvider = JavaProcessValueProvider.class) @NotNull String id) {
-        commandService.exec(new ShellCommand("kill", "-9", id));
+        if (CommandServiceImpl.isWindowsOS()) {
+            commandService.exec(new ShellCommand("TASKKILL", "/PID", id, "/F"));
+        } else {
+            commandService.exec(new ShellCommand("kill", "-9", id));
+        }
     }
 
     /**

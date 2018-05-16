@@ -25,7 +25,6 @@ package mx.infotec.dads.kukulkan.shell.commands.kukulkan;
 
 import static mx.infotec.dads.kukulkan.metamodel.util.DefaultValues.getDefaulProjectConfiguration;
 import static mx.infotec.dads.kukulkan.shell.commands.kukulkan.CommandHelper.createGeneratorContext;
-import static mx.infotec.dads.kukulkan.shell.commands.maven.MavenCommands.MVN_COMMAND;
 import static mx.infotec.dads.kukulkan.shell.commands.validation.UserInputValidation.validateParams;
 
 import java.io.File;
@@ -63,6 +62,7 @@ import mx.infotec.dads.kukulkan.shell.commands.valueprovided.KukulkanFilesProvid
 import mx.infotec.dads.kukulkan.shell.domain.Line;
 import mx.infotec.dads.kukulkan.shell.domain.ShellCommand;
 import mx.infotec.dads.kukulkan.shell.services.PrintService;
+import mx.infotec.dads.kukulkan.shell.services.impl.CommandServiceImpl;
 import mx.infotec.dads.kukulkan.shell.util.ProjectUtil;
 import mx.infotec.dads.kukulkan.shell.util.TextFormatter;
 
@@ -79,6 +79,8 @@ public class AppGeneration extends AbstractCommand {
      */
     private static final Logger LOGGER = LoggerFactory.getLogger(AppGeneration.class);
 
+    public static final String MVN_WRAPPER_COMMAND = "mvnw";
+
     @Autowired
     ThreadPoolTaskExecutor executor;
 
@@ -93,7 +95,7 @@ public class AppGeneration extends AbstractCommand {
 
     @Autowired
     private GitCommandsService gitCommandsService;
-    
+
     @Autowired
     private GitCommands gitCommands;
 
@@ -104,7 +106,8 @@ public class AppGeneration extends AbstractCommand {
      * Command Shell for Generate all the entities that come from a file with .3
      * extension
      *
-     * @param fileName the file
+     * @param fileName
+     *            the file
      */
     @ShellMethod("Generate all the entities that come from a file with .3k or .kukulkan extension")
     public void appGenerateCrud(@ShellOption(valueProvider = KukulkanFilesProvider.class) String fileName) {
@@ -117,10 +120,13 @@ public class AppGeneration extends AbstractCommand {
     /**
      * Command Shell that Generate a Project from an Archetype Catalog.
      *
-     * @param appName the app name
-     * @param packaging the packaging
-     * @param databaseType the database type DatabaseType.NO_SQL_MONGODB /
-     * DatabaseType.SQL_MYSQL
+     * @param appName
+     *            the app name
+     * @param packaging
+     *            the packaging
+     * @param databaseType
+     *            the database type DatabaseType.NO_SQL_MONGODB /
+     *            DatabaseType.SQL_MYSQL
      * @see DatabaseType
      */
     @ShellMethod("Generate a Project from an Archetype Catalog")
@@ -140,13 +146,14 @@ public class AppGeneration extends AbstractCommand {
 
             if (gitCommands.availabilityCheck().isAvailable()) {
                 boolean res;
-                
+
                 res = gitCommandsService.init(true);
-                
+
                 if (res) {
                     res = gitCommandsService.add(false, GitHelper.ADD_ALL_PARAM);
                     if (res) {
-                        res = gitCommandsService.commit("Firts version of project", "Kukulkan Team <suport@kukulkan.org.mx>");
+                        res = gitCommandsService.commit("Firts version of project",
+                                "Kukulkan Team <suport@kukulkan.org.mx>");
                         if (res) {
                             gitCommandsService.branchOrCheckout(GitHelper.DEVELOP_BRANCH);
                         }
@@ -163,12 +170,14 @@ public class AppGeneration extends AbstractCommand {
     /**
      * Configurate a front end application, It execute the command "mvn package
      * -Pprod -DskiptTests".
-     * @param type Config type
+     * 
+     * @param type
+     *            Config type
      */
     @ShellMethod("Configurate the project")
     public void appConfig(@ShellOption(defaultValue = "FRONT_END") ConfigurationType type) {
         if (type.equals(ConfigurationType.FRONT_END)) {
-            commandService.exec(new ShellCommand(MVN_COMMAND).addArg("package").addArg("-Pprod").addArg("-DskipTests"),
+            commandService.exec(new ShellCommand(getMavenWrapperCommand(), "package", "-Pprod", "-DskipTests"),
                     line -> {
                         printService.print(TextFormatter.formatLogText(line));
                         return Optional.ofNullable(new Line(line));
@@ -180,10 +189,11 @@ public class AppGeneration extends AbstractCommand {
 
     @ShellMethod("Run a Spring-Boot App")
     public void appRun() {
-        executor.execute(() -> commandService.exec(new ShellCommand(MVN_COMMAND).addArg("spring-boot:run"), line -> {
-            printService.print(TextFormatter.formatLogText(line));
-            return Optional.ofNullable(new Line(line));
-        }));
+        executor.execute(
+                () -> commandService.exec(new ShellCommand(getMavenWrapperCommand(), "spring-boot:run"), line -> {
+                    printService.print(TextFormatter.formatLogText(line));
+                    return Optional.ofNullable(new Line(line));
+                }));
     }
 
     /**
@@ -203,6 +213,13 @@ public class AppGeneration extends AbstractCommand {
     @ShellMethod("Show the current project configuration applied to the current context")
     public AttributedCharSequence testingCommand() {
         return new AttributedString("testing command");
+    }
+
+    public static String getMavenWrapperCommand() {
+        if (CommandServiceImpl.isWindowsOS()) {
+            return MVN_WRAPPER_COMMAND;
+        }
+        return "./" + MVN_WRAPPER_COMMAND;
     }
 
 }

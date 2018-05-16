@@ -228,7 +228,7 @@ public class CommandServiceImpl implements CommandService {
         }
     }
 
-    private static boolean isWindowsOS() {
+    public static boolean isWindowsOS() {
         return System.getProperty("os.name").startsWith("Windows");
     }
 
