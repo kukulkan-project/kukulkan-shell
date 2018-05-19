@@ -30,15 +30,11 @@ import org.jsoup.select.Elements;
 
 import java.io.*;
 import java.nio.file.Path;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 
 /**
  * GraphsUtil
- *
- *
  */
 public class GraphsUtil {
 
@@ -46,14 +42,12 @@ public class GraphsUtil {
 
     }
 
-    public static boolean editFiles (Path projectPathPath)
-    {
+    public static boolean editFiles(Path projectPathPath, String graphType) {
         Map<String, String> dependencies = new HashMap<>();
         dependencies.put("d3", "^3.4.4");
         dependencies.put("nvd3", "^1.7.1");
         dependencies.put("angular-nvd3", "1.0.9");
-        if (!GraphsUtil.addBowerDependencies(dependencies, projectPathPath))
-        {
+        if (!GraphsUtil.addBowerDependencies(dependencies, projectPathPath)) {
             System.out.println("The bower.json file was not found");
             return false;
         }
@@ -64,35 +58,31 @@ public class GraphsUtil {
                 "        \"dist/angular-nvd3.js\"\n" +
                 "      ]\n" +
                 "    }");
-        if (!GraphsUtil.addBowerOverrides(overrides, projectPathPath))
-        {
+        if (!GraphsUtil.addBowerOverrides(overrides, projectPathPath)) {
             System.out.println("The bower.json file was not found");
             return false;
         }
 
-        if (!GraphsUtil.addGraphsMenu(projectPathPath))
-        {
+        if (!GraphsUtil.addGraphsMenu(projectPathPath)) {
             System.out.println("The /src/main/webapp/app/layouts/navbar/navbar.html file was not found or it does not have the correct format");
             return false;
         }
-        if (!addModule("nvd3",  projectPathPath))
-        {
+        if (!addModule("nvd3", projectPathPath)) {
             System.out.println("The /src/main/webapp/app/app.module.js file was not found or it does not have the correct format");
         }
-        return  true;
+        addJsonGraphs(projectPathPath, graphType);
+        return true;
     }
 
-    public static boolean addBowerDependencies(Map<String,String> dependencies, Path projectPathPath)
-    {
+    private static boolean addBowerDependencies(Map<String, String> dependencies, Path projectPathPath) {
         boolean success = false;
         JsonParser parser = new JsonParser();
         try {
-            JsonElement element = parser.parse(new FileReader(projectPathPath.toString() + "/bower.json" ));
+            JsonElement element = parser.parse(new FileReader(projectPathPath.toString() + "/bower.json"));
             JsonObject bowerFile = element.getAsJsonObject();
             JsonObject depArr = bowerFile.getAsJsonObject("dependencies");
             for (Map.Entry<String, String> entry : dependencies.entrySet()) {
-                if (depArr.get(entry.getKey()) == null)
-                {
+                if (depArr.get(entry.getKey()) == null) {
                     depArr.addProperty(entry.getKey(), entry.getValue());
                 }
             }
@@ -103,25 +93,22 @@ public class GraphsUtil {
             file.flush();
             file.close();
             success = true;
-        }catch (IOException ex)
-        {
+        } catch (IOException ex) {
 
         }
 
         return success;
     }
 
-    public static boolean addBowerOverrides(Map<String,String> overrides, Path projectPathPath)
-    {
+    private static boolean addBowerOverrides(Map<String, String> overrides, Path projectPathPath) {
         boolean success = false;
         JsonParser parser = new JsonParser();
         try {
-            JsonElement element = parser.parse(new FileReader(projectPathPath.toString() + "/bower.json" ));
+            JsonElement element = parser.parse(new FileReader(projectPathPath.toString() + "/bower.json"));
             JsonObject bowerFile = element.getAsJsonObject();
             JsonObject overArr = bowerFile.getAsJsonObject("overrides");
             for (Map.Entry<String, String> entry : overrides.entrySet()) {
-                if (overArr.get(entry.getKey()) == null)
-                {
+                if (overArr.get(entry.getKey()) == null) {
                     JsonObject value = (new JsonParser()).parse(entry.getValue()).getAsJsonObject();
                     overArr.add(entry.getKey(), value);
                 }
@@ -133,16 +120,14 @@ public class GraphsUtil {
             file.flush();
             file.close();
             success = true;
-        }catch (IOException ex)
-        {
+        } catch (IOException ex) {
 
         }
 
         return success;
     }
 
-    public static boolean addGraphsMenu(Path projectPathPath)
-    {
+    private static boolean addGraphsMenu(Path projectPathPath) {
         boolean success = false;
         String menu = "<li id=\"graphs\" ng-class=\"{active: vm.$state.includes('admin')}\" uib-dropdown\n" +
                 "                    dropdown ng-switch-when=\"true\">\n" +
@@ -169,8 +154,7 @@ public class GraphsUtil {
 
             Elements idGraphs = doc.select("li#graphs");
 
-            if(idGraphs.isEmpty())
-            {
+            if (idGraphs.isEmpty()) {
                 Elements ul = doc.select("div.navbar-collapse>ul");
                 ul.first().append(menu);
 
@@ -181,30 +165,25 @@ public class GraphsUtil {
             }
             success = true;
 
-        }catch (IOException ex)
-        {
+        } catch (IOException ex) {
 
         }
         return success;
     }
 
-    public static boolean addModule(String module, Path projectPathPath)
-    {
+    private static boolean addModule(String module, Path projectPathPath) {
         boolean success = false;
-        try
-        {
-            File file = new File( projectPathPath.toString() + "/src/main/webapp/app/app.module.js");
+        try {
+            File file = new File(projectPathPath.toString() + "/src/main/webapp/app/app.module.js");
             BufferedReader reader = new BufferedReader(new FileReader(file));
             String line, oldText = "";
-            while((line = reader.readLine()) != null)
-            {
+            while ((line = reader.readLine()) != null) {
                 oldText += line + "\r\n";
             }
             reader.close();
 
-            if(!oldText.contains(module))
-            {
-                String replacedText  = oldText.replaceAll("'angular-loading-bar'", "'angular-loading-bar',\r\n'" + module +"'");
+            if (!oldText.contains(module)) {
+                String replacedText = oldText.replaceAll("'angular-loading-bar'", "'angular-loading-bar',\r\n'" + module + "'");
 
                 FileWriter writer = new FileWriter(projectPathPath.toString() + "/src/main/webapp/app/app.module.js");
                 writer.write(replacedText);
@@ -212,11 +191,204 @@ public class GraphsUtil {
                 writer.close();
             }
             success = true;
-        }
-        catch (IOException ioe)
-        {
+        } catch (IOException ioe) {
             ioe.printStackTrace();
         }
         return success;
+    }
+
+    private static void addJsonGraphs(Path projectPathPath, String graphType) {
+        String pathCharts = projectPathPath.toString() + "/src/main/webapp/app/entities/d3/";
+        String pathFile = pathCharts + "defaultCharts.json";
+
+        if (!graphType.equals("ALL")) {
+            JsonParser parser = new JsonParser();
+            JsonArray charArr = null;
+            Gson gson = new Gson();
+            try {
+                File f = new File(pathFile);
+                JsonObject chartsFile = null;
+                boolean existGraph = false;
+                if (f.exists()) {
+                    JsonElement element = parser.parse(new FileReader(pathFile));
+                    chartsFile = element.getAsJsonObject();
+                    charArr = chartsFile.getAsJsonArray("charts");
+                    for (int i = 0; i < charArr.size(); i++) {
+                        JsonObject data = charArr.get(i).getAsJsonObject();
+                        if (data.get("id").getAsString().equals(graphType)) {
+                                existGraph = true;
+                        }
+                    }
+                    if(!existGraph){
+                        String json = gson.toJson(jsonGraph(graphType));
+                        JsonObject obj = parser.parse(json).getAsJsonObject();
+                        charArr.add(obj);
+                    }
+                } else {
+                    String jsonCharts = "{\n" +
+                            "    \"charts\": [\n" +
+                            "        \n" +
+                            "    ]\n" +
+                            "}\n";
+                    chartsFile = parser.parse(jsonCharts).getAsJsonObject();
+                    charArr = chartsFile.getAsJsonArray("charts");
+                    String json = gson.toJson(jsonGraph(graphType));
+                    JsonObject obj = parser.parse(json).getAsJsonObject();
+                    charArr.add(obj);
+
+                    File directory = new File(pathCharts);
+                    if (! directory.exists()){
+                        directory.mkdirs();
+                    }
+                }
+                FileWriter file = new FileWriter(pathFile);
+                Gson gsonPretty = new GsonBuilder().setPrettyPrinting().create();
+                String prettyJson = gsonPretty.toJson(chartsFile);
+                file.write(prettyJson);
+                file.flush();
+                file.close();
+
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
+    }
+
+    public static Map<String, String> jsonGraph(String graphType) {
+        Map<String, String> graphs = new HashMap<>();
+        switch (graphType) {
+            case "LINE_CHART":
+                graphs.put("id", "LINE_CHART");
+                graphs.put("title", "Line Chart");
+                graphs.put("href", "lineChart");
+                graphs.put("src", "content/images/graficasD3/LINE_CHART.png");
+                break;
+            case "BOX_PLOT":
+                graphs.put("id", "BOX_PLOT");
+                graphs.put("title", "Box Plot Chart");
+                graphs.put("href", "boxPlot");
+                graphs.put("src", "content/images/graficasD3/BOX_PLOT.png");
+                break;
+            case "BULLET":
+                graphs.put("id", "BULLET");
+                graphs.put("title", "Bullet Chart");
+                graphs.put("href", "bullet");
+                graphs.put("src", "content/images/graficasD3/BULLET.png");
+                break;
+            case "CANDLESTICK":
+                graphs.put("id", "CANDLESTICK");
+                graphs.put("title", "Candlestick Chart");
+                graphs.put("href", "candlestick");
+                graphs.put("src", "content/images/graficasD3/CANDLESTICK.png");
+                break;
+            case "CUMULATIVE_LINE":
+                graphs.put("id", "CUMULATIVE_LINE");
+                graphs.put("title", "Cumulative Line Chart");
+                graphs.put("href", "cumulativeLine");
+                graphs.put("src", "content/images/graficasD3/CUMULATIVE_LINE.png");
+                break;
+            case "DISCRETE_BAR":
+                graphs.put("id", "DISCRETE_BAR");
+                graphs.put("title", "DiscreteBar Chart");
+                graphs.put("href", "discreteBar");
+                graphs.put("src", "content/images/graficasD3/DISCRETE_BAR.png");
+                break;
+            case "DONUT_CHART":
+                graphs.put("id", "DONUT_CHART");
+                graphs.put("title", "Donut Chart");
+                graphs.put("href", "donutChart");
+                graphs.put("src", "content/images/graficasD3/DONUT_CHART.png");
+                break;
+            case "FORCE_DIRECTED":
+                graphs.put("id", "FORCE_DIRECTED");
+                graphs.put("title", "Force Directed Graph");
+                graphs.put("href", "forceDirected");
+                graphs.put("src", "content/images/graficasD3/FORCE_DIRECTED.png");
+                break;
+            case "HISTORICAL_BAR":
+                graphs.put("id", "HISTORICAL_BAR");
+                graphs.put("title", "HistoricalBar Chart");
+                graphs.put("href", "historicalBar");
+                graphs.put("src", "content/images/graficasD3/HISTORICAL_BAR.png");
+                break;
+            case "LINE_FOCUS":
+                graphs.put("id", "LINE_FOCUS");
+                graphs.put("title", "Line with Focus Chart");
+                graphs.put("href", "lineFocus");
+                graphs.put("src", "content/images/graficasD3/LINE_FOCUS.png");
+                break;
+            case "MULTIBAR_HORIZONTAL":
+                graphs.put("id", "MULTIBAR_HORIZONTAL");
+                graphs.put("title", "MultiBar Horizontal Chart");
+                graphs.put("href", "multiBarHorizontal");
+                graphs.put("src", "content/images/graficasD3/MULTIBAR_HORIZONTAL.png");
+                break;
+            case "MULTIBAR":
+                graphs.put("id", "MULTIBAR");
+                graphs.put("title", "MultiBar Chart");
+                graphs.put("href", "multiBar");
+                graphs.put("src", "content/images/graficasD3/MULTIBAR.png");
+                break;
+            case "MULTI_CHART":
+                graphs.put("id", "MULTI_CHART");
+                graphs.put("title", "Multi Chart");
+                graphs.put("href", "multiChart");
+                graphs.put("src", "content/images/graficasD3/MULTI_CHART.png");
+                break;
+            case "OHCL":
+                graphs.put("id", "OHCL");
+                graphs.put("title", "OHLC Chart");
+                graphs.put("href", "ohcl");
+                graphs.put("src", "content/images/graficasD3/OHCL.png");
+                break;
+            case "PARALELL":
+                graphs.put("id", "PARALELL");
+                graphs.put("title", "Paralell Cordinates");
+                graphs.put("href", "paralell");
+                graphs.put("src", "content/images/graficasD3/PARALELL.png");
+                break;
+            case "PIE_CHART":
+                graphs.put("id", "PIE_CHART");
+                graphs.put("title", "Pie Chart");
+                graphs.put("href", "pieChart");
+                graphs.put("src", "content/images/graficasD3/PIE_CHART.png");
+                break;
+            case "SCATTER_LINE":
+                graphs.put("id", "SCATTER_LINE");
+                graphs.put("title", "Scatter + Line Chart");
+                graphs.put("href", "scatterLine");
+                graphs.put("src", "content/images/graficasD3/SCATTER_LINE.png");
+                break;
+            case "SCATTER":
+                graphs.put("id", "SCATTER");
+                graphs.put("title", "Scatter Chart");
+                graphs.put("href", "scatter");
+                graphs.put("src", "content/images/graficasD3/SCATTER.png");
+                break;
+            case "SPARK_LINE":
+                graphs.put("id", "SPARK_LINE");
+                graphs.put("title", "SparkLine Chart");
+                graphs.put("href", "sparkLine");
+                graphs.put("src", "content/images/graficasD3/SPARK_LINE.png");
+                break;
+            case "STACKED_AREA":
+                graphs.put("id", "STACKED_AREA");
+                graphs.put("title", "Stacked Area Chart");
+                graphs.put("href", "stackedArea");
+                graphs.put("src", "content/images/graficasD3/STACKED_AREA.png");
+                break;
+            case "SUNBURST":
+                graphs.put("id", "SUNBURST");
+                graphs.put("title", "Sunburst Chart");
+                graphs.put("href", "sunburst");
+                graphs.put("src", "content/images/graficasD3/SUNBURST.png");
+                break;
+            default:
+                break;
+        }
+        return graphs;
     }
 }

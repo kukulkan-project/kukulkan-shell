@@ -1,5 +1,5 @@
 /*
- *  
+ *
  * The MIT License (MIT)
  * Copyright (c) 2018
  *
@@ -38,8 +38,8 @@ import org.springframework.shell.standard.ShellOption;
 import mx.infotec.dads.kukulkan.metamodel.context.GeneratorContext;
 import mx.infotec.dads.kukulkan.shell.generator.GraphsContext;
 import mx.infotec.dads.kukulkan.shell.generator.GraphsGenerator;
+import mx.infotec.dads.kukulkan.shell.generator.GraphType;
 
-import java.util.ArrayList;
 import java.util.Optional;
 
 
@@ -65,18 +65,26 @@ public class GraphsCommand extends AbstractCommand {
      * @return List<AttributedString>
      */
     @ShellMethod("Create Graphs plugin ")
-    public void graphsPlugin(@ShellOption(optOut = true) @Valid GraphsArgs params) {
-          LOGGER.info("Creating Graphs...");
+    public void graphsPlugin(@ShellOption(optOut = true) @Valid GraphsArgs params,
+                             GraphType graphType) {
+        LOGGER.info("Creating Graphs...");
 
         GraphsContext graphsContext = MapperG.toContext(params);
         graphsContext.setOutputDir(navigator.getCurrentPath());
+        graphsContext.setGraphType(graphType);
 
-        if(ProjectUtil.readKukulkanFile(graphsContext.getOutputDir()).isPresent())
+        Optional<ProjectConfiguration> project = ProjectUtil.readKukulkanFile(graphsContext.getOutputDir());
+        if(!project.isPresent())
         {
-            GeneratorContext genCtx = new GeneratorContext();
-            genCtx.put(GraphsContext.class, graphsContext);
-            generator.process(genCtx);
+            LOGGER.error("This folder does not contain a kukulkan project");
+            System.out.println("This folder does not contain a kukulkan project");
+            return;
         }
+
+        GeneratorContext genCtx = new GeneratorContext();
+        genCtx.put(GraphsContext.class, graphsContext);
+        generator.process(genCtx);
+
 
     }
 }

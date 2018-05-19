@@ -1,11 +1,9 @@
-package mx.infotec.dads.kukulkan.shell.commands;
+package mx.infotec.dads.kukulkan.shell.generator;
 
 /**
- * Configuration Type is used for the kukulkan Command Line Interface to provide
- * an option for the main layers in the project
- * Indicates a configuration of the chart
+ * Graphs
  * 
- * @author
+ * @author 
  *
  */
 public enum GraphType {
@@ -135,7 +133,6 @@ public enum GraphType {
     public String toString(){
         return brandname;
     }
-
 
 }
 

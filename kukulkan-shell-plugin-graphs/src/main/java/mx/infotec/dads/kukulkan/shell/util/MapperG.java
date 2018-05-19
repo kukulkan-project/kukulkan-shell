@@ -1,6 +1,5 @@
 package mx.infotec.dads.kukulkan.shell.util;
 
-import mx.infotec.dads.kukulkan.shell.commands.GraphType;
 import mx.infotec.dads.kukulkan.shell.commands.GraphsArgs;
 import mx.infotec.dads.kukulkan.shell.generator.GraphsContext;
 
@@ -16,7 +15,6 @@ public class MapperG {
     }
 
     public static GraphsContext toContext(GraphsArgs params) {
-        GraphsContext context = new GraphsContext();
-        return context;
+        return new GraphsContext();
     }
 }
