@@ -56,7 +56,7 @@
         <kukulkan-grammar.version>0.2.0-SNAPSHOT</kukulkan-grammar.version>
         <kukulkan-metamodel.version>0.2.0-SNAPSHOT</kukulkan-metamodel.version>
         <kukulkan-engine.version>0.2.0-SNAPSHOT</kukulkan-engine.version>
-        <kukulkan-generator-angularjs.version>0.2.0-SNAPSHOT</kukulkan-generator-angularjs.version>
+        <kukulkan-generator-angularjs.version>0.3.0-SNAPSHOT</kukulkan-generator-angularjs.version>
         <!-- Kukulkan Shell Modules dependencies -->
     </properties>
 
