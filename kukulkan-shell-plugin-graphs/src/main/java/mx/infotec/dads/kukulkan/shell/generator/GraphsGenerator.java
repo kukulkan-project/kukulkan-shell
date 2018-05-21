@@ -3,22 +3,26 @@ package mx.infotec.dads.kukulkan.shell.generator;
 import static mx.infotec.dads.kukulkan.metamodel.util.Validator.requiredNotEmpty;
 
 import java.nio.file.Path;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.node.ArrayNode;
-import com.fasterxml.jackson.databind.node.ObjectNode;
-import mx.infotec.dads.kukulkan.metamodel.foundation.Plugin;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ArrayNode;
+import com.fasterxml.jackson.databind.node.ObjectNode;
+
+import mx.infotec.dads.kukulkan.engine.service.FileUtil;
 import mx.infotec.dads.kukulkan.engine.templating.service.TemplateService;
 import mx.infotec.dads.kukulkan.metamodel.annotation.GeneratorComponent;
 import mx.infotec.dads.kukulkan.metamodel.context.GeneratorContext;
+import mx.infotec.dads.kukulkan.metamodel.foundation.Plugin;
 import mx.infotec.dads.kukulkan.metamodel.foundation.ProjectConfiguration;
-import mx.infotec.dads.kukulkan.metamodel.util.FileUtil;
 import mx.infotec.dads.kukulkan.metamodel.generator.Generator;
 import mx.infotec.dads.kukulkan.metamodel.template.TemplateInfo;
 import mx.infotec.dads.kukulkan.metamodel.util.PathProcessor;
