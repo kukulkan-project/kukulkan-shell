@@ -85,7 +85,7 @@ public class GraphsGenerator implements Generator {
             plugin.setData(data);
         }
         ArrayNode installedGraphs = (ArrayNode) data.get("Graphs");
-        List<String> lista = new ArrayList<String>();
+        List<String> lista = new ArrayList<>();
 
         for (int i = 0; i< installedGraphs.size(); i ++)
         {
@@ -126,10 +126,6 @@ public class GraphsGenerator implements Generator {
         ProjectUtil.writeKukulkanFile(project.get());
     }
 
-    /**
-     * @param graphsContext
-     * @param template
-     */
     private Path createOutputPath(GraphsContext graphsContext, TemplateInfo template) {
         return PathProcessor.forPath(template.getFilePath()).joinBefore(graphsContext.getId())
                 .replaceRegExp(".ftl", "").getAbsolutePath(graphsContext.getOutputDir().getParent());

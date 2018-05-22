@@ -61,8 +61,6 @@ public class GraphsCommand extends AbstractCommand {
     /**
      * Command Shell that show the current project configuration applied to the
      * current context.
-     *
-     * @return List<AttributedString>
      */
     @ShellMethod("Create Graphs plugin ")
     public void graphsPlugin(@ShellOption(optOut = true) @Valid GraphsArgs params,

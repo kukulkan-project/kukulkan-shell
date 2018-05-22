@@ -37,7 +37,7 @@ import com.beust.jcommander.Parameter;
 public class GraphsArgs implements Serializable {
 
     private static final long serialVersionUID = 1L;
-    
+
     @Parameter
     private List<String> parameters = new ArrayList<>();
 

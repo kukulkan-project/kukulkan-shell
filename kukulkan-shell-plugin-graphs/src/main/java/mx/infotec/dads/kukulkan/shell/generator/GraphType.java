@@ -3,7 +3,7 @@ package mx.infotec.dads.kukulkan.shell.generator;
 /**
  * Graphs
  * 
- * @author 
+ * @author Clara Fragoso
  *
  */
 public enum GraphType {
@@ -124,7 +124,7 @@ public enum GraphType {
     ALL("ALL");
 
 
-    public String brandname;
+    public final String brandname;
     GraphType(String brand) {
         this.brandname = brand;
     }
