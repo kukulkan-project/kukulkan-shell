@@ -57,6 +57,7 @@ import mx.infotec.dads.kukulkan.shell.commands.AbstractCommand;
 import mx.infotec.dads.kukulkan.shell.commands.git.GitCommands;
 import mx.infotec.dads.kukulkan.shell.commands.git.GitHelper;
 import mx.infotec.dads.kukulkan.shell.commands.git.service.GitCommandsService;
+import mx.infotec.dads.kukulkan.shell.commands.navigation.DirectoryValueProvider;
 import mx.infotec.dads.kukulkan.shell.commands.navigation.FileNavigationCommands;
 import mx.infotec.dads.kukulkan.shell.commands.valueprovided.KukulkanFilesProvider;
 import mx.infotec.dads.kukulkan.shell.domain.Line;
@@ -110,7 +111,8 @@ public class AppGeneration extends AbstractCommand {
      *            the file
      */
     @ShellMethod("Generate all the entities that come from a file with .3k or .kukulkan extension")
-    public void appGenerateCrud(@ShellOption(valueProvider = KukulkanFilesProvider.class) String fileName) {
+    public void appGenerateCrud(@ShellOption(valueProvider = KukulkanFilesProvider.class) String fileName,
+            @ShellOption(valueProvider = LayersValueProvider.class, defaultValue = "@all") String exludeLayers) {
         File file = Paths.get(navigator.getCurrentPath().toString(), fileName).toFile();
         GeneratorContext genCtx = createGeneratorContext(shellContext.getConfiguration(), file, inflectorService);
         engineGenerator.process(genCtx);
