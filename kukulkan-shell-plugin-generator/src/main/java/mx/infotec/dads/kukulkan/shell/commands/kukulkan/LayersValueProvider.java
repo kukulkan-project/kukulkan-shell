@@ -23,76 +23,29 @@
  */
 package mx.infotec.dads.kukulkan.shell.commands.kukulkan;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.MethodParameter;
-import org.springframework.shell.CompletionContext;
-import org.springframework.shell.CompletionProposal;
-import org.springframework.shell.standard.ValueProviderSupport;
 import org.springframework.stereotype.Component;
 
-import mx.infotec.dads.kukulkan.shell.component.Navigator;
-import mx.infotec.dads.kukulkan.shell.domain.ShellCompletionProposal;
+import mx.infotec.dads.kukulkan.shell.input.AbstractListValueProvider;
 
 /**
- * The Class GitValueProvider.
+ * LayersValueProvider for excluded layers
+ * 
+ * @author Daniel Cortes Pichardo
+ *
  */
 @Component
-public class LayersValueProvider extends ValueProviderSupport {
-
-    /** The nav. */
-    @Autowired
-    private Navigator nav;
-    List<CompletionProposal> kd = new ArrayList<>();
-    List<String> validInputs = Arrays.asList("angular-js", "spring-service", "spring-repository");
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.springframework.shell.standard.ValueProvider#complete(org.
-     * springframework.core.MethodParameter,
-     * org.springframework.shell.CompletionContext, java.lang.String[])
-     */
+public class LayersValueProvider extends AbstractListValueProvider {
     @Override
-    public List<CompletionProposal> complete(MethodParameter parameter, CompletionContext completionContext,
-            String[] hints) {
-        String input = completionContext.currentWord();
-        if (input == null) {
-            return defaultValues();
-        } else {
-            return encodedValues(input);
-        }
+    public List<String> getInputValues() {
+        return Arrays.asList("angular-js", "spring-service", "spring-repository");
     }
-
-    private List<CompletionProposal> encodedValues(String input) {
-        List<CompletionProposal> completitionList = new ArrayList<>();
-        completitionList.add(new ShellCompletionProposal("angular-js,", "angular-js"));
-        completitionList.add(new ShellCompletionProposal("spring-service,", "spring-service"));
-        completitionList.add(new ShellCompletionProposal("spring-repository,", "spring-repository"));
-        List<String> layers = Arrays.asList(input.split(","));
-        for (String layer : layers) {
-            completitionList.remove(new CompletionProposal(layer));
-        }
-        return completitionList;
-    }
-
-    private List<CompletionProposal> defaultValues() {
-        List<CompletionProposal> completitionList = new ArrayList<>();
-        completitionList.add(new ShellCompletionProposal("angular-js,", "angular-js"));
-        completitionList.add(new ShellCompletionProposal("spring-service,", "spring-service"));
-        completitionList.add(new ShellCompletionProposal("spring-repository,", "spring-repository"));
-        return completitionList;
-    }
-
-    private boolean validateInput(List<String> inputs, List<String> layers) {
-        for (String layer : layers) {
-            if (!inputs.contains(layer)) {
-                return false;
-            }
-        }
-        return true;
+    
+    public static void main(String[] args) {
+        String data = ",data,kdkd,kdkdkf";
+       System.out.println(Arrays.toString(data.split(",")));
+        
     }
 }
