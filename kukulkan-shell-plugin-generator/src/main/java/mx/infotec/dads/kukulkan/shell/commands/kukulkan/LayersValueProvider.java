@@ -42,10 +42,4 @@ public class LayersValueProvider extends AbstractListValueProvider {
     public List<String> getInputValues() {
         return Arrays.asList("angular-js", "spring-service", "spring-repository");
     }
-    
-    public static void main(String[] args) {
-        String data = ",data,kdkd,kdkdkf";
-       System.out.println(Arrays.toString(data.split(",")));
-        
-    }
 }
