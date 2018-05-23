@@ -42,13 +42,14 @@ import mx.infotec.dads.kukulkan.shell.domain.ShellCompletionProposal;
  */
 public abstract class AbstractListValueProvider extends ValueProviderSupport {
 
+    private static final String COMMA = ",";
     private List<String> inputValues = getInputValues();
 
     @Override
     public List<CompletionProposal> complete(MethodParameter parameter, CompletionContext completionContext,
             String[] hints) {
         String input = completionContext.currentWord();
-        if (input == null || input.isEmpty() || (input.lastIndexOf(",") == -1)) {
+        if (input == null || input.isEmpty() || (input.lastIndexOf(COMMA) == -1)) {
             return defaultValues();
         } else {
             return encodedValues(input);
@@ -56,8 +57,8 @@ public abstract class AbstractListValueProvider extends ValueProviderSupport {
     }
 
     private List<CompletionProposal> encodedValues(String input) {
-        String substring = input.substring(0, input.lastIndexOf(","));
-        List<String> layers = Arrays.asList(substring.split(","));
+        String substring = input.substring(0, input.lastIndexOf(COMMA));
+        List<String> layers = Arrays.asList(substring.split(COMMA));
         List<String> excludedValues = createExcludedValuesList(inputValues, layers);
         return createCompletitionList(excludedValues, layers);
     }
@@ -65,13 +66,13 @@ public abstract class AbstractListValueProvider extends ValueProviderSupport {
     private List<CompletionProposal> createCompletitionList(List<String> excludedValues, List<String> layers) {
         StringBuilder sb = new StringBuilder();
         for (String layer : layers) {
-            sb.append(layer).append(",");
+            sb.append(layer).append(COMMA);
         }
         String formatedString = sb.toString();
         List<CompletionProposal> cp = new ArrayList<>();
 
         for (String value : excludedValues) {
-            cp.add(new ShellCompletionProposal(formatedString + value + ",", value));
+            cp.add(new ShellCompletionProposal(formatedString + value + COMMA, value));
         }
         return cp;
     }
@@ -89,7 +90,7 @@ public abstract class AbstractListValueProvider extends ValueProviderSupport {
     private List<CompletionProposal> defaultValues() {
         List<CompletionProposal> completitionList = new ArrayList<>();
         for (String input : inputValues) {
-            completitionList.add(new ShellCompletionProposal(input + ",", input));
+            completitionList.add(new ShellCompletionProposal(input + COMMA, input));
         }
         return completitionList;
     }
