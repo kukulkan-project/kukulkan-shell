@@ -28,9 +28,14 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.select.Elements;
 
-import java.io.*;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.FileReader;
+import java.io.IOException;
+import java.io.BufferedReader;
 import java.nio.file.Path;
-import java.util.*;
+import java.util.Map;
+import java.util.HashMap;
 
 
 /**
@@ -94,7 +99,7 @@ public class GraphsUtil {
             file.close();
             success = true;
         } catch (IOException ex) {
-
+            ex.printStackTrace();
         }
 
         return success;
@@ -121,7 +126,7 @@ public class GraphsUtil {
             file.close();
             success = true;
         } catch (IOException ex) {
-
+            ex.printStackTrace();
         }
 
         return success;
@@ -166,7 +171,7 @@ public class GraphsUtil {
             success = true;
 
         } catch (IOException ex) {
-
+            ex.printStackTrace();
         }
         return success;
     }
@@ -203,11 +208,11 @@ public class GraphsUtil {
 
         if (!graphType.equals("ALL")) {
             JsonParser parser = new JsonParser();
-            JsonArray charArr = null;
+            JsonArray charArr;
             Gson gson = new Gson();
             try {
                 File f = new File(pathFile);
-                JsonObject chartsFile = null;
+                JsonObject chartsFile;
                 boolean existGraph = false;
                 if (f.exists()) {
                     JsonElement element = parser.parse(new FileReader(pathFile));
@@ -248,8 +253,6 @@ public class GraphsUtil {
                 file.flush();
                 file.close();
 
-            } catch (FileNotFoundException e) {
-                e.printStackTrace();
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -257,7 +260,7 @@ public class GraphsUtil {
 
     }
 
-    public static Map<String, String> jsonGraph(String graphType) {
+    private static Map<String, String> jsonGraph(String graphType) {
         Map<String, String> graphs = new HashMap<>();
         switch (graphType) {
             case "LINE_CHART":

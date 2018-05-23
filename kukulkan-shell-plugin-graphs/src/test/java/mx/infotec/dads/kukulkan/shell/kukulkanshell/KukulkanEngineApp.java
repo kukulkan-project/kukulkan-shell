@@ -32,17 +32,4 @@ public class KukulkanEngineApp {
     public void initApplication() {
 
     }
-
-    /**
-     * Main method, used to run the application.
-     *
-     * @param args
-     *            the command line arguments
-     * @throws UnknownHostException
-     *             if the local host name could not be resolved into an address
-     */
-    // public static void main(String[] args) throws UnknownHostException {
-    // SpringApplication app = new SpringApplication(MetaModelApp.class);
-    // }
-
 }

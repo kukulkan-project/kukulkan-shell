@@ -36,7 +36,7 @@ import mx.infotec.dads.kukulkan.shell.generator.GraphType;
 public class GraphsTemplateFactory {
 
 
-    public static final String GRAPHS_TEMPLATE = "archetypes" + File.separator + "graphs";
+    private static final String GRAPHS_TEMPLATE = "archetypes" + File.separator + "graphs";
 
     /**
      * Instantiates a new template factory.
