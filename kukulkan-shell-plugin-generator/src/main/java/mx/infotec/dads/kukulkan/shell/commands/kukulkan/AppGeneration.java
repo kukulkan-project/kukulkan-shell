@@ -24,6 +24,8 @@
 package mx.infotec.dads.kukulkan.shell.commands.kukulkan;
 
 import static mx.infotec.dads.kukulkan.metamodel.util.DefaultValues.getDefaulProjectConfiguration;
+import static mx.infotec.dads.kukulkan.shell.commands.kukulkan.CommandHelper.LAYERS_OPTION_DEFAULT_VALUE;
+import static mx.infotec.dads.kukulkan.shell.commands.kukulkan.CommandHelper.computeExcludedLayers;
 import static mx.infotec.dads.kukulkan.shell.commands.kukulkan.CommandHelper.createGeneratorContext;
 import static mx.infotec.dads.kukulkan.shell.commands.validation.UserInputValidation.validateParams;
 
@@ -112,8 +114,9 @@ public class AppGeneration extends AbstractCommand {
      */
     @ShellMethod("Generate all the entities that come from a file with .3k or .kukulkan extension")
     public void appGenerateCrud(@ShellOption(valueProvider = KukulkanFilesProvider.class) String fileName,
-            @ShellOption(valueProvider = LayersValueProvider.class, defaultValue = "@all") String exludeLayers) {
+            @ShellOption(valueProvider = LayersValueProvider.class, defaultValue = LAYERS_OPTION_DEFAULT_VALUE) String excludeLayers) {
         File file = Paths.get(navigator.getCurrentPath().toString(), fileName).toFile();
+        computeExcludedLayers(shellContext, excludeLayers);
         GeneratorContext genCtx = createGeneratorContext(shellContext.getConfiguration(), file, inflectorService);
         engineGenerator.process(genCtx);
         FileUtil.saveToFile(genCtx);

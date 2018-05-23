@@ -25,12 +25,11 @@ package mx.infotec.dads.kukulkan.shell.commands.kukulkan;
 
 import java.io.File;
 import java.nio.file.Path;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import mx.infotec.dads.kukulkan.engine.service.InflectorService;
 import mx.infotec.dads.kukulkan.engine.translator.dsl.GrammarMapping;
@@ -54,8 +53,7 @@ import mx.infotec.dads.kukulkan.shell.util.GeneratorException;
  */
 public class CommandHelper {
 
-    /** The Constant LOGGER. */
-    private static final Logger LOGGER = LoggerFactory.getLogger(CommandHelper.class);
+    public static final String LAYERS_OPTION_DEFAULT_VALUE = "@all";
 
     /**
      * Instantiates a new command helper.
@@ -132,6 +130,28 @@ public class CommandHelper {
             return new GeneratorContext(ProjectConfiguration.class, shellContext.getConfiguration().get());
         } else {
             throw new GeneratorException("The project configuration is not present");
+        }
+    }
+
+    public static void computeExcludedLayers(KukulkanShellContext shellContext, String fileName) {
+        final List<String> toExcludeList = getExcludedList(fileName);
+        shellContext.getConfiguration().ifPresent(config -> {
+            List<String> currentLayers = config.getLayers();
+            List<String> toProcessList = new ArrayList<>();
+            for (String layer : currentLayers) {
+                if (!toExcludeList.contains(layer)) {
+                    toProcessList.add(layer);
+                }
+            }
+            config.setLayersToProcess(toProcessList);
+        });
+    }
+
+    private static List<String> getExcludedList(String fileName) {
+        if (!LAYERS_OPTION_DEFAULT_VALUE.equals(fileName)) {
+            return Arrays.asList(fileName.split(","));
+        } else {
+            return new ArrayList<>();
         }
     }
 }
