@@ -34,27 +34,24 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.io.BufferedReader;
 import java.nio.file.Path;
+import java.util.List;
 import java.util.Map;
 import java.util.HashMap;
-
 
 /**
  * GraphsUtil
  */
 public class GraphsUtil {
 
-    private GraphsUtil() {
+    private GraphsUtil() { }
 
-    }
-
-    public static boolean editFiles(Path projectPathPath, String graphType) {
+    public static void editFiles(Path projectPathPath, List<String> graphs) {
         Map<String, String> dependencies = new HashMap<>();
         dependencies.put("d3", "^3.4.4");
         dependencies.put("nvd3", "^1.7.1");
         dependencies.put("angular-nvd3", "1.0.9");
         if (!GraphsUtil.addBowerDependencies(dependencies, projectPathPath)) {
             System.out.println("The bower.json file was not found");
-            return false;
         }
 
         Map<String, String> overrides = new HashMap<>();
@@ -65,18 +62,15 @@ public class GraphsUtil {
                 "    }");
         if (!GraphsUtil.addBowerOverrides(overrides, projectPathPath)) {
             System.out.println("The bower.json file was not found");
-            return false;
         }
 
         if (!GraphsUtil.addGraphsMenu(projectPathPath)) {
             System.out.println("The /src/main/webapp/app/layouts/navbar/navbar.html file was not found or it does not have the correct format");
-            return false;
         }
         if (!addModule("nvd3", projectPathPath)) {
             System.out.println("The /src/main/webapp/app/app.module.js file was not found or it does not have the correct format");
         }
-        addJsonGraphs(projectPathPath, graphType);
-        return true;
+        addJsonGraphs(projectPathPath, graphs);
     }
 
     private static boolean addBowerDependencies(Map<String, String> dependencies, Path projectPathPath) {
@@ -127,6 +121,7 @@ public class GraphsUtil {
             success = true;
         } catch (IOException ex) {
             ex.printStackTrace();
+            System.out.println("The bower.json file was not found");
         }
 
         return success;
@@ -202,30 +197,24 @@ public class GraphsUtil {
         return success;
     }
 
-    private static void addJsonGraphs(Path projectPathPath, String graphType) {
+    private static void addJsonGraphs(Path projectPathPath, List<String> graphsList) {
         String pathCharts = projectPathPath.toString() + "/src/main/webapp/app/entities/d3/";
         String pathFile = pathCharts + "defaultCharts.json";
 
-        if (!graphType.equals("ALL")) {
+        if (!graphsList.contains("ALL")) {
             JsonParser parser = new JsonParser();
             JsonArray charArr;
             Gson gson = new Gson();
             try {
                 File f = new File(pathFile);
                 JsonObject chartsFile;
-                boolean existGraph = false;
+
                 if (f.exists()) {
                     JsonElement element = parser.parse(new FileReader(pathFile));
                     chartsFile = element.getAsJsonObject();
                     charArr = chartsFile.getAsJsonArray("charts");
-                    for (int i = 0; i < charArr.size(); i++) {
-                        JsonObject data = charArr.get(i).getAsJsonObject();
-                        if (data.get("id").getAsString().equals(graphType)) {
-                                existGraph = true;
-                        }
-                    }
-                    if(!existGraph){
-                        String json = gson.toJson(jsonGraph(graphType));
+                    for (String graph : graphsList) {
+                        String json = gson.toJson(jsonGraph(graph));
                         JsonObject obj = parser.parse(json).getAsJsonObject();
                         charArr.add(obj);
                     }
@@ -237,12 +226,14 @@ public class GraphsUtil {
                             "}\n";
                     chartsFile = parser.parse(jsonCharts).getAsJsonObject();
                     charArr = chartsFile.getAsJsonArray("charts");
-                    String json = gson.toJson(jsonGraph(graphType));
-                    JsonObject obj = parser.parse(json).getAsJsonObject();
-                    charArr.add(obj);
+                    for (String graph : graphsList) {
+                        String json = gson.toJson(jsonGraph(graph));
+                        JsonObject obj = parser.parse(json).getAsJsonObject();
+                        charArr.add(obj);
+                    }
 
                     File directory = new File(pathCharts);
-                    if (! directory.exists()){
+                    if (!directory.exists()) {
                         directory.mkdirs();
                     }
                 }
@@ -260,9 +251,10 @@ public class GraphsUtil {
 
     }
 
-    private static Map<String, String> jsonGraph(String graphType) {
-        Map<String, String> graphs = new HashMap<>();
-        switch (graphType) {
+    private static Map<String, Object> jsonGraph(String graph) {
+        Map<String, Object> graphs = new HashMap<>();
+
+        switch (graph) {
             case "LINE_CHART":
                 graphs.put("id", "LINE_CHART");
                 graphs.put("title", "Line Chart");
@@ -388,8 +380,6 @@ public class GraphsUtil {
                 graphs.put("title", "Sunburst Chart");
                 graphs.put("href", "sunburst");
                 graphs.put("src", "content/images/graficasD3/SUNBURST.png");
-                break;
-            default:
                 break;
         }
         return graphs;

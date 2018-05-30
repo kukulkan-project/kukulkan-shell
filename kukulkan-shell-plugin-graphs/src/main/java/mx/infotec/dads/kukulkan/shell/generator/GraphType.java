@@ -49,11 +49,6 @@ public enum GraphType {
     HISTORICAL_BAR("HISTORICAL_BAR"),
 
     /**
-     * Line Bar Chart
-     */
-    LINE_BAR("LINE_BAR"),
-
-    /**
      * Line Chart
      */
     LINE_CHART("LINE_CHART"),

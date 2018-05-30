@@ -6,9 +6,8 @@ import java.util.Collections;
 import java.util.List;
 
 /**
- * Database Configuration
  * 
- * @author Clara Fragoso
+ * Plugin Graphs
  *
  */
 public class PluginGraphs implements Serializable {

@@ -8,6 +8,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Arrays;
+
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -33,19 +35,20 @@ import mx.infotec.dads.kukulkan.shell.util.GraphsUtil;
 import mx.infotec.dads.kukulkan.shell.util.ProjectUtil;
 
 /**
- * Generator for Angular 1.5.8, Spring boot and Spring Data
- *
- *
+ * Configuration File Generator
  */
+
 @GeneratorComponent
 public class GraphsGenerator implements Generator {
 
     private WriterHelper writer;
 
     public static final String GRAPHS_ARCHETYPE = "archetypes/graphs/src/main/webapp/";
+
     public GraphsGenerator(WriterHelper writer) {
         this.writer = writer;
     }
+
     private static final Logger LOGGER = LoggerFactory.getLogger(GraphsCommand.class);
     /** The template service. */
     @Autowired
@@ -56,21 +59,20 @@ public class GraphsGenerator implements Generator {
         return "graphs";
     }
 
-
     @Override
     public void process(GeneratorContext context) {
         GraphsContext graphsContext = requiredNotEmpty(context.get(GraphsContext.class));
 
         Map<String, Object> model = new HashMap<>();
         Optional<ProjectConfiguration> project = ProjectUtil.readKukulkanFile(graphsContext.getOutputDir());
-        String id = project.get().getId();
+        String id = (project.isPresent()) ? project.get().getId() : null;
         graphsContext.setId(id);
         graphsContext.setGrammarName(id);
 
-        String graphType = graphsContext.getGraphType().name();
+        List<String> graphsList = Arrays.asList(graphsContext.getGraphs().split("\\s*,\\s*"));
 
         Plugin plugin = project.get().getPlugin("GraphsD3");
-        if( plugin == null )
+        if (plugin == null)
         {
             plugin = new Plugin();
             plugin.setName("GraphsD3");
@@ -85,43 +87,62 @@ public class GraphsGenerator implements Generator {
             plugin.setData(data);
         }
         ArrayNode installedGraphs = (ArrayNode) data.get("Graphs");
-        List<String> lista = new ArrayList<>();
-
-        for (int i = 0; i< installedGraphs.size(); i ++)
-        {
-            if (installedGraphs.get(i).textValue().equals(graphType) ||
-                    installedGraphs.get(i).textValue().equals("ALL"))
+        List<String> listaFinal = new ArrayList<>();
+        List<String> addList = new ArrayList<>();
+        for (String graph : graphsList) {
+            if (installedGraphs.size() > 0)
             {
-                LOGGER.info(graphType + " is already installed");
-                System.out.println(graphType + " is already installed");
-                return;
+                for (int i = 0; i < installedGraphs.size(); i++) {
+                    if (installedGraphs.get(i).textValue().equals(graph) ||
+                            installedGraphs.get(i).textValue().equals("ALL"))
+                    {
+                        LOGGER.info(graph + " is already installed");
+                        System.out.println(graph + " is already installed");
+                    } else if (!listaFinal.contains(graph))
+                    {
+                        writer.copy(GRAPHS_ARCHETYPE + "content/images/graficasD3/" + graph + ".png",
+                                "src/main/webapp/content/images/graficasD3/" + graph + ".png");
+                        listaFinal.add(graph);
+                        addList.add(graph);
+                        installedGraphs.add(graph);
+                    }
+                    if (!listaFinal.contains(installedGraphs.get(i).textValue()))
+                    {
+                        listaFinal.add(installedGraphs.get(i).textValue());
+                    }
+                }
+            } else if (!listaFinal.contains(graph))
+            {
+                writer.copy(GRAPHS_ARCHETYPE + "content/images/graficasD3/" + graph + ".png",
+                        "src/main/webapp/content/images/graficasD3/" + graph + ".png");
+                listaFinal.add(graph);
+                addList.add(graph);
+                installedGraphs.add(graph);
             }
-            lista.add(installedGraphs.get(i).textValue());
+
+            if (graph.trim().contains("ALL"))
+            {
+                installedGraphs.removeAll();
+                installedGraphs.add(graph);
+                listaFinal.clear();
+                listaFinal.add(graph);
+                addList.clear();
+                addList.add(graph);
+                writer.copyDir(GraphsGenerator.class, GRAPHS_ARCHETYPE + "content/images/graficasD3", "src/main/webapp/content/images/graficasD3");
+                writer.copy(GRAPHS_ARCHETYPE + "app/entities/d3/defaultCharts.json", "src/main/webapp/app/entities/d3/defaultCharts.json");
+                break;
+            }
         }
 
-        if(graphType.equals("ALL")){
-            installedGraphs.removeAll();
-            lista.clear();
-            writer.copyDir(GraphsGenerator.class, GRAPHS_ARCHETYPE + "content/images/graficasD3","src/main/webapp/content/images/graficasD3");
-            writer.copy(GRAPHS_ARCHETYPE + "app/entities/d3/defaultCharts.json","src/main/webapp/app/entities/d3/defaultCharts.json");
-        }
-        else
-        {
-            writer.copy(GRAPHS_ARCHETYPE + "content/images/graficasD3/"+graphType+".png",
-                    "src/main/webapp/content/images/graficasD3/"+graphType+".png");
-        }
-        lista.add(graphType);
-        installedGraphs.add(graphType);
-
-        GraphsUtil.editFiles(graphsContext.getOutputDir(), graphType);
+        GraphsUtil.editFiles(graphsContext.getOutputDir(), addList);
         model.put("project", requiredNotEmpty(context.get(GraphsContext.class)));
-        model.put("listGraphs", lista);
-        for (TemplateInfo template : GraphsTemplateFactory.getGraphsTemplates( graphsContext.getGraphType())) {
+        model.put("listGraphs", listaFinal);
+        for (TemplateInfo template : GraphsTemplateFactory.getGraphsTemplates(addList)) {
             String content = templateService.fillTemplate(template.getTemplatePath(), model);
             FileUtil.saveToFile(createOutputPath(graphsContext, template), content);
         }
 
-        writer.copy(GRAPHS_ARCHETYPE + "app/entities/d3/d3.html","src/main/webapp/app/entities/d3/d3.html");
+        writer.copy(GRAPHS_ARCHETYPE + "app/entities/d3/d3.html", "src/main/webapp/app/entities/d3/d3.html");
         writer.copy(GRAPHS_ARCHETYPE + "app/entities/d3/charts/graph.html", "src/main/webapp/app/entities/d3/charts/graph.html");
         ProjectUtil.writeKukulkanFile(project.get());
     }

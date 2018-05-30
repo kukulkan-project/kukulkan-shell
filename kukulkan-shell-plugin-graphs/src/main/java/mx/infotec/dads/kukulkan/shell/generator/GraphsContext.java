@@ -25,6 +25,7 @@ package mx.infotec.dads.kukulkan.shell.generator;
 
 import mx.infotec.dads.kukulkan.metamodel.context.BaseContext;
 
+
 /**
  * GraphsContext.
  *
@@ -61,23 +62,23 @@ public class GraphsContext extends BaseContext {
     }
 
 
-    /** The grammar name. */
-    private GraphType graphType;
+    /** List of graphs. */
+    private String graphs;
 
     /**
-     * Gets the Graph Type.
+     * Gets the graphs.
      *
-     * @return the graph type
+     * @return the graphs
      */
-    public GraphType getGraphType() { return graphType; }
+    public String getGraphs() { return graphs; }
 
     /**
-     * Sets the grammar name.
+     * Sets the graphs.
      *
-     * @param graphType
-     *            the new graph type
+     * @param graphs
+     *            the new graphs types
      */
-    public void setGraphType(GraphType graphType) { this.graphType = graphType; }
+    public void setGraphs(String graphs) { this.graphs = graphs; }
 
     /*
      * (non-Javadoc)
@@ -86,6 +87,6 @@ public class GraphsContext extends BaseContext {
      */
     @Override
     public String toString() {
-        return "Args{" + "projectName=" + this.getId() + ", grammarName='" + grammarName + '\'' + ", graphType=" + graphType + '}';
+        return "Args{" + "projectName=" + this.getId() + ", grammarName='" + grammarName + '\'' + ", graphs=" + graphs + '}';
     }
 }

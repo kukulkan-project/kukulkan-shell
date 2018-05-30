@@ -42,11 +42,8 @@ import mx.infotec.dads.kukulkan.shell.generator.GraphType;
 
 import java.util.Optional;
 
-
 /**
  * Graphs Command
- *
- *
  */
 @ShellComponent
 public class GraphsCommand extends AbstractCommand {
@@ -64,21 +61,20 @@ public class GraphsCommand extends AbstractCommand {
      */
     @ShellMethod("Create Graphs plugin ")
     public void graphsPlugin(@ShellOption(optOut = true) @Valid GraphsArgs params,
-                             GraphType graphType) {
+                             @ShellOption(valueProvider = GraphsValueProvider.class) String graphs) {
         LOGGER.info("Creating Graphs...");
 
         GraphsContext graphsContext = MapperG.toContext(params);
         graphsContext.setOutputDir(navigator.getCurrentPath());
-        graphsContext.setGraphType(graphType);
+        graphsContext.setGraphs(graphs);
 
         Optional<ProjectConfiguration> project = ProjectUtil.readKukulkanFile(graphsContext.getOutputDir());
-        if(!project.isPresent())
+        if (!project.isPresent())
         {
             LOGGER.error("This folder does not contain a kukulkan project");
             System.out.println("This folder does not contain a kukulkan project");
             return;
         }
-
         GeneratorContext genCtx = new GeneratorContext();
         genCtx.put(GraphsContext.class, graphsContext);
         generator.process(genCtx);
