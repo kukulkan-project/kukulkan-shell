@@ -35,6 +35,7 @@ import java.util.Optional;
 
 import javax.validation.constraints.NotNull;
 
+import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.jline.utils.AttributedCharSequence;
 import org.jline.utils.AttributedString;
 import org.slf4j.Logger;
@@ -52,6 +53,7 @@ import com.fasterxml.jackson.databind.SerializationFeature;
 import mx.infotec.dads.kukulkan.engine.service.EngineGenerator;
 import mx.infotec.dads.kukulkan.engine.service.FileUtil;
 import mx.infotec.dads.kukulkan.engine.service.InflectorService;
+import mx.infotec.dads.kukulkan.engine.translator.TranslatorService;
 import mx.infotec.dads.kukulkan.metamodel.context.GeneratorContext;
 import mx.infotec.dads.kukulkan.metamodel.foundation.DatabaseType;
 import mx.infotec.dads.kukulkan.metamodel.foundation.ProjectConfiguration;
@@ -59,7 +61,6 @@ import mx.infotec.dads.kukulkan.shell.commands.AbstractCommand;
 import mx.infotec.dads.kukulkan.shell.commands.git.GitCommands;
 import mx.infotec.dads.kukulkan.shell.commands.git.GitHelper;
 import mx.infotec.dads.kukulkan.shell.commands.git.service.GitCommandsService;
-import mx.infotec.dads.kukulkan.shell.commands.navigation.DirectoryValueProvider;
 import mx.infotec.dads.kukulkan.shell.commands.navigation.FileNavigationCommands;
 import mx.infotec.dads.kukulkan.shell.commands.valueprovided.KukulkanFilesProvider;
 import mx.infotec.dads.kukulkan.shell.domain.Line;
@@ -105,6 +106,12 @@ public class AppGeneration extends AbstractCommand {
     @Autowired
     private FileNavigationCommands fileNavigationCommands;
 
+    @Autowired
+    private TranslatorService translatorService;
+    
+    @Autowired
+    private ResourceSet resourceSet;
+
     /**
      * Command Shell for Generate all the entities that come from a file with .3
      * extension
@@ -117,7 +124,7 @@ public class AppGeneration extends AbstractCommand {
             @ShellOption(valueProvider = LayersValueProvider.class, defaultValue = LAYERS_OPTION_DEFAULT_VALUE) String excludeLayers) {
         File file = Paths.get(navigator.getCurrentPath().toString(), fileName).toFile();
         computeExcludedLayers(shellContext, excludeLayers);
-        GeneratorContext genCtx = createGeneratorContext(shellContext.getConfiguration(), file, inflectorService);
+        GeneratorContext genCtx = createGeneratorContext(shellContext.getConfiguration(), file, inflectorService, translatorService, resourceSet);
         engineGenerator.process(genCtx);
         FileUtil.saveToFile(genCtx);
     }

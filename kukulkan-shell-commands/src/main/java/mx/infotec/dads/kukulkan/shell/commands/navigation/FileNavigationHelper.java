@@ -5,11 +5,11 @@ import static mx.infotec.dads.kukulkan.shell.util.TextFormatter.formatNormalText
 
 import java.nio.file.Path;
 import java.nio.file.Paths;
+
 import org.jline.utils.AttributedString;
 import org.unix4j.unix.Ls;
 import org.unix4j.unix.ls.LsOptionSet_Rahlrt;
 
-import edu.emory.mathcs.backport.java.util.Arrays;
 import mx.infotec.dads.kukulkan.shell.component.Navigator;
 import mx.infotec.dads.kukulkan.shell.util.GeneratorException;
 

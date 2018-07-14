@@ -60,10 +60,6 @@
         </dependency>
         <dependency>
             <groupId>mx.infotec.dads.kukulkan</groupId>
-            <artifactId>kukulkan-grammar</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>mx.infotec.dads.kukulkan</groupId>
             <artifactId>kukulkan-engine</artifactId>
         </dependency>
     </dependencies>
