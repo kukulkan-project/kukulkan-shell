@@ -35,7 +35,6 @@ import java.util.Optional;
 
 import javax.validation.constraints.NotNull;
 
-import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.jline.utils.AttributedCharSequence;
 import org.jline.utils.AttributedString;
 import org.slf4j.Logger;
@@ -52,8 +51,7 @@ import com.fasterxml.jackson.databind.SerializationFeature;
 
 import mx.infotec.dads.kukulkan.engine.service.EngineGenerator;
 import mx.infotec.dads.kukulkan.engine.service.FileUtil;
-import mx.infotec.dads.kukulkan.engine.service.InflectorService;
-import mx.infotec.dads.kukulkan.engine.translator.TranslatorService;
+import mx.infotec.dads.kukulkan.engine.translator.dsl.XtextGrammarTranslatorService;
 import mx.infotec.dads.kukulkan.metamodel.context.GeneratorContext;
 import mx.infotec.dads.kukulkan.metamodel.foundation.DatabaseType;
 import mx.infotec.dads.kukulkan.metamodel.foundation.ProjectConfiguration;
@@ -92,9 +90,6 @@ public class AppGeneration extends AbstractCommand {
     private EngineGenerator engineGenerator;
 
     @Autowired
-    private InflectorService inflectorService;
-
-    @Autowired
     private PrintService printService;
 
     @Autowired
@@ -107,10 +102,7 @@ public class AppGeneration extends AbstractCommand {
     private FileNavigationCommands fileNavigationCommands;
 
     @Autowired
-    private TranslatorService translatorService;
-    
-    @Autowired
-    private ResourceSet resourceSet;
+    private XtextGrammarTranslatorService translatorService;
 
     /**
      * Command Shell for Generate all the entities that come from a file with .3
@@ -124,7 +116,7 @@ public class AppGeneration extends AbstractCommand {
             @ShellOption(valueProvider = LayersValueProvider.class, defaultValue = LAYERS_OPTION_DEFAULT_VALUE) String excludeLayers) {
         File file = Paths.get(navigator.getCurrentPath().toString(), fileName).toFile();
         computeExcludedLayers(shellContext, excludeLayers);
-        GeneratorContext genCtx = createGeneratorContext(shellContext.getConfiguration(), file, inflectorService, translatorService, resourceSet);
+        GeneratorContext genCtx = createGeneratorContext(shellContext.getConfiguration(), file, translatorService);
         engineGenerator.process(genCtx);
         FileUtil.saveToFile(genCtx);
     }

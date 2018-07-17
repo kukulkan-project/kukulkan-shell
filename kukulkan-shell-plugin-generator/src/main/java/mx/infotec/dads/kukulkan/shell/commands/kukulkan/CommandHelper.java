@@ -31,18 +31,12 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
-import org.eclipse.emf.ecore.resource.ResourceSet;
-
-import mx.infotec.dads.kukulkan.engine.service.InflectorService;
 import mx.infotec.dads.kukulkan.engine.translator.TranslatorService;
-import mx.infotec.dads.kukulkan.engine.translator.dsl.GrammarMapping;
-import mx.infotec.dads.kukulkan.engine.translator.dsl.XtextSemanticAnalyzer;
+import mx.infotec.dads.kukulkan.engine.translator.dsl.FileSource;
 import mx.infotec.dads.kukulkan.metamodel.context.GeneratorContext;
 import mx.infotec.dads.kukulkan.metamodel.foundation.Database;
 import mx.infotec.dads.kukulkan.metamodel.foundation.DatabaseType;
 import mx.infotec.dads.kukulkan.metamodel.foundation.DomainModel;
-import mx.infotec.dads.kukulkan.metamodel.foundation.DomainModelGroup;
-import mx.infotec.dads.kukulkan.metamodel.foundation.JavaDomainModel;
 import mx.infotec.dads.kukulkan.metamodel.foundation.ProjectConfiguration;
 import mx.infotec.dads.kukulkan.metamodel.util.PKGenerationStrategy;
 import mx.infotec.dads.kukulkan.shell.domain.KukulkanShellContext;
@@ -76,18 +70,13 @@ public class CommandHelper {
      * @return the generator context
      */
     public static GeneratorContext createGeneratorContext(Optional<ProjectConfiguration> projectConfiguration,
-            File file, InflectorService inflectorService, TranslatorService translatorService,
-            ResourceSet resourceSet) {
+            File file, TranslatorService translatorService) {
         GeneratorContext genCtx = new GeneratorContext();
         if (!projectConfiguration.isPresent()) {
             throw new GeneratorException("projectConfiguration is not present");
         }
         projectConfiguration.ifPresent(config -> {
-            DomainModel domainModel = new JavaDomainModel();
-            XtextSemanticAnalyzer semanticAnalyzer = new XtextSemanticAnalyzer(config, inflectorService);
-            List<DomainModelGroup> dmgList = GrammarMapping.createSingleDataModelGroupList(semanticAnalyzer, file,
-                    resourceSet);
-            domainModel.setDomainModelGroup(dmgList);
+            DomainModel domainModel = translatorService.translate(projectConfiguration.get(), new FileSource(file));
             genCtx.put(ProjectConfiguration.class, config);
             genCtx.put(DomainModel.class, domainModel);
         });
