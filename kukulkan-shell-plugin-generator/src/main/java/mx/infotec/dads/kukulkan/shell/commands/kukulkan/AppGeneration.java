@@ -40,6 +40,7 @@ import org.jline.utils.AttributedString;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.shell.standard.ShellComponent;
 import org.springframework.shell.standard.ShellMethod;
@@ -51,10 +52,10 @@ import com.fasterxml.jackson.databind.SerializationFeature;
 
 import mx.infotec.dads.kukulkan.engine.service.EngineGenerator;
 import mx.infotec.dads.kukulkan.engine.service.FileUtil;
-import mx.infotec.dads.kukulkan.engine.translator.dsl.XtextGrammarTranslatorService;
 import mx.infotec.dads.kukulkan.metamodel.context.GeneratorContext;
 import mx.infotec.dads.kukulkan.metamodel.foundation.DatabaseType;
 import mx.infotec.dads.kukulkan.metamodel.foundation.ProjectConfiguration;
+import mx.infotec.dads.kukulkan.metamodel.translator.TranslatorService;
 import mx.infotec.dads.kukulkan.shell.commands.AbstractCommand;
 import mx.infotec.dads.kukulkan.shell.commands.git.GitCommands;
 import mx.infotec.dads.kukulkan.shell.commands.git.GitHelper;
@@ -102,7 +103,8 @@ public class AppGeneration extends AbstractCommand {
     private FileNavigationCommands fileNavigationCommands;
 
     @Autowired
-    private XtextGrammarTranslatorService translatorService;
+    @Qualifier("grammarTranslatorService")
+    private TranslatorService translatorService;
 
     /**
      * Command Shell for Generate all the entities that come from a file with .3
