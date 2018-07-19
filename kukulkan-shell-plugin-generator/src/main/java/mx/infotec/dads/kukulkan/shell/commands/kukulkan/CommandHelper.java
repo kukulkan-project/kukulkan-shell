@@ -31,13 +31,13 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
-import mx.infotec.dads.kukulkan.engine.translator.TranslatorService;
 import mx.infotec.dads.kukulkan.engine.translator.dsl.FileSource;
 import mx.infotec.dads.kukulkan.metamodel.context.GeneratorContext;
 import mx.infotec.dads.kukulkan.metamodel.foundation.Database;
 import mx.infotec.dads.kukulkan.metamodel.foundation.DatabaseType;
 import mx.infotec.dads.kukulkan.metamodel.foundation.DomainModel;
 import mx.infotec.dads.kukulkan.metamodel.foundation.ProjectConfiguration;
+import mx.infotec.dads.kukulkan.metamodel.translator.TranslatorService;
 import mx.infotec.dads.kukulkan.metamodel.util.PKGenerationStrategy;
 import mx.infotec.dads.kukulkan.shell.domain.KukulkanShellContext;
 import mx.infotec.dads.kukulkan.shell.util.GeneratorException;
