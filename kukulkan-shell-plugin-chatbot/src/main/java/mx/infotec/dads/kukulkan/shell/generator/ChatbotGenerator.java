@@ -24,10 +24,10 @@
 package mx.infotec.dads.kukulkan.shell.generator;
 
 import static mx.infotec.dads.kukulkan.metamodel.util.Validator.requiredNotEmpty;
+import static mx.infotec.dads.kukulkan.shell.generator.ChatbotArchetypeWriter.writeArchetype;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.function.Function;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -47,8 +47,6 @@ import mx.infotec.dads.kukulkan.shell.services.WriterHelper;
 public class ChatbotGenerator implements Generator {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ChatbotGenerator.class);
-
-    private static final String CHATBOT_ARCHETYPE = "archetypes/chatbot/";
 
     private WriterHelper writer;
 
@@ -71,47 +69,9 @@ public class ChatbotGenerator implements Generator {
         ChatbotContext chatbotCtx = requiredNotEmpty(context.get(ChatbotContext.class));
         Map<String, Object> model = new HashMap<>();
         model.put("project", chatbotCtx);
-
-        Function<String, String> pathBuilder = template -> template.replace(".ftl", "").replace(CHATBOT_ARCHETYPE, "");
-
-        // Common files
-        writer.copySmart(CHATBOT_ARCHETYPE + "yarn.lock", pathBuilder, model);
-        writer.copySmart(CHATBOT_ARCHETYPE + "README.md.ftl", pathBuilder, model);
-        writer.copySmart(CHATBOT_ARCHETYPE + "Procfile", pathBuilder, model);
-        writer.copySmart(CHATBOT_ARCHETYPE + "package.json.ftl", pathBuilder, model);
-        writer.copySmart(CHATBOT_ARCHETYPE + "app.js", pathBuilder, model);
-        writer.copySmart(CHATBOT_ARCHETYPE + ".gitignore", pathBuilder, model);
-        writer.copySmart(CHATBOT_ARCHETYPE + ".env.ftl", pathBuilder, model);
-        writer.copyDir(ChatbotGenerator.class, CHATBOT_ARCHETYPE + "views", "views");
-        writer.copyDir(ChatbotGenerator.class, CHATBOT_ARCHETYPE + "routes", "routes");
-        writer.copyDir(ChatbotGenerator.class, CHATBOT_ARCHETYPE + "public", "public");
-        writer.copySmart(CHATBOT_ARCHETYPE + "bin/www", pathBuilder, model);
-        writer.copySmart(CHATBOT_ARCHETYPE + "bots/index.js.ftl", pathBuilder, model);
-
-        // Facebook bot
-        if (chatbotCtx.isFacebookBot()) {
-            writer.copySmart(CHATBOT_ARCHETYPE + "bots/facebook/controller.js.ftl", pathBuilder, model);
-            writer.copySmart(CHATBOT_ARCHETYPE + "bots/facebook/menu.js.ftl", pathBuilder, model);
-            writer.copySmart(CHATBOT_ARCHETYPE + "bots/facebook/middlewares.js.ftl", pathBuilder, model);
-            writer.copySmart(CHATBOT_ARCHETYPE + "bots/facebook/skills.js.ftl", pathBuilder, model);
-        }
-
-        // Web bot
-        if (chatbotCtx.isWebBot()) {
-            writer.copySmart(CHATBOT_ARCHETYPE + "bots/web/controller.js.ftl", pathBuilder, model);
-            writer.copySmart(CHATBOT_ARCHETYPE + "bots/web/middlewares.js.ftl", pathBuilder, model);
-            writer.copySmart(CHATBOT_ARCHETYPE + "bots/web/skills.js.ftl", pathBuilder, model);
-        }
-
-        // DialogFlow conversation scripts
-        if (chatbotCtx.getNlpService().equals(NlpService.DIALOGFLOW)) {
-            writer.copySmart(CHATBOT_ARCHETYPE + "bots/conversation/create-conversation.js.ftl", pathBuilder, model);
-            writer.copySmart(CHATBOT_ARCHETYPE + "bots/conversation/starter-conversation.js.ftl", pathBuilder, model);
-        }
-
-        LOGGER.info("Finished!");
-        LOGGER.info("Run `npm install` to install dependencies");
-        LOGGER.info("Run `npm start` to run the project");
+        
+        writeArchetype(writer, model);
+        
     }
 
 }

@@ -23,17 +23,18 @@
  */
 package mx.infotec.dads.kukulkan.shell.commands.chatbot;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.shell.standard.ShellComponent;
 import org.springframework.shell.standard.ShellMethod;
 
 import mx.infotec.dads.kukulkan.metamodel.context.GeneratorContext;
 import mx.infotec.dads.kukulkan.shell.commands.AbstractCommand;
+import mx.infotec.dads.kukulkan.shell.commands.navigation.FileNavigationCommands;
 import mx.infotec.dads.kukulkan.shell.commands.util.Mapper;
+import mx.infotec.dads.kukulkan.shell.domain.ShellCommand;
 import mx.infotec.dads.kukulkan.shell.generator.ChatbotContext;
 import mx.infotec.dads.kukulkan.shell.generator.ChatbotGenerator;
+import mx.infotec.dads.kukulkan.shell.services.PrintService;
 
 /**
  * 
@@ -46,8 +47,11 @@ public class ChatbotGeneration extends AbstractCommand {
     @Autowired
     private ChatbotGenerator generator;
 
-    /** The Constant LOGGER. */
-    private static final Logger LOGGER = LoggerFactory.getLogger(ChatbotGeneration.class);
+    @Autowired
+    private FileNavigationCommands navCmds;
+
+    @Autowired
+    private PrintService printService;
 
     @ShellMethod("Generate a chatbot broker")
     public void chatbotProject(String name) {
@@ -56,6 +60,15 @@ public class ChatbotGeneration extends AbstractCommand {
         GeneratorContext genContext = new GeneratorContext();
         genContext.put(ChatbotContext.class, chatbotContext);
         generator.process(genContext);
+        navCmds.cd(navigator.getCurrentPath().resolve(name).toString());
+        printService.info("Running 'yarn install'");
+        boolean yarnSucceded = commandService.execToConsole(new ShellCommand("yarn", "install"));
+        if (!yarnSucceded) {
+            printService.info("Configure your '.env' and then run 'yarn start:dev to run the project'");
+        } else {
+            printService.error("Failed to execute 'yarn install");
+            printService.error("Run yarn install manually");
+        }
     }
 
 }

@@ -42,7 +42,7 @@ public class Navigator {
     private Path currentPath;
 
     /** The previus path. */
-    private Path previusPath;
+    private Path previousPath;
 
     /**
      * Inits the.
@@ -50,7 +50,7 @@ public class Navigator {
     @PostConstruct
     private void init() {
         this.currentPath = Paths.get(System.getProperty("user.dir"));
-        this.previusPath = null;
+        this.previousPath = null;
     }
 
     /**
@@ -65,10 +65,11 @@ public class Navigator {
     /**
      * Sets the current path.
      *
-     * @param currentPath the new current path
+     * @param currentPath
+     *            the new current path
      */
     public void setCurrentPath(Path currentPath) {
-        this.previusPath = this.currentPath;
+        this.previousPath = this.currentPath;
         this.currentPath = currentPath;
     }
 
@@ -78,6 +79,6 @@ public class Navigator {
      * @return the previus path
      */
     public Path getPreviusPath() {
-        return previusPath;
+        return previousPath;
     }
 }
