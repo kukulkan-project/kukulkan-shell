@@ -29,7 +29,7 @@ public class ProjectContextConfiguration {
         pConf.setPackaging("mx.infotec.dads.default");
         pConf.setYear("2018");
         pConf.setAuthor("KUKULKAN");
-        pConf.setDatabase(new Database(DatabaseType.SQL_MYSQL, PKGenerationStrategy.AUTO));
+        pConf.setTargetDatabase(new Database(DatabaseType.SQL_MYSQL, PKGenerationStrategy.AUTO));
         return pConf;
     }
 }

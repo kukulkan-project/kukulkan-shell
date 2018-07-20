@@ -53,18 +53,17 @@ import com.fasterxml.jackson.databind.SerializationFeature;
 import mx.infotec.dads.kukulkan.engine.service.EngineGenerator;
 import mx.infotec.dads.kukulkan.engine.service.FileUtil;
 import mx.infotec.dads.kukulkan.engine.translator.database.DataBaseSource;
+import mx.infotec.dads.kukulkan.engine.translator.database.DataBaseTranslatorService;
 import mx.infotec.dads.kukulkan.engine.translator.database.DataStore;
 import mx.infotec.dads.kukulkan.engine.translator.database.DataStoreType;
-import mx.infotec.dads.kukulkan.engine.util.EntityFactory;
 import mx.infotec.dads.kukulkan.metamodel.context.GeneratorContext;
 import mx.infotec.dads.kukulkan.metamodel.foundation.DatabaseType;
-import mx.infotec.dads.kukulkan.metamodel.foundation.DomainModel;
 import mx.infotec.dads.kukulkan.metamodel.foundation.ProjectConfiguration;
+import mx.infotec.dads.kukulkan.metamodel.foundation.TableTypes;
 import mx.infotec.dads.kukulkan.metamodel.translator.Source;
 import mx.infotec.dads.kukulkan.metamodel.translator.TranslatorService;
 import mx.infotec.dads.kukulkan.shell.commands.AbstractCommand;
 import mx.infotec.dads.kukulkan.shell.commands.git.GitCommands;
-import mx.infotec.dads.kukulkan.shell.commands.git.GitHelper;
 import mx.infotec.dads.kukulkan.shell.commands.git.service.GitCommandsService;
 import mx.infotec.dads.kukulkan.shell.commands.navigation.FileNavigationCommands;
 import mx.infotec.dads.kukulkan.shell.commands.valueprovided.KukulkanFilesProvider;
@@ -95,6 +94,9 @@ public class AppGeneration extends AbstractCommand {
 
     @Autowired
     private EngineGenerator engineGenerator;
+
+    @Autowired
+    private DataBaseTranslatorService dataBaseTranslatorService;
 
     @Autowired
     private PrintService printService;
@@ -131,17 +133,29 @@ public class AppGeneration extends AbstractCommand {
 
     @ShellMethod("Generate a Project from an Archetype Catalog")
     // @ShellMethodAvailability("availabilityAppGenerateProject")
-    public void appGenerateCrudFromDataBase(@ShellOption(valueProvider = KukulkanFilesProvider.class) String fileName,
-            @ShellOption(valueProvider = LayersValueProvider.class, defaultValue = LAYERS_OPTION_DEFAULT_VALUE) String excludeLayers,
+    public void addEntities(@ShellOption(valueProvider = LayersValueProvider.class, defaultValue = LAYERS_OPTION_DEFAULT_VALUE) String excludeLayers,
             @ShellOption(defaultValue = "SQL_MYSQL") DatabaseType databaseType) {
         LOGGER.info("Generating Project from Archetype...");
-        File file = Paths.get(navigator.getCurrentPath().toString(), fileName).toFile();
         computeExcludedLayers(shellContext, excludeLayers);
-        DataStore dataStore = EntityFactory.createMySqlDataStore();
+        DataStore dataStore = createMySqlDataStore();
         Source dataBaseSource = new DataBaseSource(dataStore);
-        GeneratorContext genCtx = createGeneratorContext(shellContext.getConfiguration(), file, translatorService);
+        GeneratorContext genCtx = CommandHelper.createGeneratorContext(shellContext.getConfiguration(), dataBaseSource,
+                dataBaseTranslatorService);
         engineGenerator.process(genCtx);
         FileUtil.saveToFile(genCtx);
+    }
+
+    public static DataStore createMySqlDataStore() {
+        DataStore testDataStore = new DataStore();
+        testDataStore.setDataStoreType(DataStoreType.SQL);
+        testDataStore.setDriverClass("com.mysql.jdbc.Driver");
+        testDataStore.setName("employees");
+        testDataStore.setPassword("");
+        testDataStore.setTableTypes(TableTypes.TABLE_VIEW);
+        testDataStore.setUrl("jdbc:mysql://localhost:3306");
+        testDataStore.setSchema("employees");
+        testDataStore.setUsername("root");
+        return testDataStore;
     }
 
     /**

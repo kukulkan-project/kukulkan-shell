@@ -37,6 +37,7 @@ import mx.infotec.dads.kukulkan.metamodel.foundation.Database;
 import mx.infotec.dads.kukulkan.metamodel.foundation.DatabaseType;
 import mx.infotec.dads.kukulkan.metamodel.foundation.DomainModel;
 import mx.infotec.dads.kukulkan.metamodel.foundation.ProjectConfiguration;
+import mx.infotec.dads.kukulkan.metamodel.translator.Source;
 import mx.infotec.dads.kukulkan.metamodel.translator.TranslatorService;
 import mx.infotec.dads.kukulkan.metamodel.util.PKGenerationStrategy;
 import mx.infotec.dads.kukulkan.shell.domain.KukulkanShellContext;
@@ -83,6 +84,20 @@ public class CommandHelper {
         });
         return genCtx;
     }
+    
+    public static GeneratorContext createGeneratorContext(Optional<ProjectConfiguration> projectConfiguration,
+            Source dataBaseSource, TranslatorService translatorService) {
+        GeneratorContext genCtx = new GeneratorContext();
+        if (!projectConfiguration.isPresent()) {
+            throw new GeneratorException("projectConfiguration is not present");
+        }
+        projectConfiguration.ifPresent(config -> {
+            DomainModel domainModel = translatorService.translate(projectConfiguration.get(), dataBaseSource);
+            genCtx.put(ProjectConfiguration.class, config);
+            genCtx.put(DomainModel.class, domainModel);
+        });
+        return genCtx;
+    }
 
     /**
      * Configure the ProjectConfiguration Object with the proper appName, groupId
@@ -103,7 +118,7 @@ public class CommandHelper {
             config.setId(appName);
             config.setPackaging(packaging);
             config.setOutputDir(currentPath);
-            config.setDatabase(new Database(databaseType, PKGenerationStrategy.IDENTITY));
+            config.setTargetDatabase(new Database(databaseType, PKGenerationStrategy.IDENTITY));
         });
     }
 
