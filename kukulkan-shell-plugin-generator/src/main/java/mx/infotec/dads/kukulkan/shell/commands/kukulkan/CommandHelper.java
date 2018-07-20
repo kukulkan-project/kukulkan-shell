@@ -77,6 +77,7 @@ public class CommandHelper {
         }
         projectConfiguration.ifPresent(config -> {
             DomainModel domainModel = translatorService.translate(projectConfiguration.get(), new FileSource(file));
+//            DomainModel domainModel = translatorService.translate(pConf, dataBaseSource);
             genCtx.put(ProjectConfiguration.class, config);
             genCtx.put(DomainModel.class, domainModel);
         });
@@ -110,7 +111,7 @@ public class CommandHelper {
         Objects.requireNonNull(shellContext.getConfiguration(), "The configuration Object can not be null");
         shellContext.getConfiguration().ifPresent(config -> {
             config.addLayers("angular-js", "spring-rest", "spring-service", "spring-repository", "domain-core");
-            if (config.getDatabase().getDatabaseType().equals(DatabaseType.SQL_MYSQL)) {
+            if (config.getTargetDatabase().getDatabaseType().equals(DatabaseType.SQL_MYSQL)) {
                 config.addLayer("liquibase");
             }
         });

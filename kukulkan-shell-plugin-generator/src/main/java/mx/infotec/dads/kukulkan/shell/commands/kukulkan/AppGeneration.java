@@ -52,9 +52,15 @@ import com.fasterxml.jackson.databind.SerializationFeature;
 
 import mx.infotec.dads.kukulkan.engine.service.EngineGenerator;
 import mx.infotec.dads.kukulkan.engine.service.FileUtil;
+import mx.infotec.dads.kukulkan.engine.translator.database.DataBaseSource;
+import mx.infotec.dads.kukulkan.engine.translator.database.DataStore;
+import mx.infotec.dads.kukulkan.engine.translator.database.DataStoreType;
+import mx.infotec.dads.kukulkan.engine.util.EntityFactory;
 import mx.infotec.dads.kukulkan.metamodel.context.GeneratorContext;
 import mx.infotec.dads.kukulkan.metamodel.foundation.DatabaseType;
+import mx.infotec.dads.kukulkan.metamodel.foundation.DomainModel;
 import mx.infotec.dads.kukulkan.metamodel.foundation.ProjectConfiguration;
+import mx.infotec.dads.kukulkan.metamodel.translator.Source;
 import mx.infotec.dads.kukulkan.metamodel.translator.TranslatorService;
 import mx.infotec.dads.kukulkan.shell.commands.AbstractCommand;
 import mx.infotec.dads.kukulkan.shell.commands.git.GitCommands;
@@ -123,6 +129,21 @@ public class AppGeneration extends AbstractCommand {
         FileUtil.saveToFile(genCtx);
     }
 
+    @ShellMethod("Generate a Project from an Archetype Catalog")
+    // @ShellMethodAvailability("availabilityAppGenerateProject")
+    public void appGenerateCrudFromDataBase(@ShellOption(valueProvider = KukulkanFilesProvider.class) String fileName,
+            @ShellOption(valueProvider = LayersValueProvider.class, defaultValue = LAYERS_OPTION_DEFAULT_VALUE) String excludeLayers,
+            @ShellOption(defaultValue = "SQL_MYSQL") DatabaseType databaseType) {
+        LOGGER.info("Generating Project from Archetype...");
+        File file = Paths.get(navigator.getCurrentPath().toString(), fileName).toFile();
+        computeExcludedLayers(shellContext, excludeLayers);
+        DataStore dataStore = EntityFactory.createMySqlDataStore();
+        Source dataBaseSource = new DataBaseSource(dataStore);
+        GeneratorContext genCtx = createGeneratorContext(shellContext.getConfiguration(), file, translatorService);
+        engineGenerator.process(genCtx);
+        FileUtil.saveToFile(genCtx);
+    }
+
     /**
      * Command Shell that Generate a Project from an Archetype Catalog.
      *
@@ -147,28 +168,8 @@ public class AppGeneration extends AbstractCommand {
         generationService.findGeneratorByName("angular-js-archetype-generator").ifPresent(generator -> {
             generationService.process(genCtx, generator);
             ProjectUtil.writeKukulkanFile(shellContext.getConfiguration().get());
-
             fileNavigationCommands.cd(appName);
-
-            if (gitCommands.availabilityCheck().isAvailable()) {
-                boolean res;
-
-                res = gitCommandsService.init(true);
-
-                if (res) {
-                    res = gitCommandsService.add(false, GitHelper.ADD_ALL_PARAM);
-                    if (res) {
-                        res = gitCommandsService.commit("Firts version of project",
-                                "Kukulkan Team <suport@kukulkan.org.mx>");
-                        if (res) {
-                            gitCommandsService.branchOrCheckout(GitHelper.DEVELOP_BRANCH);
-                        }
-                    }
-                }
-            } else {
-                printService.warning("Git not availability");
-            }
-
+            gitCommandsService.addAll("Firts version of project", "Kukulkan Team <suport@kukulkan.org.mx>");
             printService.print("Execute the command", "app-config --type FRONT_END");
         });
     }

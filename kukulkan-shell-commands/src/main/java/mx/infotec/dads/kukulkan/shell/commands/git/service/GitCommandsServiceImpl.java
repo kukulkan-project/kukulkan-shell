@@ -24,6 +24,8 @@
 package mx.infotec.dads.kukulkan.shell.commands.git.service;
 
 import java.util.List;
+
+import mx.infotec.dads.kukulkan.shell.commands.git.GitCommands;
 import mx.infotec.dads.kukulkan.shell.commands.git.GitContext;
 import mx.infotec.dads.kukulkan.shell.commands.git.GitHelper;
 import static mx.infotec.dads.kukulkan.shell.commands.git.GitHelper.ADD;
@@ -35,6 +37,8 @@ import mx.infotec.dads.kukulkan.shell.domain.ShellCommand;
 import mx.infotec.dads.kukulkan.shell.event.message.EventType;
 import mx.infotec.dads.kukulkan.shell.event.message.LocationUpdatedEvent;
 import mx.infotec.dads.kukulkan.shell.services.CommandService;
+import mx.infotec.dads.kukulkan.shell.services.PrintService;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -48,6 +52,8 @@ import org.springframework.stereotype.Service;
 @Service
 public class GitCommandsServiceImpl implements GitCommandsService {
 
+    private static final long serialVersionUID = 1L;
+
     private static final Logger LOGGER = LoggerFactory.getLogger(GitCommandsServiceImpl.class);
 
     @Autowired
@@ -58,6 +64,12 @@ public class GitCommandsServiceImpl implements GitCommandsService {
     
     @Autowired
     protected GitContext gitContext;
+    
+    @Autowired
+    private PrintService printService;
+
+    @Autowired
+    private GitCommands gitCommands;
     
     @Override
     public boolean status() {
@@ -93,6 +105,28 @@ public class GitCommandsServiceImpl implements GitCommandsService {
         }
 
         return execGitCommand(shellCommand.addArg(fileName));
+    }
+    
+    @Override
+    public void addAll(String desc, String longDesc) {
+        if (gitCommands.availabilityCheck().isAvailable()) {
+            boolean res;
+            res = init(true);
+
+            if (res) {
+                res = add(false, GitHelper.ADD_ALL_PARAM);
+                if (res) {
+                    res = commit(desc,
+                            longDesc);
+                    if (res) {
+                        branchOrCheckout(GitHelper.DEVELOP_BRANCH);
+                    }
+                }
+            }
+        } else {
+            printService.warning("Git not availability");
+        }
+
     }
 
     @Override

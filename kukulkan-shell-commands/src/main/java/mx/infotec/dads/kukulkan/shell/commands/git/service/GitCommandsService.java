@@ -112,5 +112,14 @@ public interface GitCommandsService extends Serializable {
      * @return true if no error.
      */
     boolean branchOrCheckout(String branchName);
+
+    /**
+     * addAll elements in the current git workspace
+     * 
+     * @param desc
+     * @param longDesc
+     * @return
+     */
+    void addAll(String desc, String longDesc);
     
 }
