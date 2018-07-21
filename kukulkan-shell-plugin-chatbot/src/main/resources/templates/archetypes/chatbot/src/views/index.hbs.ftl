@@ -1,0 +1,15 @@
+<div id="home">
+    <div id="homepage_bot">
+        <iframe id="botkit_client" src="/chat.html"></iframe>
+    </div>
+
+    <div id="welcome">
+        <h1>I'm a bot!</h1>
+        <p><a href="/chat.html">Make me full screen</a></p>
+        <p><a href="/embed">Embed me in a web site</a></p>
+    </div>
+</div>
+<script src="javascripts/embed.js"></script>
+<script>
+  Botkit.boot({});
+</script>
