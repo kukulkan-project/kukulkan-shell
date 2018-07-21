@@ -4,14 +4,14 @@ import java.util.Arrays;
 import java.util.List;
 
 import org.jline.reader.LineReader;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContextException;
+import org.springframework.stereotype.Component;
 
+@Component
 public class InputShell {
-    private final LineReader lineReader;
-
-    public InputShell(LineReader lineReader) {
-        this.lineReader = lineReader;
-    }
+    @Autowired
+    private LineReader lineReader;
 
     public String readFromOptionList(String prompt, String defaultValue, String... options) {
         List<String> optionsAsList = Arrays.asList(options);
@@ -25,8 +25,13 @@ public class InputShell {
         return "".equals(answer) && !optionsAsList.contains("") ? defaultValue : answer;
     }
 
-    public String readOption(String prompt, String defaultValue, boolean echo) {
+    public String readPassword(String prompt, String defaultValue, boolean echo) {
         String answer = lineReader.readLine(prompt + ": ", '*');
+        return "".equals(answer) ? defaultValue : answer;
+    }
+    
+    public String readOption(String prompt, String defaultValue, boolean echo) {
+        String answer = lineReader.readLine(prompt + ": ");
         return "".equals(answer) ? defaultValue : answer;
     }
 }

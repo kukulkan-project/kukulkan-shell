@@ -79,16 +79,6 @@ public class NativeCommandConfig {
     public NativeCommandProvided javaCommand() {
         return () -> Optional.of(new DefaultNativeCommand("java", "java -version"));
     }
-
-    /**
-     * Kukulkan command.
-     *
-     * @return the native command provided
-     */
-    @Bean
-    public NativeCommandProvided kukulkanCommand() {
-        return () -> Optional.of(new DefaultNativeCommand("kukulkan", "kukulkan -version"));
-    }
     
     /**
      * 

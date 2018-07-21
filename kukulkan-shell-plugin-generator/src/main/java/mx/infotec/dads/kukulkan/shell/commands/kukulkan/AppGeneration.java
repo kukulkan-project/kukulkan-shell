@@ -52,18 +52,13 @@ import com.fasterxml.jackson.databind.SerializationFeature;
 
 import mx.infotec.dads.kukulkan.engine.service.EngineGenerator;
 import mx.infotec.dads.kukulkan.engine.service.FileUtil;
-import mx.infotec.dads.kukulkan.engine.translator.database.DataBaseSource;
 import mx.infotec.dads.kukulkan.engine.translator.database.DataBaseTranslatorService;
-import mx.infotec.dads.kukulkan.engine.translator.database.DataStore;
-import mx.infotec.dads.kukulkan.engine.translator.database.DataStoreType;
+import mx.infotec.dads.kukulkan.engine.translator.database.SchemaAnalyzerException;
 import mx.infotec.dads.kukulkan.metamodel.context.GeneratorContext;
 import mx.infotec.dads.kukulkan.metamodel.foundation.DatabaseType;
 import mx.infotec.dads.kukulkan.metamodel.foundation.ProjectConfiguration;
-import mx.infotec.dads.kukulkan.metamodel.foundation.TableTypes;
-import mx.infotec.dads.kukulkan.metamodel.translator.Source;
 import mx.infotec.dads.kukulkan.metamodel.translator.TranslatorService;
 import mx.infotec.dads.kukulkan.shell.commands.AbstractCommand;
-import mx.infotec.dads.kukulkan.shell.commands.git.GitCommands;
 import mx.infotec.dads.kukulkan.shell.commands.git.service.GitCommandsService;
 import mx.infotec.dads.kukulkan.shell.commands.navigation.FileNavigationCommands;
 import mx.infotec.dads.kukulkan.shell.commands.valueprovided.KukulkanFilesProvider;
@@ -93,6 +88,9 @@ public class AppGeneration extends AbstractCommand {
     ThreadPoolTaskExecutor executor;
 
     @Autowired
+    private AppInput appInput;
+
+    @Autowired
     private EngineGenerator engineGenerator;
 
     @Autowired
@@ -103,9 +101,6 @@ public class AppGeneration extends AbstractCommand {
 
     @Autowired
     private GitCommandsService gitCommandsService;
-
-    @Autowired
-    private GitCommands gitCommands;
 
     @Autowired
     private FileNavigationCommands fileNavigationCommands;
@@ -122,7 +117,7 @@ public class AppGeneration extends AbstractCommand {
      *            the file
      */
     @ShellMethod("Generate all the entities that come from a file with .3k or .kukulkan extension")
-    public void appGenerateCrud(@ShellOption(valueProvider = KukulkanFilesProvider.class) String fileName,
+    public void addEntitiesFromLanguage(@ShellOption(valueProvider = KukulkanFilesProvider.class) String fileName,
             @ShellOption(valueProvider = LayersValueProvider.class, defaultValue = LAYERS_OPTION_DEFAULT_VALUE) String excludeLayers) {
         File file = Paths.get(navigator.getCurrentPath().toString(), fileName).toFile();
         computeExcludedLayers(shellContext, excludeLayers);
@@ -131,31 +126,19 @@ public class AppGeneration extends AbstractCommand {
         FileUtil.saveToFile(genCtx);
     }
 
-    @ShellMethod("Generate a Project from an Archetype Catalog")
-    // @ShellMethodAvailability("availabilityAppGenerateProject")
-    public void addEntities(@ShellOption(valueProvider = LayersValueProvider.class, defaultValue = LAYERS_OPTION_DEFAULT_VALUE) String excludeLayers,
-            @ShellOption(defaultValue = "SQL_MYSQL") DatabaseType databaseType) {
-        LOGGER.info("Generating Project from Archetype...");
+    @ShellMethod("Add entities from differents sources")
+    public void addEntitiesFromDatabase(
+            @ShellOption(valueProvider = LayersValueProvider.class, defaultValue = LAYERS_OPTION_DEFAULT_VALUE) String excludeLayers,
+            @ShellOption(defaultValue = "SQL_MYSQL") DatabaseType source) {
         computeExcludedLayers(shellContext, excludeLayers);
-        DataStore dataStore = createMySqlDataStore();
-        Source dataBaseSource = new DataBaseSource(dataStore);
-        GeneratorContext genCtx = CommandHelper.createGeneratorContext(shellContext.getConfiguration(), dataBaseSource,
-                dataBaseTranslatorService);
-        engineGenerator.process(genCtx);
-        FileUtil.saveToFile(genCtx);
-    }
-
-    public static DataStore createMySqlDataStore() {
-        DataStore testDataStore = new DataStore();
-        testDataStore.setDataStoreType(DataStoreType.SQL);
-        testDataStore.setDriverClass("com.mysql.jdbc.Driver");
-        testDataStore.setName("employees");
-        testDataStore.setPassword("");
-        testDataStore.setTableTypes(TableTypes.TABLE_VIEW);
-        testDataStore.setUrl("jdbc:mysql://localhost:3306");
-        testDataStore.setSchema("employees");
-        testDataStore.setUsername("root");
-        return testDataStore;
+        try {
+            GeneratorContext genCtx = createGeneratorContext(shellContext.getConfiguration(),
+                    appInput.readDataStore(source), dataBaseTranslatorService);
+            engineGenerator.process(genCtx);
+            FileUtil.saveToFile(genCtx);
+        } catch (SchemaAnalyzerException e) {
+            printService.error(e.getMessage());
+        }
     }
 
     /**
@@ -171,8 +154,7 @@ public class AppGeneration extends AbstractCommand {
      * @see DatabaseType
      */
     @ShellMethod("Generate a Project from an Archetype Catalog")
-    // @ShellMethodAvailability("availabilityAppGenerateProject")
-    public void appGenerateProject(@NotNull String appName, @NotNull String packaging,
+    public void createProject(@NotNull String appName, @NotNull String packaging,
             @ShellOption(defaultValue = "NO_SQL_MONGODB") DatabaseType databaseType) {
         LOGGER.info("Generating Project from Archetype...");
         validateParams(appName, packaging);
@@ -184,7 +166,7 @@ public class AppGeneration extends AbstractCommand {
             ProjectUtil.writeKukulkanFile(shellContext.getConfiguration().get());
             fileNavigationCommands.cd(appName);
             gitCommandsService.addAll("Firts version of project", "Kukulkan Team <suport@kukulkan.org.mx>");
-            printService.print("Execute the command", "app-config --type FRONT_END");
+            printService.print("Execute the command", "config --type FRONT_END");
         });
     }
 
@@ -196,7 +178,7 @@ public class AppGeneration extends AbstractCommand {
      *            Config type
      */
     @ShellMethod("Configurate the project")
-    public void appConfig(@ShellOption(defaultValue = "FRONT_END") ConfigurationType type) {
+    public void config(@ShellOption(defaultValue = "FRONT_END") ConfigurationType type) {
         if (type.equals(ConfigurationType.FRONT_END)) {
             commandService.exec(new ShellCommand(getMavenWrapperCommand(), "package", "-Pprod", "-DskipTests"),
                     line -> {
@@ -209,7 +191,7 @@ public class AppGeneration extends AbstractCommand {
     }
 
     @ShellMethod("Run a Spring-Boot App")
-    public void appRun() {
+    public void run() {
         executor.execute(
                 () -> commandService.exec(new ShellCommand(getMavenWrapperCommand(), "spring-boot:run"), line -> {
                     printService.print(TextFormatter.formatLogText(line));
@@ -225,7 +207,7 @@ public class AppGeneration extends AbstractCommand {
      * @throws JsonProcessingException
      */
     @ShellMethod("Show the current project configuration applied to the current context")
-    public String appShowConfiguration() throws JsonProcessingException {
+    public String showConfiguration() throws JsonProcessingException {
         ObjectMapper objectMapper = new ObjectMapper();
         objectMapper.configure(SerializationFeature.INDENT_OUTPUT, true);
         return objectMapper.writeValueAsString(shellContext.getConfiguration().orElse(new ProjectConfiguration()));
@@ -242,5 +224,4 @@ public class AppGeneration extends AbstractCommand {
         }
         return "./" + MVN_WRAPPER_COMMAND;
     }
-
 }
