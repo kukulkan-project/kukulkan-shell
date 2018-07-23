@@ -23,18 +23,23 @@
  */
 package mx.infotec.dads.kukulkan.shell.commands.chatbot;
 
+import java.util.Optional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.shell.standard.ShellComponent;
 import org.springframework.shell.standard.ShellMethod;
 
 import mx.infotec.dads.kukulkan.metamodel.context.GeneratorContext;
+import mx.infotec.dads.kukulkan.metamodel.foundation.ProjectConfiguration;
 import mx.infotec.dads.kukulkan.shell.commands.AbstractCommand;
 import mx.infotec.dads.kukulkan.shell.commands.navigation.FileNavigationCommands;
 import mx.infotec.dads.kukulkan.shell.commands.util.Mapper;
 import mx.infotec.dads.kukulkan.shell.domain.ShellCommand;
+import mx.infotec.dads.kukulkan.shell.generator.ChatbotClientGenerator;
 import mx.infotec.dads.kukulkan.shell.generator.ChatbotContext;
 import mx.infotec.dads.kukulkan.shell.generator.ChatbotGenerator;
 import mx.infotec.dads.kukulkan.shell.services.PrintService;
+import mx.infotec.dads.kukulkan.shell.util.ProjectUtil;
 
 /**
  * 
@@ -46,6 +51,9 @@ public class ChatbotGeneration extends AbstractCommand {
 
     @Autowired
     private ChatbotGenerator generator;
+
+    @Autowired
+    private ChatbotClientGenerator clientGenerator;
 
     @Autowired
     private FileNavigationCommands navCmds;
@@ -68,6 +76,18 @@ public class ChatbotGeneration extends AbstractCommand {
         } else {
             printService.error("Failed to execute 'yarn install");
             printService.error("Run yarn install manually");
+        }
+    }
+
+    @ShellMethod("Add chatbot client to Kukulkan project")
+    public void addChatbot() {
+        Optional<ProjectConfiguration> projectConfig = ProjectUtil.readKukulkanFile(navigator.getCurrentPath());
+        if (!projectConfig.isPresent()) {
+            printService.error("This path does not contains a Kukulkan project: " + navigator.getCurrentPath());
+        } else {
+            GeneratorContext genContext = new GeneratorContext();
+            genContext.put(ProjectConfiguration.class, projectConfig.get());
+            clientGenerator.process(genContext);
         }
     }
 

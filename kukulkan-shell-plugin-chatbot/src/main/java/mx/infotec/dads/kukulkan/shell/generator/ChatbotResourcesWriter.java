@@ -28,11 +28,12 @@ import java.util.function.Function;
 
 import mx.infotec.dads.kukulkan.shell.services.WriterHelper;
 
-public class ChatbotArchetypeWriter {
+public class ChatbotResourcesWriter {
 
     private static final String CHATBOT_TEMPLATE = "archetypes/chatbot/";
+    private static final String CHATBOT_CLIENT_TEMPLATE = "archetypes/chatbot-client/";
 
-    private ChatbotArchetypeWriter() {
+    private ChatbotResourcesWriter() {
     }
 
     public static void writeArchetype(WriterHelper writer, Object model) {
@@ -89,6 +90,18 @@ public class ChatbotArchetypeWriter {
         writer.copySmart(CHATBOT_TEMPLATE + "package.json.ftl", pathBuilderChatbot, model);
         writer.copySmart(CHATBOT_TEMPLATE + "tsconfig.json.ftl", pathBuilderChatbot, model);
         writer.copySmart(CHATBOT_TEMPLATE + ".gitignore.ftl", pathBuilderChatbot, model);
+    }
+
+    public static void writeChatbotClient(WriterHelper writer, Object model) {
+        final Function<String, String> pathBuilderChatbotClient = template -> template.replace(CHATBOT_CLIENT_TEMPLATE, "").replace(".ftl", "");
+
+        writer.copySmart(CHATBOT_CLIENT_TEMPLATE + "src/main/webapp/app/chatbot/chatbot.controller.js.ftl", pathBuilderChatbotClient, model);
+        writer.copySmart(CHATBOT_CLIENT_TEMPLATE + "src/main/webapp/app/chatbot/chatbot.html.ftl", pathBuilderChatbotClient, model);
+        writer.copySmart(CHATBOT_CLIENT_TEMPLATE + "src/main/webapp/app/chatbot/chatbot.service.js.ftl", pathBuilderChatbotClient, model);
+        writer.copySmart(CHATBOT_CLIENT_TEMPLATE + "src/main/webapp/content/css/chatbot-styles.css.ftl", pathBuilderChatbotClient, model);
+        writer.copySmart(CHATBOT_CLIENT_TEMPLATE + "src/main/webapp/content/images/robot-solid.svg", pathBuilderChatbotClient, model);
+        writer.copySmart(CHATBOT_CLIENT_TEMPLATE + "src/main/webapp/i18n/es/chatbot.json.ftl", pathBuilderChatbotClient, model);
+        writer.copySmart(CHATBOT_CLIENT_TEMPLATE + "src/main/webapp/i18n/en/chatbot.json.ftl", pathBuilderChatbotClient, model);
     }
 
 }

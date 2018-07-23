@@ -1,7 +1,7 @@
 /*
  *  
  * The MIT License (MIT)
- * Copyright (c) 2018 Roberto Villarejo Martínez <roberto.villarejo@infotec.mx>
+ * Copyright (c) 2018 Roberto Villarejo Martínez
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -21,57 +21,40 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
+
 package mx.infotec.dads.kukulkan.shell.generator;
 
 import static mx.infotec.dads.kukulkan.metamodel.util.Validator.requiredNotEmpty;
-import static mx.infotec.dads.kukulkan.shell.generator.ChatbotResourcesWriter.writeArchetype;
+import static mx.infotec.dads.kukulkan.shell.generator.ChatbotResourcesWriter.writeChatbotClient;
 
 import java.util.HashMap;
 import java.util.Map;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import mx.infotec.dads.kukulkan.metamodel.annotation.GeneratorComponent;
 import mx.infotec.dads.kukulkan.metamodel.context.GeneratorContext;
+import mx.infotec.dads.kukulkan.metamodel.foundation.ProjectConfiguration;
 import mx.infotec.dads.kukulkan.metamodel.generator.Generator;
 import mx.infotec.dads.kukulkan.shell.services.WriterHelper;
 
-/**
- * Generator for Chatbot
- * 
- * @author Roberto Villarejo Martínez <roberto.villarejo@infotec.mx>
- *
- */
 @GeneratorComponent
-public class ChatbotGenerator implements Generator {
+public class ChatbotClientGenerator implements Generator {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(ChatbotGenerator.class);
+    @Autowired
+    WriterHelper writer;
 
-    private WriterHelper writer;
-
-    public ChatbotGenerator(WriterHelper writer) {
-        this.writer = writer;
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see mx.infotec.dads.kukulkan.metamodel.generator.Generator#getName()
-     */
     @Override
     public String getName() {
-        return "chatbot-generator";
+        return "chatbot-client-generator";
     }
 
     @Override
     public void process(GeneratorContext context) {
-        ChatbotContext chatbotCtx = requiredNotEmpty(context.get(ChatbotContext.class));
+        ProjectConfiguration projectConfig = requiredNotEmpty(context.get(ProjectConfiguration.class));
         Map<String, Object> model = new HashMap<>();
-        model.put("project", chatbotCtx);
-
-        writeArchetype(writer, model);
-
+        model.put("project", projectConfig);
+        writeChatbotClient(writer, model);
     }
 
 }
