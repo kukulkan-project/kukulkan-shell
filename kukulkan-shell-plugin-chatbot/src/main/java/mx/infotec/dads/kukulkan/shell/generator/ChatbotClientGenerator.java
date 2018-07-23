@@ -27,15 +27,24 @@ package mx.infotec.dads.kukulkan.shell.generator;
 import static mx.infotec.dads.kukulkan.metamodel.util.Validator.requiredNotEmpty;
 import static mx.infotec.dads.kukulkan.shell.generator.ChatbotResourcesWriter.writeChatbotClient;
 
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
+import freemarker.template.Configuration;
+import freemarker.template.Template;
+import mx.infotec.dads.kukulkan.engine.util.FileUtils;
+import mx.infotec.dads.kukulkan.engine.util.TemplateUtil;
 import mx.infotec.dads.kukulkan.metamodel.annotation.GeneratorComponent;
 import mx.infotec.dads.kukulkan.metamodel.context.GeneratorContext;
 import mx.infotec.dads.kukulkan.metamodel.foundation.ProjectConfiguration;
 import mx.infotec.dads.kukulkan.metamodel.generator.Generator;
+import mx.infotec.dads.kukulkan.shell.component.Navigator;
+import mx.infotec.dads.kukulkan.shell.services.PrintService;
 import mx.infotec.dads.kukulkan.shell.services.WriterHelper;
 
 @GeneratorComponent
@@ -43,6 +52,15 @@ public class ChatbotClientGenerator implements Generator {
 
     @Autowired
     WriterHelper writer;
+
+    @Autowired
+    PrintService printer;
+
+    @Autowired
+    Configuration config;
+
+    @Autowired
+    Navigator nav;
 
     @Override
     public String getName() {
@@ -54,7 +72,36 @@ public class ChatbotClientGenerator implements Generator {
         ProjectConfiguration projectConfig = requiredNotEmpty(context.get(ProjectConfiguration.class));
         Map<String, Object> model = new HashMap<>();
         model.put("project", projectConfig);
+        model.put("chatbotUrl", context.get("chatbotUrl").get());
         writeChatbotClient(writer, model);
+        addCssStyles(model);
+    }
+
+    public void addCssStyles(Map<String, Object> model) {
+        String stylesTemplate = ChatbotResourcesWriter.CHATBOT_CLIENT_TEMPLATE
+                + "src/main/webapp/content/css/chatbot-styles.css";
+        List<String> fileLines = getStringLinesFromTemplate(stylesTemplate, model);
+
+        FileUtils.rewriteFile(nav.getCurrentPath().resolve("src/main/webapp/content/css/main.css").toString(),
+                "jhipster-needle-css-add-main", fileLines);
+    }
+
+    private List<String> getStringLinesFromTemplate(String pathname, Object model) {
+        Template template;
+        List<String> result = new ArrayList<>();
+        try {
+            template = config.getTemplate(pathname);
+            String processedTemplate = TemplateUtil.processTemplate(model, template);
+            String[] lines = processedTemplate.split("\n");
+
+            for (int i = 0; i < lines.length; i++) {
+                result.add(lines[i]);
+            }
+            return result;
+        } catch (IOException e) {
+            printer.error("Error while processing template: " + pathname);
+        }
+        return result;
     }
 
 }

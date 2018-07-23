@@ -80,13 +80,14 @@ public class ChatbotGeneration extends AbstractCommand {
     }
 
     @ShellMethod("Add chatbot client to Kukulkan project")
-    public void addChatbot() {
+    public void addChatbot(String urlWebSocket) {
         Optional<ProjectConfiguration> projectConfig = ProjectUtil.readKukulkanFile(navigator.getCurrentPath());
         if (!projectConfig.isPresent()) {
             printService.error("This path does not contains a Kukulkan project: " + navigator.getCurrentPath());
         } else {
             GeneratorContext genContext = new GeneratorContext();
             genContext.put(ProjectConfiguration.class, projectConfig.get());
+            genContext.put("chatbotUrl", urlWebSocket);
             clientGenerator.process(genContext);
         }
     }

@@ -30,8 +30,8 @@ import mx.infotec.dads.kukulkan.shell.services.WriterHelper;
 
 public class ChatbotResourcesWriter {
 
-    private static final String CHATBOT_TEMPLATE = "archetypes/chatbot/";
-    private static final String CHATBOT_CLIENT_TEMPLATE = "archetypes/chatbot-client/";
+    public static final String CHATBOT_TEMPLATE = "archetypes/chatbot/";
+    public static final String CHATBOT_CLIENT_TEMPLATE = "archetypes/chatbot-client/";
 
     private ChatbotResourcesWriter() {
     }
@@ -98,10 +98,12 @@ public class ChatbotResourcesWriter {
         writer.copySmart(CHATBOT_CLIENT_TEMPLATE + "src/main/webapp/app/chatbot/chatbot.controller.js.ftl", pathBuilderChatbotClient, model);
         writer.copySmart(CHATBOT_CLIENT_TEMPLATE + "src/main/webapp/app/chatbot/chatbot.html.ftl", pathBuilderChatbotClient, model);
         writer.copySmart(CHATBOT_CLIENT_TEMPLATE + "src/main/webapp/app/chatbot/chatbot.service.js.ftl", pathBuilderChatbotClient, model);
-        writer.copySmart(CHATBOT_CLIENT_TEMPLATE + "src/main/webapp/content/css/chatbot-styles.css.ftl", pathBuilderChatbotClient, model);
         writer.copySmart(CHATBOT_CLIENT_TEMPLATE + "src/main/webapp/content/images/robot-solid.svg", pathBuilderChatbotClient, model);
         writer.copySmart(CHATBOT_CLIENT_TEMPLATE + "src/main/webapp/i18n/es/chatbot.json.ftl", pathBuilderChatbotClient, model);
         writer.copySmart(CHATBOT_CLIENT_TEMPLATE + "src/main/webapp/i18n/en/chatbot.json.ftl", pathBuilderChatbotClient, model);
+        writer.copySmart(CHATBOT_CLIENT_TEMPLATE + "src/main/webapp/app/app.state.js.ftl", pathBuilderChatbotClient, model);
+        writer.copySmart(CHATBOT_CLIENT_TEMPLATE + "src/main/webapp/index.html.ftl", pathBuilderChatbotClient, model);
+        writer.copySmart(CHATBOT_CLIENT_TEMPLATE + "gulpfile.js.ftl", pathBuilderChatbotClient, model);
     }
 
 }
