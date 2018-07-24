@@ -31,8 +31,6 @@
             ,'lineFocus'
         <#elseif name == "SCATTER_LINE">
             ,'scatterLine'
-        <#elseif name == "LINE_BAR">
-            ,'lineBar'
         <#elseif name == "DONUT_CHART">
             ,'donutChart'
         <#elseif name == "SPARK_LINE">
@@ -56,7 +54,7 @@
         <#elseif name == "ALL">
             ,'lineChart','cumulativeLine','stackedArea','multiBar','bullet','discreteBar',
             'historicalBar','multiBarHorizontal','pieChart','scatter','lineFocus',
-            'scatterLine','lineBar','donutChart','sparkLine','paralell','multiChart',
+            'scatterLine','donutChart','sparkLine','paralell','multiChart',
             'candlestick','sunburst','ohcl','boxPlot','forceDirected'
         </#if>
     </#list>
@@ -88,8 +86,6 @@
             ,lineFocus
         <#elseif name == "SCATTER_LINE">
             ,scatterLine
-        <#elseif name == "LINE_BAR">
-            ,lineBar
         <#elseif name == "DONUT_CHART">
             ,donutChart
         <#elseif name == "SPARK_LINE">
@@ -112,7 +108,7 @@
             ,multiChart
         <#elseif name == "ALL">
             ,lineChart,cumulativeLine, stackedArea, multiBar, bullet, discreteBar, historicalBar, multiBarHorizontal, pieChart,
-            scatter, lineFocus, scatterLine, lineBar, donutChart, sparkLine, paralell, multiChart, candlestick,
+            scatter, lineFocus, scatterLine, donutChart, sparkLine, paralell, multiChart, candlestick,
             sunburst, ohcl, boxPlot, forceDirected
          </#if>
      </#list>) {
@@ -171,10 +167,6 @@
             case 'scatterLine':
                 vm.options = scatterLine.options();
                 vm.data = scatterLine.data();
-                break;
-            case 'lineBar':
-                vm.options = lineBar.options();
-                vm.data = lineBar.data();
                 break;
             case 'donutChart':
                 vm.options = donutChart.options();

@@ -64,11 +64,12 @@ public class GraphsUtil {
             System.out.println("The bower.json file was not found");
         }
 
-        if (!GraphsUtil.addGraphsMenu(projectPathPath)) {
-            System.out.println("The /src/main/webapp/app/layouts/navbar/navbar.html file was not found or it does not have the correct format");
-        }
         if (!addModule("nvd3", projectPathPath)) {
             System.out.println("The /src/main/webapp/app/app.module.js file was not found or it does not have the correct format");
+        }
+
+        if (!GraphsUtil.addGraphsMenu(projectPathPath)) {
+            System.out.println("The /src/main/webapp/app/layouts/navbar/navbar.html file was not found or it does not have the correct format");
         }
         addJsonGraphs(projectPathPath, graphs);
     }
@@ -129,24 +130,13 @@ public class GraphsUtil {
 
     private static boolean addGraphsMenu(Path projectPathPath) {
         boolean success = false;
-        String menu = "<li id=\"graphs\" ng-class=\"{active: vm.$state.includes('admin')}\" uib-dropdown\n" +
-                "                    dropdown ng-switch-when=\"true\">\n" +
-                "                    <a class=\"dropdown-toggle\" uib-dropdown-toggle href=\"\">\n" +
-                "                        <span>\n" +
-                "                            <span class=\"glyphicon glyphicon-stats\"></span> <span class=\"hidden-sm\">Graphs</span> <b class=\"caret\"></b>\n" +
-                "                        </span>\n" +
-                "                    </a>\n" +
-                "                    <ul class=\"dropdown-menu\" uib-dropdown-menu>\n" +
-                "                        <li ui-sref-active=\"active\">\n" +
-                "                            <a ui-sref=\"graphs\"\n" +
-                "                               ng-click=\"vm.collapseNavbar()\">\n" +
-                "                                <span class=\"glyphicon glyphicon-stats\"></span>&nbsp; <span >\n" +
-                "                                    Graphs\n" +
-                "                                </span>\n" +
-                "                            </a>\n" +
-                "                        </li>\n" +
-                "                    </ul>\n" +
-                "                </li>";
+        String menu = "<li id=\"graphs\"  ui-sref-active=\"active\" class=\"sidebar-list\">\n" +
+                "\t\t\t\t<a ui-sref=\"graphs\" ng-click=\"vm.collapseNavbar();\" >\n" +
+                "\t\t\t\t\t<span ng-click=\"vm.toggleNavbar()\" class=\"menu-icon glyphicon glyphicon-stats\"></span>\n" +
+                "                    <span>Graphs</span>\n" +
+                "\t\t\t\t\t <b class=\"caret\"></b>\n" +
+                "\t\t\t\t</a>\n" +
+                "\t\t\t</li>";
 
         try {
             File input = new File(projectPathPath.toString() + "/src/main/webapp/app/layouts/navbar/navbar.html");
@@ -155,18 +145,23 @@ public class GraphsUtil {
             Elements idGraphs = doc.select("li#graphs");
 
             if (idGraphs.isEmpty()) {
-                Elements ul = doc.select("div.navbar-collapse>ul");
-                ul.first().append(menu);
-
-                FileWriter file = new FileWriter(projectPathPath.toString() + "/src/main/webapp/app/layouts/navbar/navbar.html");
-                file.write(doc.toString());
-                file.flush();
-                file.close();
+                Elements ul = doc.select("div#sidebar-wrapper>ul");
+                if(ul.isEmpty()){
+                    success = false;
+                }else {
+                    ul.first().append(menu);
+                    FileWriter file = new FileWriter(projectPathPath.toString() + "/src/main/webapp/app/layouts/navbar/navbar.html");
+                    file.write(doc.toString());
+                    file.flush();
+                    file.close();
+                }
             }
             success = true;
 
         } catch (IOException ex) {
             ex.printStackTrace();
+            System.out.println("The navbar.html file was not found");
+
         }
         return success;
     }

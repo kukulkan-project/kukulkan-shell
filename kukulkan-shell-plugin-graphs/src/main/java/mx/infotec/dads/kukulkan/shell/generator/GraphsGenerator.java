@@ -89,8 +89,9 @@ public class GraphsGenerator implements Generator {
         ArrayNode installedGraphs = (ArrayNode) data.get("Graphs");
         List<String> listaFinal = new ArrayList<>();
         List<String> addList = new ArrayList<>();
+        boolean nuevo = false;
         for (String graph : graphsList) {
-            if (installedGraphs.size() > 0)
+            if (installedGraphs.size() > 0 && !nuevo)
             {
                 for (int i = 0; i < installedGraphs.size(); i++) {
                     if (installedGraphs.get(i).textValue().equals(graph) ||
@@ -118,6 +119,7 @@ public class GraphsGenerator implements Generator {
                 listaFinal.add(graph);
                 addList.add(graph);
                 installedGraphs.add(graph);
+                nuevo = true;
             }
 
             if (graph.trim().contains("ALL"))
