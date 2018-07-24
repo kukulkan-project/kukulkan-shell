@@ -2,7 +2,7 @@
     'use strict';
 
     angular
-        .module('${project.id}')
+        .module('${project.id}App')
         .factory('ChatbotService', ChatbotService);
 
     ChatbotService.$inject = ['$rootScope', 'CHATBOT_URL', 'Principal'];

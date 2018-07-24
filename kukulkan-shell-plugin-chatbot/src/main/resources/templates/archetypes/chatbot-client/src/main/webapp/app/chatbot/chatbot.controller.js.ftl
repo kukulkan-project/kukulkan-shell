@@ -2,7 +2,7 @@
     'use strict';
 
     angular
-        .module('${project.id}')
+        .module('${project.id}App')
         .controller('ChatbotController', ChatbotController);
 
     ChatbotController.$inject = ['ChatbotService', '$rootScope', '$scope'];
