@@ -1,0 +1,8 @@
+Package: kukulkan
+Version: 2.0.0
+Section: misc
+Priority: low
+Architecture: all
+Depends: 
+Description: kukulkan shell client
+Maintainer: dads@infotec.mx
