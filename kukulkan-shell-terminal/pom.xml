@@ -96,21 +96,6 @@
 				<!-- default Spring profiles -->
 				<spring.profiles.active>dev</spring.profiles.active>
 			</properties>
-			<build>
-				<plugins>
-					<plugin>
-						<groupId>org.springframework.boot</groupId>
-						<artifactId>spring-boot-maven-plugin</artifactId>
-						<executions>
-							<execution>
-								<goals>
-									<goal>repackage</goal>
-								</goals>
-							</execution>
-						</executions>
-					</plugin>
-				</plugins>
-			</build>
 		</profile>
 		<profile>
 			<id>prod</id>
@@ -123,39 +108,8 @@
 				<company.name>infotec</company.name>
 			</properties>
 			<build>
+				<finalName>kukulkan</finalName>
 				<plugins>
-					<plugin>
-						<groupId>org.codehaus.mojo</groupId>
-						<artifactId>appassembler-maven-plugin</artifactId>
-						<version>2.0.0</version>
-						<executions>
-							<execution>
-								<phase>package</phase>
-								<goals>
-									<goal>assemble</goal>
-								</goals>
-							</execution>
-						</executions>
-						<configuration>
-							<includeConfigurationDirectoryInClasspath>true</includeConfigurationDirectoryInClasspath>
-							<configurationDirectory>conf</configurationDirectory>
-							<programs>
-								<program>
-									<mainClass>mx.infotec.dads.kukulkan.KukulkanShellApplication</mainClass>
-									<id>start</id>
-									<jvmSettings>
-										<initialMemorySize>20m</initialMemorySize>
-										<maxMemorySize>256m</maxMemorySize>
-										<maxStackSize>128m</maxStackSize>
-										<extraArguments>
-											<extraArgument>-Dspring.profiles.active=prod</extraArgument>
-											<extraArgument>-Dlogback.loglevel=INFO</extraArgument>
-										</extraArguments>
-									</jvmSettings>
-								</program>
-							</programs>
-						</configuration>
-					</plugin>
 					<plugin>
 						<artifactId>jdeb</artifactId>
 						<groupId>org.vafer</groupId>
@@ -175,33 +129,35 @@
 									<verbose>true</verbose>
 									<controlDir>${basedir}/src/deb/control</controlDir>
 									<dataSet>
+										<!-- Jar -->
 										<data>
-											<src>${project.build.directory}/appassembler/bin</src>
-											<type>directory</type>
+											<src>${project.build.directory}/${project.build.finalName}.jar</src>
+											<type>file</type>
 											<mapper>
 												<type>perm</type>
-												<prefix>/opt/${company.name}/${kukulkan-deploy-id}/${project.version}/bin</prefix>
+												<prefix>/usr/share/${company.name}/${kukulkan-deploy-id}/lib/</prefix>
 												<user>root</user>
 												<group>root</group>
 												<filemode>755</filemode>
 											</mapper>
 										</data>
+										<!-- Script SH -->
 										<data>
-											<src>${project.build.directory}/appassembler</src>
-											<excludes>bin/**</excludes>
-											<type>directory</type>
+											<src>${basedir}/src/deb/upstart/kukulkan.sh</src>
+											<type>file</type>
 											<mapper>
 												<type>perm</type>
-												<prefix>/opt/${company.name}/${kukulkan-deploy-id}/${project.version}</prefix>
+												<prefix>/usr/share/${company.name}/${kukulkan-deploy-id}/lib/${project.version}</prefix>
 												<user>root</user>
 												<group>root</group>
-												<filemode>644</filemode>
+												<filemode>755</filemode>
 											</mapper>
 										</data>
+										<!-- LINK -->
 										<data>
 											<type>link</type>
 											<linkName>/usr/bin/kukulkan</linkName>
-											<linkTarget>/opt/${company.name}/${kukulkan-deploy-id}/${project.version}/bin/start</linkTarget>
+											<linkTarget>/usr/share/${company.name}/${kukulkan-deploy-id}/lib/${project.version}/kukulkan.sh</linkTarget>
 											<symlink>true</symlink>
 										</data>
 									</dataSet>
@@ -213,4 +169,19 @@
 			</build>
 		</profile>
 	</profiles>
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.springframework.boot</groupId>
+				<artifactId>spring-boot-maven-plugin</artifactId>
+				<executions>
+					<execution>
+						<goals>
+							<goal>repackage</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+		</plugins>
+	</build>
 </project>
