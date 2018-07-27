@@ -108,8 +108,36 @@
 				<company.name>infotec</company.name>
 			</properties>
 			<build>
+
 				<finalName>kukulkan</finalName>
 				<plugins>
+					<plugin>
+						<artifactId>maven-antrun-plugin</artifactId>
+						<executions>
+							<execution>
+								<phase>prepare-package</phase>
+								<configuration>
+									<target>
+										<replace token="company.name" value="${company.name}"
+											dir="target/classes">
+											<include name="kukulkan.sh" />
+										</replace>
+										<replace token="kukulkan-deploy-id" value="${kukulkan-deploy-id}"
+											dir="target/classes">
+											<include name="kukulkan.sh" />
+										</replace>
+										<replace token="project.version" value="${project.version}"
+											dir="target/classes">
+											<include name="kukulkan.sh" />
+										</replace>
+									</target>
+								</configuration>
+								<goals>
+									<goal>run</goal>
+								</goals>
+							</execution>
+						</executions>
+					</plugin>
 					<plugin>
 						<artifactId>jdeb</artifactId>
 						<groupId>org.vafer</groupId>
@@ -135,7 +163,7 @@
 											<type>file</type>
 											<mapper>
 												<type>perm</type>
-												<prefix>/usr/share/${company.name}/${kukulkan-deploy-id}/lib/</prefix>
+												<prefix>/usr/share/${company.name}/${kukulkan-deploy-id}/lib/${project.version}</prefix>
 												<user>root</user>
 												<group>root</group>
 												<filemode>755</filemode>
@@ -143,7 +171,7 @@
 										</data>
 										<!-- Script SH -->
 										<data>
-											<src>${basedir}/src/deb/upstart/kukulkan.sh</src>
+											<src>${project.build.directory}/classes/kukulkan.sh</src>
 											<type>file</type>
 											<mapper>
 												<type>perm</type>
@@ -170,6 +198,17 @@
 		</profile>
 	</profiles>
 	<build>
+		<resources>
+			<resource>
+				<directory>src/main/resources</directory>
+			</resource>
+			<resource>
+				<directory>src/deb/upstart</directory>
+				<includes>
+					<include>kukulkan.sh</include>
+				</includes>
+			</resource>
+		</resources>
 		<plugins>
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
