@@ -1,5 +1,6 @@
 package mx.infotec.dads.kukulkan.shell.startup;
 
+import org.jline.utils.AttributedString;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.context.event.EventListener;
@@ -19,8 +20,10 @@ public class KukulkanVersionVerificator {
 
     @EventListener
     public void onApplicationEvent(ContextRefreshedEvent event) {
-//        String fooResourceUrl = "https://httpbin.org/get";
-//        ResponseEntity<String> response = template.getForEntity(fooResourceUrl , String.class);
-//        printService.print("Init", response.toString());
+        printService.print(new AttributedString("You are running latest version"));
+        // String fooResourceUrl = "https://httpbin.org/get";
+        // ResponseEntity<String> response =
+        // template.getForEntity(fooResourceUrl , String.class);
+        // printService.print("Init", response.toString());
     }
 }
