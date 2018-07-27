@@ -168,7 +168,6 @@ public class CommandServiceImpl implements CommandService {
             Process p = Runtime.getRuntime().exec(nc.getTestCommand());
             try (InputStream is = p.getInputStream()) {
                 p.waitFor();
-                printService.info(nc.getCommand() + " is installed");
                 output = readBufferProcess(is, new StringBuilderCollector());
                 nc.setInfoMessage(output);
                 nc.setActive(true);
