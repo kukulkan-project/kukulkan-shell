@@ -60,7 +60,7 @@ public class GraphsCommand extends AbstractCommand {
      * current context.
      */
     @ShellMethod("Create Graphs plugin ")
-    public void graphsPlugin(@ShellOption(optOut = true) @Valid GraphsArgs params,
+    public void addCharts(@ShellOption(optOut = true) @Valid GraphsArgs params,
                              @ShellOption(valueProvider = GraphsValueProvider.class) String graphs) {
         LOGGER.info("Creating Graphs...");
 
