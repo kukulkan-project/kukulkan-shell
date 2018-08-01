@@ -31,6 +31,7 @@ import static mx.infotec.dads.kukulkan.shell.commands.validation.UserInputValida
 
 import java.io.File;
 import java.nio.file.Paths;
+import java.util.List;
 import java.util.Optional;
 
 import javax.validation.constraints.NotNull;
@@ -62,10 +63,12 @@ import mx.infotec.dads.kukulkan.shell.commands.AbstractCommand;
 import mx.infotec.dads.kukulkan.shell.commands.git.service.GitCommandsService;
 import mx.infotec.dads.kukulkan.shell.commands.navigation.FileNavigationCommands;
 import mx.infotec.dads.kukulkan.shell.commands.valueprovided.KukulkanFilesProvider;
+import mx.infotec.dads.kukulkan.shell.component.Navigator;
 import mx.infotec.dads.kukulkan.shell.domain.Line;
 import mx.infotec.dads.kukulkan.shell.domain.ShellCommand;
 import mx.infotec.dads.kukulkan.shell.services.PrintService;
 import mx.infotec.dads.kukulkan.shell.services.impl.CommandServiceImpl;
+import mx.infotec.dads.kukulkan.shell.util.GeneratorException;
 import mx.infotec.dads.kukulkan.shell.util.ProjectUtil;
 import mx.infotec.dads.kukulkan.shell.util.TextFormatter;
 
@@ -106,6 +109,9 @@ public class AppGeneration extends AbstractCommand {
     private FileNavigationCommands fileNavigationCommands;
 
     @Autowired
+    private Navigator navigator;
+
+    @Autowired
     @Qualifier("grammarTranslatorService")
     private TranslatorService translatorService;
 
@@ -121,9 +127,24 @@ public class AppGeneration extends AbstractCommand {
             @ShellOption(valueProvider = LayersValueProvider.class, defaultValue = LAYERS_OPTION_DEFAULT_VALUE) String excludeLayers) {
         File file = Paths.get(navigator.getCurrentPath().toString(), fileName).toFile();
         computeExcludedLayers(shellContext, excludeLayers);
-        GeneratorContext genCtx = createGeneratorContext(shellContext.getConfiguration(), file, translatorService);
+        ProjectConfiguration pConf = shellContext.getConfiguration()
+                .orElseThrow(() -> new GeneratorException("No ProjectConfiguration Found"));
+        GeneratorContext genCtx = createGeneratorContext(pConf, file, translatorService);
         engineGenerator.process(genCtx);
+        ProjectUtil.addEntities(genCtx, pConf);
         FileUtil.saveToFile(genCtx);
+        ProjectUtil.writeKukulkanFile(pConf);
+//        config(ConfigurationType.FRONT_END);
+    }
+
+    @ShellMethod("Generate all the entities that come from a file with .3k or .kukulkan extension")
+    public void rollBack() {
+        ProjectConfiguration pConfiguration = shellContext.getConfiguration()
+                .orElseThrow(() -> new GeneratorException("No ProjectConfiguration Found"));
+        printService.info("Rolling back to");
+        pConfiguration.getEntities().forEach(entity -> {
+            printService.info(entity);
+        });
     }
 
     @ShellMethod("Add entities from differents sources")
@@ -136,6 +157,7 @@ public class AppGeneration extends AbstractCommand {
                     appInput.readDataStore(source), dataBaseTranslatorService);
             engineGenerator.process(genCtx);
             FileUtil.saveToFile(genCtx);
+            config(ConfigurationType.FRONT_END);
         } catch (SchemaAnalyzerException e) {
             printService.error(e.getMessage());
         }

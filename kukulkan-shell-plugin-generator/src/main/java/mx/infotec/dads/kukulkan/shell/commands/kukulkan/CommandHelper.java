@@ -70,21 +70,16 @@ public class CommandHelper {
      *            the file
      * @return the generator context
      */
-    public static GeneratorContext createGeneratorContext(Optional<ProjectConfiguration> projectConfiguration,
-            File file, TranslatorService translatorService) {
+    public static GeneratorContext createGeneratorContext(ProjectConfiguration projectConfiguration, File file,
+            TranslatorService translatorService) {
         GeneratorContext genCtx = new GeneratorContext();
-        if (!projectConfiguration.isPresent()) {
-            throw new GeneratorException("projectConfiguration is not present");
-        }
-        projectConfiguration.ifPresent(config -> {
-            DomainModel domainModel = translatorService.translate(projectConfiguration.get(), new FileSource(file));
-//            DomainModel domainModel = translatorService.translate(pConf, dataBaseSource);
-            genCtx.put(ProjectConfiguration.class, config);
-            genCtx.put(DomainModel.class, domainModel);
-        });
+        DomainModel domainModel = translatorService.translate(projectConfiguration, new FileSource(file));
+        genCtx.put(ProjectConfiguration.class, projectConfiguration);
+        genCtx.put(DomainModel.class, domainModel);
+
         return genCtx;
     }
-    
+
     public static GeneratorContext createGeneratorContext(Optional<ProjectConfiguration> projectConfiguration,
             Source dataBaseSource, TranslatorService translatorService) {
         GeneratorContext genCtx = new GeneratorContext();
@@ -100,8 +95,8 @@ public class CommandHelper {
     }
 
     /**
-     * Configure the ProjectConfiguration Object with the proper appName, groupId
-     * and currentPath.
+     * Configure the ProjectConfiguration Object with the proper appName,
+     * groupId and currentPath.
      *
      * @param projectConfiguration
      *            the project configuration

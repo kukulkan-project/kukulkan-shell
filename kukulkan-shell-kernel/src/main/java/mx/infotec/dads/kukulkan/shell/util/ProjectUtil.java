@@ -26,6 +26,8 @@ package mx.infotec.dads.kukulkan.shell.util;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 import javax.annotation.PostConstruct;
@@ -39,7 +41,10 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 
 import mx.infotec.dads.kukulkan.engine.service.GeneratorPrintProvider;
+import mx.infotec.dads.kukulkan.metamodel.context.GeneratorContext;
+import mx.infotec.dads.kukulkan.metamodel.foundation.DomainModel;
 import mx.infotec.dads.kukulkan.metamodel.foundation.ProjectConfiguration;
+import mx.infotec.dads.kukulkan.shell.domain.KukulkanShellContext;
 
 /**
  * Project Reader.
@@ -108,5 +113,17 @@ public class ProjectUtil {
      */
     private ProjectUtil() {
 
+    }
+
+    public static List<String> addEntities(GeneratorContext genCtx, ProjectConfiguration pConfiguration) {
+        List<String> entities = new ArrayList<>();
+        genCtx.get(DomainModel.class).ifPresent(domain -> domain.getDomainModelGroup()
+                .forEach(dmg -> dmg.getEntities().forEach(entity->{
+                    entity.getGeneratedElements().forEach(element->{
+                        entities.add(element.getRelativePath().toString());   
+                    });
+                })));
+        pConfiguration.setEntities(entities);
+        return entities;
     }
 }

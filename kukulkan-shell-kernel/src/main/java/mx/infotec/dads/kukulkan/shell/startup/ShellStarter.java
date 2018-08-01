@@ -41,7 +41,6 @@ public class ShellStarter {
 
     @EventListener
     public void onApplicationEvent(ContextRefreshedEvent event) {
-        printService.print(new AttributedString("You are running latest version"));
         executor.execute(
                 () -> nativeContext.setAvailableCommands(mapDefaultNativeCommands(nativeCommands, commandService)));
     }
