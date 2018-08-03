@@ -216,9 +216,9 @@ public class AppGeneration extends AbstractCommand {
     }
 
     @ShellMethod("Run a Spring-Boot App")
-    public void run() {
-        executor.execute(
-                () -> commandService.exec(new ShellCommand(getMavenWrapperCommand(), "spring-boot:run"), line -> {
+    public void run(@ShellOption(defaultValue = "DEV") Profile profile) {
+        executor.execute(() -> commandService.exec(
+                new ShellCommand(getMavenWrapperCommand(), "spring-boot:run", "-P", profile.getProfileName()), line -> {
                     printService.print(TextFormatter.formatLogText(line));
                     return Optional.ofNullable(new Line(line));
                 }));
