@@ -51,7 +51,7 @@ public class GraphsContextConfiguration {
         pConf.setPackaging("mx.infotec.dads.default");
         pConf.setYear("2018");
         pConf.setAuthor("KUKULKAN");
-        pConf.setTargetDatabase(new Database(DatabaseType.SQL_MYSQL, PKGenerationStrategy.AUTO));
+        pConf.setTargetDatabase(new Database(DatabaseType.SQL_MYSQL));
         return new KukulkanShellContext(java.util.Optional.ofNullable(pConf));
     }
 }

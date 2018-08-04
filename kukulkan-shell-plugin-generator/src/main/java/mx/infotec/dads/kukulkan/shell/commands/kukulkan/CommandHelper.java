@@ -113,15 +113,16 @@ public class CommandHelper {
             config.setId(appName);
             config.setPackaging(packaging);
             config.setOutputDir(currentPath);
-            config.setTargetDatabase(new Database(databaseType, PKGenerationStrategy.IDENTITY));
+            config.setTargetDatabase(new Database(databaseType));
         });
     }
 
     public static void configLayers(KukulkanShellContext shellContext) {
         Objects.requireNonNull(shellContext.getConfiguration(), "The configuration Object can not be null");
         shellContext.getConfiguration().ifPresent(config -> {
+            DatabaseType dbType = config.getTargetDatabase().getDatabaseType();
             config.addLayers("angular-js", "spring-rest", "spring-service", "spring-repository", "domain-core");
-            if (config.getTargetDatabase().getDatabaseType().equals(DatabaseType.SQL_MYSQL)) {
+            if (dbType.equals(DatabaseType.SQL_MYSQL) || dbType.equals(DatabaseType.SQL_ORACLE)) {
                 config.addLayer("liquibase");
             }
         });
