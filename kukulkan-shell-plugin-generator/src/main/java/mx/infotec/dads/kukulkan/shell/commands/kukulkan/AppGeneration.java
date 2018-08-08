@@ -190,7 +190,7 @@ public class AppGeneration extends AbstractCommand {
             generationService.process(genCtx, generator);
             ProjectUtil.writeKukulkanFile(shellContext.getConfiguration().get());
             fileNavigationCommands.cd(appName);
-            gitCommandsService.addAll("Firts version of project", "Kukulkan Team <suport@kukulkan.org.mx>");
+            gitCommandsService.addAll("First version of project", "Kukulkan Team <suport@kukulkan.org.mx>");
             printService.print("Execute the command", "config --type FRONT_END");
         });
     }
