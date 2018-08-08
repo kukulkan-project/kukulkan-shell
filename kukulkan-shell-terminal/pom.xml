@@ -21,6 +21,7 @@
 		<logback.loglevel>DEBUG</logback.loglevel>
 		<maven-resources-plugin.version>3.0.1</maven-resources-plugin.version>
 		<java.version>1.8</java.version>
+		<launch4j.version>1.7.22</launch4j.version>
 	</properties>
 
 	<dependencies>
@@ -189,6 +190,41 @@
 											<symlink>true</symlink>
 										</data>
 									</dataSet>
+								</configuration>
+							</execution>
+						</executions>
+					</plugin>
+					<plugin>
+						<groupId>com.akathist.maven.plugins.launch4j</groupId>
+						<artifactId>launch4j-maven-plugin</artifactId>
+						<version>${launch4j.version}</version>
+						<executions>
+							<execution>
+								<id>l4j-clui</id>
+								<phase>package</phase>
+								<goals>
+									<goal>launch4j</goal>
+								</goals>
+								<configuration>
+									<headerType>console</headerType>
+									<outfile>${project.build.directory}/kukulkan.exe</outfile>
+									<jar>${project.build.directory}/${project.build.finalName}.jar</jar>
+									<errTitle>${project.name}</errTitle>
+									<icon>${project.basedir}/src/launch4j/icon.ico</icon>
+									<jre>
+										<minVersion>1.8.0</minVersion>
+									</jre>
+									<versionInfo>
+										<fileVersion>1.0.0.0</fileVersion>
+										<txtFileVersion>${project.version}</txtFileVersion>
+										<fileDescription>${project.description} for Windows</fileDescription>
+										<copyright>Apache License 2.0</copyright>
+										<productVersion>1.0.0.0</productVersion>
+										<internalName>${project.build.finalName}</internalName>
+										<txtProductVersion>${project.version}</txtProductVersion>
+										<productName>${project.name}</productName>
+										<originalFilename>${project.build.finalName}.exe</originalFilename>
+									</versionInfo>
 								</configuration>
 							</execution>
 						</executions>
