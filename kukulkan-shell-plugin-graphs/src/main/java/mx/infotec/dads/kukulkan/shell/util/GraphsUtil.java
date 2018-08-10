@@ -102,9 +102,10 @@ public class GraphsUtil {
 
     private static boolean addBowerOverrides(Map<String, String> overrides, Path projectPathPath) {
         boolean success = false;
+        Path pathNavbar = projectPathPath.resolve("bower.json");
         JsonParser parser = new JsonParser();
         try {
-            JsonElement element = parser.parse(new FileReader(projectPathPath.toString() + "/bower.json"));
+            JsonElement element = parser.parse(new FileReader(pathNavbar.toFile()));
             JsonObject bowerFile = element.getAsJsonObject();
             JsonObject overArr = bowerFile.getAsJsonObject("overrides");
             for (Map.Entry<String, String> entry : overrides.entrySet()) {
@@ -113,7 +114,7 @@ public class GraphsUtil {
                     overArr.add(entry.getKey(), value);
                 }
             }
-            FileWriter file = new FileWriter(projectPathPath.toString() + "/bower.json");
+            FileWriter file = new FileWriter(pathNavbar.toFile());
             Gson gson = new GsonBuilder().setPrettyPrinting().create();
             String prettyJson = gson.toJson(bowerFile);
             file.write(prettyJson);
@@ -122,7 +123,6 @@ public class GraphsUtil {
             success = true;
         } catch (IOException ex) {
             ex.printStackTrace();
-            System.out.println("The bower.json file was not found");
         }
 
         return success;
@@ -130,6 +130,7 @@ public class GraphsUtil {
 
     private static boolean addGraphsMenu(Path projectPathPath) {
         boolean success = false;
+        Path pathNavbar = projectPathPath.resolve("src/main/webapp/app/layouts/navbar/navbar.html");
         String menu = "<li id=\"graphs\"  ui-sref-active=\"active\" class=\"sidebar-list\">\n" +
                 "\t\t\t\t<a ui-sref=\"graphs\" ng-click=\"vm.collapseNavbar();\" >\n" +
                 "\t\t\t\t\t<span ng-click=\"vm.toggleNavbar()\" class=\"menu-icon glyphicon glyphicon-stats\"></span>\n" +
@@ -139,18 +140,18 @@ public class GraphsUtil {
                 "\t\t\t</li>";
 
         try {
-            File input = new File(projectPathPath.toString() + "/src/main/webapp/app/layouts/navbar/navbar.html");
+            File input = pathNavbar.toFile();
             Document doc = Jsoup.parse(input, "UTF-8", "");
 
             Elements idGraphs = doc.select("li#graphs");
 
             if (idGraphs.isEmpty()) {
                 Elements ul = doc.select("div#sidebar-wrapper>ul");
-                if(ul.isEmpty()){
+                if (ul.isEmpty()) {
                     success = false;
-                }else {
+                } else {
                     ul.first().append(menu);
-                    FileWriter file = new FileWriter(projectPathPath.toString() + "/src/main/webapp/app/layouts/navbar/navbar.html");
+                    FileWriter file = new FileWriter(pathNavbar.toFile());
                     file.write(doc.toString());
                     file.flush();
                     file.close();
@@ -168,8 +169,9 @@ public class GraphsUtil {
 
     private static boolean addModule(String module, Path projectPathPath) {
         boolean success = false;
+        Path pathModule = projectPathPath.resolve("src/main/webapp/app/app.module.js");
         try {
-            File file = new File(projectPathPath.toString() + "/src/main/webapp/app/app.module.js");
+            File file = pathModule.toFile();
             BufferedReader reader = new BufferedReader(new FileReader(file));
             String line, oldText = "";
             while ((line = reader.readLine()) != null) {
@@ -180,7 +182,7 @@ public class GraphsUtil {
             if (!oldText.contains(module)) {
                 String replacedText = oldText.replaceAll("'angular-loading-bar'", "'angular-loading-bar',\r\n'" + module + "'");
 
-                FileWriter writer = new FileWriter(projectPathPath.toString() + "/src/main/webapp/app/app.module.js");
+                FileWriter writer = new FileWriter(pathModule.toFile());
                 writer.write(replacedText);
                 writer.flush();
                 writer.close();
@@ -193,51 +195,42 @@ public class GraphsUtil {
     }
 
     private static void addJsonGraphs(Path projectPathPath, List<String> graphsList) {
-        String pathCharts = projectPathPath.toString() + "/src/main/webapp/app/entities/d3/";
-        String pathFile = pathCharts + "defaultCharts.json";
+        Path pathCharts = projectPathPath.resolve("src/main/webapp/app/entities/d3");
+        Path pathFile = pathCharts.resolve("defaultCharts.json");
 
         if (!graphsList.contains("ALL")) {
             JsonParser parser = new JsonParser();
             JsonArray charArr;
             Gson gson = new Gson();
             try {
-                File f = new File(pathFile);
-                JsonObject chartsFile;
-
+                File f = pathFile.toFile();
+                JsonObject chartsFile = null;
                 if (f.exists()) {
-                    JsonElement element = parser.parse(new FileReader(pathFile));
-                    chartsFile = element.getAsJsonObject();
-                    charArr = chartsFile.getAsJsonArray("charts");
-                    for (String graph : graphsList) {
-                        String json = gson.toJson(jsonGraph(graph));
-                        JsonObject obj = parser.parse(json).getAsJsonObject();
-                        charArr.add(obj);
-                    }
-                } else {
-                    String jsonCharts = "{\n" +
-                            "    \"charts\": [\n" +
-                            "        \n" +
-                            "    ]\n" +
-                            "}\n";
-                    chartsFile = parser.parse(jsonCharts).getAsJsonObject();
-                    charArr = chartsFile.getAsJsonArray("charts");
-                    for (String graph : graphsList) {
-                        String json = gson.toJson(jsonGraph(graph));
-                        JsonObject obj = parser.parse(json).getAsJsonObject();
-                        charArr.add(obj);
-                    }
-
-                    File directory = new File(pathCharts);
-                    if (!directory.exists()) {
-                        directory.mkdirs();
-                    }
+                    f.delete();
                 }
-                FileWriter file = new FileWriter(pathFile);
-                Gson gsonPretty = new GsonBuilder().setPrettyPrinting().create();
-                String prettyJson = gsonPretty.toJson(chartsFile);
-                file.write(prettyJson);
-                file.flush();
-                file.close();
+                String jsonCharts = "{\n" +
+                        "    \"charts\": [\n" +
+                        "        \n" +
+                        "    ]\n" +
+                        "}\n";
+                chartsFile = parser.parse(jsonCharts).getAsJsonObject();
+                charArr = chartsFile.getAsJsonArray("charts");
+                for (String graph : graphsList) {
+                    String json = gson.toJson(jsonGraph(graph));
+                    JsonObject obj = parser.parse(json).getAsJsonObject();
+                    charArr.add(obj);
+                }
+
+                File directory = pathCharts.toFile();
+                if (!directory.exists()) {
+                    directory.mkdirs();
+                }
+
+                try (FileWriter file = new FileWriter(pathFile.toFile())) {
+                    Gson gsonPretty = new GsonBuilder().setPrettyPrinting().create();
+                    String prettyJson = gsonPretty.toJson(chartsFile);
+                    file.write(prettyJson);
+                }
 
             } catch (IOException e) {
                 e.printStackTrace();
