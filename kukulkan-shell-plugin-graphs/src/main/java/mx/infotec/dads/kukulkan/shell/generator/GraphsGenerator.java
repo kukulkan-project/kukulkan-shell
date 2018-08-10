@@ -61,6 +61,7 @@ public class GraphsGenerator implements Generator {
 
     @Override
     public void process(GeneratorContext context) {
+
         GraphsContext graphsContext = requiredNotEmpty(context.get(GraphsContext.class));
 
         Map<String, Object> model = new HashMap<>();
@@ -90,15 +91,17 @@ public class GraphsGenerator implements Generator {
         List<String> listaFinal = new ArrayList<>();
         List<String> addList = new ArrayList<>();
         boolean nuevo = false;
-        for (String graph : graphsList) {
+        for (String graph : graphsList)
+        {
             if (installedGraphs.size() > 0 && !nuevo)
             {
-                for (int i = 0; i < installedGraphs.size(); i++) {
+                for (int i = 0; i < installedGraphs.size(); i++)
+                {
                     if (installedGraphs.get(i).textValue().equals(graph) ||
                             installedGraphs.get(i).textValue().equals("ALL"))
                     {
-                        LOGGER.info(graph + " is already installed");
                         System.out.println(graph + " is already installed");
+
                     } else if (!listaFinal.contains(graph))
                     {
                         writer.copy(GRAPHS_ARCHETYPE + "content/images/graficasD3/" + graph + ".png",
@@ -106,6 +109,7 @@ public class GraphsGenerator implements Generator {
                         listaFinal.add(graph);
                         addList.add(graph);
                         installedGraphs.add(graph);
+                        nuevo = true;
                     }
                     if (!listaFinal.contains(installedGraphs.get(i).textValue()))
                     {
@@ -119,7 +123,6 @@ public class GraphsGenerator implements Generator {
                 listaFinal.add(graph);
                 addList.add(graph);
                 installedGraphs.add(graph);
-                nuevo = true;
             }
 
             if (graph.trim().contains("ALL"))
@@ -136,10 +139,11 @@ public class GraphsGenerator implements Generator {
             }
         }
 
-        GraphsUtil.editFiles(graphsContext.getOutputDir(), addList);
+        GraphsUtil.editFiles(graphsContext.getOutputDir(), listaFinal);
         model.put("project", requiredNotEmpty(context.get(GraphsContext.class)));
         model.put("listGraphs", listaFinal);
-        for (TemplateInfo template : GraphsTemplateFactory.getGraphsTemplates(addList)) {
+        for (TemplateInfo template : GraphsTemplateFactory.getGraphsTemplates(addList))
+        {
             String content = templateService.fillTemplate(template.getTemplatePath(), model);
             FileUtil.saveToFile(createOutputPath(graphsContext, template), content);
         }
@@ -148,7 +152,6 @@ public class GraphsGenerator implements Generator {
         writer.copy(GRAPHS_ARCHETYPE + "app/entities/d3/charts/graph.html", "src/main/webapp/app/entities/d3/charts/graph.html");
         ProjectUtil.writeKukulkanFile(project.get());
     }
-
     private Path createOutputPath(GraphsContext graphsContext, TemplateInfo template) {
         return PathProcessor.forPath(template.getFilePath()).joinBefore(graphsContext.getId())
                 .replaceRegExp(".ftl", "").getAbsolutePath(graphsContext.getOutputDir().getParent());
