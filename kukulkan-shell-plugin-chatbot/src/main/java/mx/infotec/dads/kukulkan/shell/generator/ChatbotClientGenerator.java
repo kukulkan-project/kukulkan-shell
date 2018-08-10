@@ -27,18 +27,13 @@ package mx.infotec.dads.kukulkan.shell.generator;
 import static mx.infotec.dads.kukulkan.metamodel.util.Validator.requiredNotEmpty;
 import static mx.infotec.dads.kukulkan.shell.generator.ChatbotResourcesWriter.writeChatbotClient;
 
-import java.io.IOException;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
 import freemarker.template.Configuration;
-import freemarker.template.Template;
-import mx.infotec.dads.kukulkan.engine.util.FileUtils;
-import mx.infotec.dads.kukulkan.engine.util.TemplateUtil;
+import mx.infotec.dads.kukulkan.engine.templating.service.TemplateService;
 import mx.infotec.dads.kukulkan.metamodel.annotation.GeneratorComponent;
 import mx.infotec.dads.kukulkan.metamodel.context.GeneratorContext;
 import mx.infotec.dads.kukulkan.metamodel.foundation.ProjectConfiguration;
@@ -58,6 +53,9 @@ public class ChatbotClientGenerator implements Generator {
 
     @Autowired
     Configuration config;
+
+    @Autowired
+    TemplateService templateService;
 
     @Autowired
     Navigator nav;
@@ -80,28 +78,8 @@ public class ChatbotClientGenerator implements Generator {
     public void addCssStyles(Map<String, Object> model) {
         String stylesTemplate = ChatbotResourcesWriter.CHATBOT_CLIENT_TEMPLATE
                 + "src/main/webapp/content/css/chatbot-styles.css";
-        List<String> fileLines = getStringLinesFromTemplate(stylesTemplate, model);
-
-        FileUtils.rewriteFile(nav.getCurrentPath().resolve("src/main/webapp/content/css/main.css").toString(),
-                "jhipster-needle-css-add-main", fileLines);
-    }
-
-    private List<String> getStringLinesFromTemplate(String pathname, Object model) {
-        Template template;
-        List<String> result = new ArrayList<>();
-        try {
-            template = config.getTemplate(pathname);
-            String processedTemplate = TemplateUtil.processTemplate(model, template);
-            String[] lines = processedTemplate.split("\n");
-
-            for (int i = 0; i < lines.length; i++) {
-                result.add(lines[i]);
-            }
-            return result;
-        } catch (IOException e) {
-            printer.error("Error while processing template: " + pathname);
-        }
-        return result;
+        writer.rewriteFile(stylesTemplate, "src/main/webapp/content/css/main.css", model,
+                "jhipster-needle-css-add-main");
     }
 
 }

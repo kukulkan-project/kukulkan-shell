@@ -179,5 +179,16 @@ public interface WriterHelper {
      */
     public Optional<File> copySmart(String template, Function<String, String> function, Object model);
 
+    /**
+     * Find the needle in file and inserts the contents(template filled with model)
+     * before the needle if found
+     * 
+     * @param template
+     * @param file
+     * @param model
+     * @param needle
+     * @return the file if has been rewrited
+     */
+    public Optional<File> rewriteFile(String template, String fileRelativePath, Object model, String needle);
 
 }

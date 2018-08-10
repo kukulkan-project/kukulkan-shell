@@ -31,7 +31,6 @@ import static mx.infotec.dads.kukulkan.shell.commands.validation.UserInputValida
 
 import java.io.File;
 import java.nio.file.Paths;
-import java.util.List;
 import java.util.Optional;
 
 import javax.validation.constraints.NotNull;
@@ -63,7 +62,6 @@ import mx.infotec.dads.kukulkan.shell.commands.AbstractCommand;
 import mx.infotec.dads.kukulkan.shell.commands.git.service.GitCommandsService;
 import mx.infotec.dads.kukulkan.shell.commands.navigation.FileNavigationCommands;
 import mx.infotec.dads.kukulkan.shell.commands.valueprovided.KukulkanFilesProvider;
-import mx.infotec.dads.kukulkan.shell.component.Navigator;
 import mx.infotec.dads.kukulkan.shell.domain.Line;
 import mx.infotec.dads.kukulkan.shell.domain.ShellCommand;
 import mx.infotec.dads.kukulkan.shell.services.PrintService;
@@ -107,9 +105,6 @@ public class AppGeneration extends AbstractCommand {
 
     @Autowired
     private FileNavigationCommands fileNavigationCommands;
-
-    @Autowired
-    private Navigator navigator;
 
     @Autowired
     @Qualifier("grammarTranslatorService")

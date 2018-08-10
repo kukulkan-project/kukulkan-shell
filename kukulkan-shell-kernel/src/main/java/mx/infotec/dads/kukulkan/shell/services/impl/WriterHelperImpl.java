@@ -114,4 +114,9 @@ public class WriterHelperImpl implements WriterHelper {
         return writerService.copySmart(template, navigator.getCurrentPath(), function, model);
     }
 
+    @Override
+    public Optional<File> rewriteFile(String template, String fileRelativePath, Object model, String needle) {
+        return writerService.rewriteFile(template, navigator.getCurrentPath().resolve(fileRelativePath), model, needle);
+    }
+
 }
