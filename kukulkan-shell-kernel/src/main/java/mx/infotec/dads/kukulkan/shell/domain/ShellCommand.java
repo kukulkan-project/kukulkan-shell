@@ -25,6 +25,8 @@ package mx.infotec.dads.kukulkan.shell.domain;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * Native Command show the main commands.
@@ -42,7 +44,8 @@ public class ShellCommand implements Command {
     /**
      * Instantiates a new shell command.
      *
-     * @param command the command
+     * @param command
+     *            the command
      */
     public ShellCommand(String command) {
         this.command = command;
@@ -51,8 +54,10 @@ public class ShellCommand implements Command {
     /**
      * Instantiates a new shell command.
      *
-     * @param command the command
-     * @param args the args
+     * @param command
+     *            the command
+     * @param args
+     *            the args
      */
     public ShellCommand(String command, String... args) {
         this.command = command;
@@ -61,7 +66,9 @@ public class ShellCommand implements Command {
         }
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see mx.infotec.dads.kukulkan.shell.domain.Command#getCommand()
      */
     public String getCommand() {
@@ -71,7 +78,8 @@ public class ShellCommand implements Command {
     /**
      * Sets the command.
      *
-     * @param command the new command
+     * @param command
+     *            the new command
      */
     public void setCommand(String command) {
         this.command = command;
@@ -80,7 +88,8 @@ public class ShellCommand implements Command {
     /**
      * Adds the arg.
      *
-     * @param arg the arg
+     * @param arg
+     *            the arg
      * @return the shell command
      */
     public ShellCommand addArg(String arg) {
@@ -114,5 +123,10 @@ public class ShellCommand implements Command {
             list.add(arg.getParam());
         }
         return list.toArray(new String[0]);
+    }
+
+    @Override
+    public String toString() {
+        return Stream.of(getExecutableCommand()).collect(Collectors.joining(" "));
     }
 }
