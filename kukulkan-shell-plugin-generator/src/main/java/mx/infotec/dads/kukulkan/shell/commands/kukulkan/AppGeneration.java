@@ -57,6 +57,7 @@ import mx.infotec.dads.kukulkan.engine.translator.database.SchemaAnalyzerExcepti
 import mx.infotec.dads.kukulkan.metamodel.context.GeneratorContext;
 import mx.infotec.dads.kukulkan.metamodel.foundation.DatabaseType;
 import mx.infotec.dads.kukulkan.metamodel.foundation.ProjectConfiguration;
+import mx.infotec.dads.kukulkan.metamodel.generator.Generator;
 import mx.infotec.dads.kukulkan.metamodel.translator.TranslatorService;
 import mx.infotec.dads.kukulkan.shell.commands.AbstractCommand;
 import mx.infotec.dads.kukulkan.shell.commands.git.service.GitCommandsService;
@@ -175,12 +176,13 @@ public class AppGeneration extends AbstractCommand {
      */
     @ShellMethod("Generate a Project from an Archetype Catalog")
     public void createProject(@NotNull String appName, @NotNull String packaging,
-            @ShellOption(defaultValue = "NO_SQL_MONGODB") DatabaseType databaseType) {
+            @ShellOption(defaultValue = "NO_SQL_MONGODB") DatabaseType databaseType,
+            @ShellOption(defaultValue = "ANGULARJS") FrontEndArchetype frontEndArchetype) {
         LOGGER.info("Generating Project from Archetype...");
         validateParams(appName, packaging);
         shellContext.setConfiguration(Optional.of(getDefaulProjectConfiguration()));
         GeneratorContext genCtx = createGeneratorContext(shellContext, appName, packaging, navigator.getCurrentPath(),
-                databaseType);
+                databaseType, frontEndArchetype);
         generationService.findGeneratorByName("angular-js-archetype-generator").ifPresent(generator -> {
             generationService.process(genCtx, generator);
             ProjectUtil.writeKukulkanFile(shellContext.getConfiguration().get());
@@ -188,6 +190,7 @@ public class AppGeneration extends AbstractCommand {
             gitCommandsService.addAll("First version of project", "Kukulkan Team <suport@kukulkan.org.mx>");
             printService.print("Execute the command", "config --type FRONT_END");
         });
+
     }
 
     /**
