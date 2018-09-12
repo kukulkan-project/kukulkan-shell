@@ -39,7 +39,6 @@ import mx.infotec.dads.kukulkan.metamodel.foundation.DomainModel;
 import mx.infotec.dads.kukulkan.metamodel.foundation.ProjectConfiguration;
 import mx.infotec.dads.kukulkan.metamodel.translator.Source;
 import mx.infotec.dads.kukulkan.metamodel.translator.TranslatorService;
-import mx.infotec.dads.kukulkan.metamodel.util.PKGenerationStrategy;
 import mx.infotec.dads.kukulkan.shell.domain.KukulkanShellContext;
 import mx.infotec.dads.kukulkan.shell.util.GeneratorException;
 
@@ -95,8 +94,8 @@ public class CommandHelper {
     }
 
     /**
-     * Configure the ProjectConfiguration Object with the proper appName,
-     * groupId and currentPath.
+     * Configure the ProjectConfiguration Object with the proper appName, groupId
+     * and currentPath.
      *
      * @param projectConfiguration
      *            the project configuration
@@ -117,11 +116,18 @@ public class CommandHelper {
         });
     }
 
-    public static void configLayers(KukulkanShellContext shellContext) {
+    public static void configLayers(KukulkanShellContext shellContext, FrontEndArchetype frontEndArchetype) {
         Objects.requireNonNull(shellContext.getConfiguration(), "The configuration Object can not be null");
         shellContext.getConfiguration().ifPresent(config -> {
+            config.addLayers("spring-rest", "spring-service", "spring-repository", "domain-core");
+
+            if (FrontEndArchetype.GOB_MX_ANGULARJS.equals(frontEndArchetype)) {
+                config.addLayers("gob-mx-angular-js", "gob-mx-angular-js-archetype-layer");
+            } else if (FrontEndArchetype.ANGULARJS.equals(frontEndArchetype)) {
+                config.addLayers("angular-js", "angular-js-archetype-layer");
+            }
+
             DatabaseType dbType = config.getTargetDatabase().getDatabaseType();
-            config.addLayers("angular-js", "spring-rest", "spring-service", "spring-repository", "domain-core");
             if (dbType.equals(DatabaseType.SQL_MYSQL) || dbType.equals(DatabaseType.SQL_ORACLE)) {
                 config.addLayer("liquibase");
             }
@@ -129,9 +135,9 @@ public class CommandHelper {
     }
 
     public static GeneratorContext createGeneratorContext(KukulkanShellContext shellContext, String appName,
-            String packaging, Path currentPath, DatabaseType databaseType) {
+            String packaging, Path currentPath, DatabaseType databaseType, FrontEndArchetype frontEndArchetype) {
         configProjectConfiguration(shellContext, appName, packaging, currentPath, databaseType);
-        configLayers(shellContext);
+        configLayers(shellContext, frontEndArchetype);
         if (shellContext.getConfiguration().isPresent()) {
             return new GeneratorContext(ProjectConfiguration.class, shellContext.getConfiguration().get());
         } else {
