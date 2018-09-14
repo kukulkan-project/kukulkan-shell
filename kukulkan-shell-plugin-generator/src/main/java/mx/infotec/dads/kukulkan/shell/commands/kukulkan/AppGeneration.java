@@ -45,6 +45,7 @@ import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.shell.standard.ShellComponent;
 import org.springframework.shell.standard.ShellMethod;
 import org.springframework.shell.standard.ShellOption;
+import org.springframework.util.StringUtils;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -55,9 +56,10 @@ import mx.infotec.dads.kukulkan.engine.service.FileUtil;
 import mx.infotec.dads.kukulkan.engine.translator.database.DataBaseTranslatorService;
 import mx.infotec.dads.kukulkan.engine.translator.database.SchemaAnalyzerException;
 import mx.infotec.dads.kukulkan.metamodel.context.GeneratorContext;
+import mx.infotec.dads.kukulkan.metamodel.foundation.Database;
 import mx.infotec.dads.kukulkan.metamodel.foundation.DatabaseType;
+import mx.infotec.dads.kukulkan.metamodel.foundation.DomainModel;
 import mx.infotec.dads.kukulkan.metamodel.foundation.ProjectConfiguration;
-import mx.infotec.dads.kukulkan.metamodel.generator.Generator;
 import mx.infotec.dads.kukulkan.metamodel.translator.TranslatorService;
 import mx.infotec.dads.kukulkan.shell.commands.AbstractCommand;
 import mx.infotec.dads.kukulkan.shell.commands.git.service.GitCommandsService;
@@ -85,6 +87,9 @@ public class AppGeneration extends AbstractCommand {
     private static final Logger LOGGER = LoggerFactory.getLogger(AppGeneration.class);
 
     public static final String MVN_WRAPPER_COMMAND = "mvnw";
+
+    @Autowired
+    private DomainModelDslWriter dslWriter;
 
     @Autowired
     ThreadPoolTaskExecutor executor;
@@ -152,6 +157,25 @@ public class AppGeneration extends AbstractCommand {
             config(ConfigurationType.FRONT_END);
         } catch (SchemaAnalyzerException e) {
             printService.error(e.getMessage());
+        }
+    }
+
+    @ShellMethod("Create a 3k file with the entities definition extracted from database")
+    public void createDomainModelFromDatabase(@ShellOption(defaultValue = "SQL_MYSQL") DatabaseType source,
+            @ShellOption(defaultValue = "") String fileName) {
+        ProjectConfiguration pConf = new ProjectConfiguration();
+        pConf.setTargetDatabase(new Database(source));
+        GeneratorContext genCtx = createGeneratorContext(Optional.of(pConf), appInput.readDataStore(source),
+                dataBaseTranslatorService);
+        Optional<DomainModel> maybeDomainModel = genCtx.get(DomainModel.class);
+        if (maybeDomainModel.isPresent()) {
+            if (!StringUtils.isEmpty(fileName)) {
+                dslWriter.toDslFile(maybeDomainModel.get(), navigator.getCurrentPath().resolve(fileName));
+            } else {
+                printService.info(dslWriter.toDslContent(maybeDomainModel.get()));
+            }
+        } else {
+            printService.error("No domain model obtained from database");
         }
     }
 

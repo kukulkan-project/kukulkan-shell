@@ -1,0 +1,24 @@
+//Se crea la entidad persona con 'usuarios' como nombre de la tabla en la base de datos
+entity Persona (usuarios) {
+	-> nombre : String required min(3) max(50),
+	edad : Integer min(5) max(120) required,
+	sueldo : Long,
+	impuesto : Float,
+	fechaCreacion : LocalDate,
+	ManyToOne manager : Persona,
+	ManyToMany proyectos : Proyecto,
+	OneToMany retardos : Retardo,
+	OneToOne direccion: Direccion
+}
+
+entity Direccion
+
+entity Proyecto {
+	nombre : String required,
+	descripcion : String
+}
+
+entity Retardo {
+	descripcion : String,
+	fecha : LocalDate
+}
