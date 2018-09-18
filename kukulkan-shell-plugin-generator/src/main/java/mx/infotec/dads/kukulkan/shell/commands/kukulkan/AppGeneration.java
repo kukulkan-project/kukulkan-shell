@@ -56,6 +56,7 @@ import mx.infotec.dads.kukulkan.engine.service.FileUtil;
 import mx.infotec.dads.kukulkan.engine.translator.database.DataBaseTranslatorService;
 import mx.infotec.dads.kukulkan.engine.translator.database.SchemaAnalyzerException;
 import mx.infotec.dads.kukulkan.metamodel.context.GeneratorContext;
+import mx.infotec.dads.kukulkan.metamodel.conventions.CodeStandard;
 import mx.infotec.dads.kukulkan.metamodel.foundation.Database;
 import mx.infotec.dads.kukulkan.metamodel.foundation.DatabaseType;
 import mx.infotec.dads.kukulkan.metamodel.foundation.DomainModel;
@@ -201,10 +202,13 @@ public class AppGeneration extends AbstractCommand {
     @ShellMethod("Generate a Project from an Archetype Catalog")
     public void createProject(@NotNull String appName, @NotNull String packaging,
             @ShellOption(defaultValue = "NO_SQL_MONGODB") DatabaseType databaseType,
-            @ShellOption(defaultValue = "ANGULARJS") FrontEndArchetype frontEndArchetype) {
+            @ShellOption(defaultValue = "ANGULARJS") FrontEndArchetype frontEndArchetype,
+            @ShellOption(defaultValue = "DEFAULT") CodeStandard codeStandard) {
         LOGGER.info("Generating Project from Archetype...");
         validateParams(appName, packaging);
-        shellContext.setConfiguration(Optional.of(getDefaulProjectConfiguration()));
+        ProjectConfiguration pConf = getDefaulProjectConfiguration();
+        pConf.setCodeStandard(codeStandard);
+        shellContext.setConfiguration(Optional.of(pConf));
         GeneratorContext genCtx = createGeneratorContext(shellContext, appName, packaging, navigator.getCurrentPath(),
                 databaseType, frontEndArchetype);
         generationService.findGeneratorByName("angular-js-archetype-generator").ifPresent(generator -> {
