@@ -111,7 +111,7 @@ public class CommandHelper {
         shellContext.getConfiguration().ifPresent(config -> {
             config.setId(appName);
             config.setPackaging(packaging);
-            config.setOutputDir(currentPath);
+            config.setOutputDir(currentPath.resolve(appName));
             config.setTargetDatabase(new Database(databaseType));
         });
     }

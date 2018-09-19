@@ -77,7 +77,7 @@ public class Antlr4Generator implements Generator {
      * @param template
      */
     private Path createOutputPath(Antlr4Context antlrContext, TemplateInfo template) {
-        return PathProcessor.forPath(template.getFilePath()).joinBefore(antlrContext.getId())
+        return PathProcessor.forPath(template.getFilePath())
                 .replaceLiteral("package", replaceDotByFileSeparator(antlrContext.getPackaging()))
                 .replaceRegExp(".ftl", "").getAbsolutePath(antlrContext.getOutputDir());
     }

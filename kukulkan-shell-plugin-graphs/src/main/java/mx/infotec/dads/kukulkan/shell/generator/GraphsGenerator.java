@@ -10,7 +10,6 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Arrays;
 
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -73,15 +72,13 @@ public class GraphsGenerator implements Generator {
         List<String> graphsList = Arrays.asList(graphsContext.getGraphs().split("\\s*,\\s*"));
 
         Plugin plugin = project.get().getPlugin("GraphsD3");
-        if (plugin == null)
-        {
+        if (plugin == null) {
             plugin = new Plugin();
             plugin.setName("GraphsD3");
             project.get().addPlugin(plugin);
         }
         ObjectNode data = plugin.getData();
-        if (data == null)
-        {
+        if (data == null) {
             ObjectMapper mapper = new ObjectMapper();
             data = mapper.createObjectNode();
             data.putArray("Graphs");
@@ -91,19 +88,14 @@ public class GraphsGenerator implements Generator {
         List<String> listaFinal = new ArrayList<>();
         List<String> addList = new ArrayList<>();
         boolean nuevo = false;
-        for (String graph : graphsList)
-        {
-            if (installedGraphs.size() > 0 && !nuevo)
-            {
-                for (int i = 0; i < installedGraphs.size(); i++)
-                {
-                    if (installedGraphs.get(i).textValue().equals(graph) ||
-                            installedGraphs.get(i).textValue().equals("ALL"))
-                    {
+        for (String graph : graphsList) {
+            if (installedGraphs.size() > 0 && !nuevo) {
+                for (int i = 0; i < installedGraphs.size(); i++) {
+                    if (installedGraphs.get(i).textValue().equals(graph)
+                            || installedGraphs.get(i).textValue().equals("ALL")) {
                         System.out.println(graph + " is already installed");
 
-                    } else if (!listaFinal.contains(graph))
-                    {
+                    } else if (!listaFinal.contains(graph)) {
                         writer.copy(GRAPHS_ARCHETYPE + "content/images/graficasD3/" + graph + ".png",
                                 "src/main/webapp/content/images/graficasD3/" + graph + ".png");
                         listaFinal.add(graph);
@@ -111,13 +103,11 @@ public class GraphsGenerator implements Generator {
                         installedGraphs.add(graph);
                         nuevo = true;
                     }
-                    if (!listaFinal.contains(installedGraphs.get(i).textValue()))
-                    {
+                    if (!listaFinal.contains(installedGraphs.get(i).textValue())) {
                         listaFinal.add(installedGraphs.get(i).textValue());
                     }
                 }
-            } else if (!listaFinal.contains(graph))
-            {
+            } else if (!listaFinal.contains(graph)) {
                 writer.copy(GRAPHS_ARCHETYPE + "content/images/graficasD3/" + graph + ".png",
                         "src/main/webapp/content/images/graficasD3/" + graph + ".png");
                 listaFinal.add(graph);
@@ -125,16 +115,17 @@ public class GraphsGenerator implements Generator {
                 installedGraphs.add(graph);
             }
 
-            if (graph.trim().contains("ALL"))
-            {
+            if (graph.trim().contains("ALL")) {
                 installedGraphs.removeAll();
                 installedGraphs.add(graph);
                 listaFinal.clear();
                 listaFinal.add(graph);
                 addList.clear();
                 addList.add(graph);
-                writer.copyDir(GraphsGenerator.class, GRAPHS_ARCHETYPE + "content/images/graficasD3", "src/main/webapp/content/images/graficasD3");
-                writer.copy(GRAPHS_ARCHETYPE + "app/entities/d3/defaultCharts.json", "src/main/webapp/app/entities/d3/defaultCharts.json");
+                writer.copyDir(GraphsGenerator.class, GRAPHS_ARCHETYPE + "content/images/graficasD3",
+                        "src/main/webapp/content/images/graficasD3");
+                writer.copy(GRAPHS_ARCHETYPE + "app/entities/d3/defaultCharts.json",
+                        "src/main/webapp/app/entities/d3/defaultCharts.json");
                 break;
             }
         }
@@ -142,18 +133,19 @@ public class GraphsGenerator implements Generator {
         GraphsUtil.editFiles(graphsContext.getOutputDir(), listaFinal);
         model.put("project", requiredNotEmpty(context.get(GraphsContext.class)));
         model.put("listGraphs", listaFinal);
-        for (TemplateInfo template : GraphsTemplateFactory.getGraphsTemplates(addList))
-        {
+        for (TemplateInfo template : GraphsTemplateFactory.getGraphsTemplates(addList)) {
             String content = templateService.fillTemplate(template.getTemplatePath(), model);
             FileUtil.saveToFile(createOutputPath(graphsContext, template), content);
         }
 
         writer.copy(GRAPHS_ARCHETYPE + "app/entities/d3/d3.html", "src/main/webapp/app/entities/d3/d3.html");
-        writer.copy(GRAPHS_ARCHETYPE + "app/entities/d3/charts/graph.html", "src/main/webapp/app/entities/d3/charts/graph.html");
+        writer.copy(GRAPHS_ARCHETYPE + "app/entities/d3/charts/graph.html",
+                "src/main/webapp/app/entities/d3/charts/graph.html");
         ProjectUtil.writeKukulkanFile(project.get());
     }
+
     private Path createOutputPath(GraphsContext graphsContext, TemplateInfo template) {
-        return PathProcessor.forPath(template.getFilePath()).joinBefore(graphsContext.getId())
-                .replaceRegExp(".ftl", "").getAbsolutePath(graphsContext.getOutputDir().getParent());
+        return PathProcessor.forPath(template.getFilePath()).replaceRegExp(".ftl", "")
+                .getAbsolutePath(graphsContext.getOutputDir().getParent());
     }
 }

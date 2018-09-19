@@ -44,7 +44,6 @@ import mx.infotec.dads.kukulkan.engine.service.GeneratorPrintProvider;
 import mx.infotec.dads.kukulkan.metamodel.context.GeneratorContext;
 import mx.infotec.dads.kukulkan.metamodel.foundation.DomainModel;
 import mx.infotec.dads.kukulkan.metamodel.foundation.ProjectConfiguration;
-import mx.infotec.dads.kukulkan.shell.domain.KukulkanShellContext;
 
 /**
  * Project Reader.
@@ -78,7 +77,7 @@ public class ProjectUtil {
      */
     public static void writeKukulkanFile(ProjectConfiguration config) {
         try {
-            Path kukulkanFilePath = Paths.get(config.getOutputDir().toString(), config.getId(), KUKULKAN_FILE);
+            Path kukulkanFilePath = config.getOutputDir().resolve(KUKULKAN_FILE);
             printProvider.info("saveFile to: {}", kukulkanFilePath);
             ObjectMapper objectMapper = new ObjectMapper();
             objectMapper.configure(SerializationFeature.INDENT_OUTPUT, true);
@@ -101,7 +100,7 @@ public class ProjectUtil {
             ObjectMapper objectMapper = new ObjectMapper();
             Optional<ProjectConfiguration> pConf = Optional
                     .of(objectMapper.readValue(kukulkanFilePath.toFile(), ProjectConfiguration.class));
-            pConf.ifPresent(conf -> conf.setOutputDir(projectPath.getParent()));
+            pConf.ifPresent(conf -> conf.setOutputDir(projectPath));
             return pConf;
         } catch (IOException e) {
             return Optional.empty();
@@ -117,10 +116,10 @@ public class ProjectUtil {
 
     public static List<String> addEntities(GeneratorContext genCtx, ProjectConfiguration pConfiguration) {
         List<String> entities = new ArrayList<>();
-        genCtx.get(DomainModel.class).ifPresent(domain -> domain.getDomainModelGroup()
-                .forEach(dmg -> dmg.getEntities().forEach(entity->{
-                    entity.getGeneratedElements().forEach(element->{
-                        entities.add(element.getRelativePath().toString());   
+        genCtx.get(DomainModel.class)
+                .ifPresent(domain -> domain.getDomainModelGroup().forEach(dmg -> dmg.getEntities().forEach(entity -> {
+                    entity.getGeneratedElements().forEach(element -> {
+                        entities.add(element.getRelativePath().toString());
                     });
                 })));
         pConfiguration.setEntities(entities);
