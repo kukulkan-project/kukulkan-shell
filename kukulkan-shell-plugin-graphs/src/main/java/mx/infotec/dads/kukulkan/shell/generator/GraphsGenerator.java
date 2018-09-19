@@ -146,6 +146,6 @@ public class GraphsGenerator implements Generator {
 
     private Path createOutputPath(GraphsContext graphsContext, TemplateInfo template) {
         return PathProcessor.forPath(template.getFilePath()).replaceRegExp(".ftl", "")
-                .getAbsolutePath(graphsContext.getOutputDir().getParent());
+                .getAbsolutePath(graphsContext.getOutputDir());
     }
 }
