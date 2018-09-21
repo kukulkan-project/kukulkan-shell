@@ -31,6 +31,9 @@ import static mx.infotec.dads.kukulkan.shell.commands.validation.UserInputValida
 
 import java.io.File;
 import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Optional;
 
 import javax.validation.constraints.NotNull;
@@ -42,8 +45,10 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
+import org.springframework.shell.Availability;
 import org.springframework.shell.standard.ShellComponent;
 import org.springframework.shell.standard.ShellMethod;
+import org.springframework.shell.standard.ShellMethodAvailability;
 import org.springframework.shell.standard.ShellOption;
 import org.springframework.util.StringUtils;
 
@@ -240,6 +245,52 @@ public class AppGeneration extends AbstractCommand {
             printService.print(new AttributedString("This configuration is not supported: " + type));
         }
     }
+
+    @ShellMethod("Execute local installed yarn")
+    @ShellMethodAvailability("isLocalYarnInstalled")
+    public void yarn(@ShellOption String arguments) {
+        commandService.execToConsole(navigator.getCurrentPath().resolve(YarnCommandHelper.YARN_BIN_LOCATION),
+                getYarnCommand(arguments));
+    }
+
+    public ShellCommand getYarnCommand(String args) {
+        List<String> yarnArgs = new ArrayList<>();
+        yarnArgs.addAll(Arrays.asList(args.split(" ")));
+        yarnArgs.add(YarnCommandHelper.YARN_CWD_OPTION);
+        yarnArgs.add(navigator.getCurrentPath().toString());
+        return new ShellCommand(YarnCommandHelper.YARN_LINUX_COMMAND, yarnArgs.toArray(new String[yarnArgs.size()]));
+    }
+
+//    public ShellCommand getBowerCommand(String args) {
+//        List<String> bowerArgs = new ArrayList<>();
+//        bowerArgs.addAll(Arrays.asList(args.split(" ")));
+//        return new ShellCommand(BowerCommandHelper.BOWER_LINUX_COMMAND,
+//                bowerArgs.toArray(new String[bowerArgs.size()]));
+//    }
+//
+//    @ShellMethod("Execute local installed bower")
+//    @ShellMethodAvailability("isLocalBowerInstalled")
+//    public void bower(@ShellOption String arguments) {
+//        commandService.execToConsole(navigator.getCurrentPath().resolve(BowerCommandHelper.BOWER_BIN_LOCATION),
+//                getBowerCommand(arguments));
+//    }
+
+//    @ShellMethod("Execute local installed gulp")
+//    @ShellMethodAvailability("isLocalGulpInstalled")
+//    public void gulp(@ShellOption String arguments) {
+//        commandService.execToConsole(navigator.getCurrentPath().resolve("node_modules/bower/bin"),
+//                new ShellCommand(BowerCommandHelper.BOWER_LINUX_COMMAND, arguments.split(" ")));
+//    }
+
+    public Availability isLocalYarnInstalled() {
+        return navigator.getCurrentPath().resolve("node/yarn/dist/bin").toFile().exists() ? Availability.available()
+                : Availability.unavailable("Yarn local installation was not found in this directory");
+    }
+
+//    public Availability isLocalBowerInstalled() {
+//        return navigator.getCurrentPath().resolve(BowerCommandHelper.BOWER_BIN_LOCATION).toFile().exists() ? Availability.available()
+//                : Availability.unavailable("Bower local installation was not found in this directory");
+//    }
 
     @ShellMethod("Run a Spring-Boot App")
     public void run(@ShellOption(defaultValue = "DEV") Profile profile) {

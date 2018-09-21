@@ -78,8 +78,7 @@ public class CommandServiceImpl implements CommandService {
     /*
      * (non-Javadoc)
      * 
-     * @see
-     * mx.infotec.dads.kukulkan.shell.services.CommandService#exec(mx.infotec.
+     * @see mx.infotec.dads.kukulkan.shell.services.CommandService#exec(mx.infotec.
      * dads.kukulkan.shell.domain.ShellCommand,
      * mx.infotec.dads.kukulkan.shell.util.LineValuedProcessor)
      */
@@ -106,8 +105,7 @@ public class CommandServiceImpl implements CommandService {
     /*
      * (non-Javadoc)
      * 
-     * @see
-     * mx.infotec.dads.kukulkan.shell.services.CommandService#exec(mx.infotec.
+     * @see mx.infotec.dads.kukulkan.shell.services.CommandService#exec(mx.infotec.
      * dads.kukulkan.shell.domain.ShellCommand)
      */
     @Override
@@ -196,7 +194,7 @@ public class CommandServiceImpl implements CommandService {
     @Override
     public boolean execToConsole(Path workingDirectory, ShellCommand command) {
         ProcessBuilder pb = new ProcessBuilder(fixShellCommand(command).getExecutableCommand());
-        pb.directory(nav.getCurrentPath().toFile());
+        pb.directory(workingDirectory.toFile());
 
         try {
             Process p = pb.start();
