@@ -23,27 +23,29 @@
  */
 package mx.infotec.dads.kukulkan.shell.commands.git.service;
 
-import java.util.List;
-
-import mx.infotec.dads.kukulkan.shell.commands.git.GitCommands;
-import mx.infotec.dads.kukulkan.shell.commands.git.GitContext;
-import mx.infotec.dads.kukulkan.shell.commands.git.GitHelper;
 import static mx.infotec.dads.kukulkan.shell.commands.git.GitHelper.ADD;
 import static mx.infotec.dads.kukulkan.shell.commands.git.GitHelper.CLONE;
 import static mx.infotec.dads.kukulkan.shell.commands.git.GitHelper.GIT_COMMAND;
 import static mx.infotec.dads.kukulkan.shell.commands.git.GitHelper.INIT;
 import static mx.infotec.dads.kukulkan.shell.commands.git.GitHelper.STATUS;
-import mx.infotec.dads.kukulkan.shell.domain.ShellCommand;
-import mx.infotec.dads.kukulkan.shell.event.message.EventType;
-import mx.infotec.dads.kukulkan.shell.event.message.LocationUpdatedEvent;
-import mx.infotec.dads.kukulkan.shell.services.CommandService;
-import mx.infotec.dads.kukulkan.shell.services.PrintService;
+
+import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
+
+import mx.infotec.dads.kukulkan.shell.commands.git.GitCommands;
+import mx.infotec.dads.kukulkan.shell.commands.git.GitContext;
+import mx.infotec.dads.kukulkan.shell.commands.git.GitHelper;
+import mx.infotec.dads.kukulkan.shell.component.Navigator;
+import mx.infotec.dads.kukulkan.shell.domain.ShellCommand;
+import mx.infotec.dads.kukulkan.shell.event.message.EventType;
+import mx.infotec.dads.kukulkan.shell.event.message.LocationUpdatedEvent;
+import mx.infotec.dads.kukulkan.shell.services.CommandService;
+import mx.infotec.dads.kukulkan.shell.services.PrintService;
 
 /**
  *
@@ -58,19 +60,22 @@ public class GitCommandsServiceImpl implements GitCommandsService {
 
     @Autowired
     protected CommandService commandService;
-    
+
     @Autowired
-    protected ApplicationEventPublisher publisher;    
-    
+    protected ApplicationEventPublisher publisher;
+
     @Autowired
     protected GitContext gitContext;
-    
+
     @Autowired
     private PrintService printService;
 
     @Autowired
     private GitCommands gitCommands;
-    
+
+    @Autowired
+    private Navigator navigator;
+
     @Override
     public boolean status() {
         LOGGER.debug(LOGGER_EXEC, GIT_COMMAND, STATUS);
@@ -106,18 +111,19 @@ public class GitCommandsServiceImpl implements GitCommandsService {
 
         return execGitCommand(shellCommand.addArg(fileName));
     }
-    
+
     @Override
     public void addAll(String desc, String longDesc) {
         if (gitCommands.availabilityCheck().isAvailable()) {
-            boolean res;
-            res = init(true);
+            boolean res = false;
+            if (!isGitRepo()) {
+                res = init(true);
+            }
 
             if (res) {
                 res = add(false, GitHelper.ADD_ALL_PARAM);
                 if (res) {
-                    res = commit(desc,
-                            longDesc);
+                    res = commit(desc, longDesc);
                     if (res) {
                         branchOrCheckout(GitHelper.DEVELOP_BRANCH);
                     }
@@ -127,6 +133,10 @@ public class GitCommandsServiceImpl implements GitCommandsService {
             printService.warning("Git not availability");
         }
 
+    }
+
+    public boolean isGitRepo() {
+        return navigator.getCurrentPath().resolve(".git").toFile().exists();
     }
 
     @Override
@@ -166,13 +176,13 @@ public class GitCommandsServiceImpl implements GitCommandsService {
     @Override
     public boolean branch(String branchName) {
         LOGGER.debug(LOGGER_EXEC, GIT_COMMAND, GitHelper.BRANCH);
-        
+
         ShellCommand shellCommand = new ShellCommand(GIT_COMMAND, GitHelper.BRANCH);
-        
+
         if (branchName != null && !branchName.isEmpty()) {
             shellCommand.addArg(branchName);
         }
-        
+
         return execGitCommand(shellCommand);
     }
 
@@ -191,7 +201,7 @@ public class GitCommandsServiceImpl implements GitCommandsService {
         }
 
         boolean noError;
-        
+
         if (create) {
             LOGGER.debug("Create develop branch");
             noError = branch(GitHelper.DEVELOP_BRANCH);
@@ -205,7 +215,7 @@ public class GitCommandsServiceImpl implements GitCommandsService {
             return false;
         }
     }
-    
+
     private boolean execGitCommand(ShellCommand shellCommand) {
         boolean res = commandService.execToConsole(shellCommand);
         publisher.publishEvent(new LocationUpdatedEvent(EventType.FILE_NAVIGATION));

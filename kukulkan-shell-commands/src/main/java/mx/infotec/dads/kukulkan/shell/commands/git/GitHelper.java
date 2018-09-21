@@ -44,7 +44,7 @@ public class GitHelper {
     public static final String CLONE = "clone";
 
     public static final String ADD = "add";
-    
+
     public static final String ADD_ALL_PARAM = "-A";
 
     public static final String COMMIT = "commit";
@@ -64,7 +64,7 @@ public class GitHelper {
     public static final String LOG = "log";
 
     public static final String MASTER_BRANCH = "master";
-    
+
     public static final String DEVELOP_BRANCH = "develop";
 
     public static final String FEATURE_PREFIX = "feature-";
