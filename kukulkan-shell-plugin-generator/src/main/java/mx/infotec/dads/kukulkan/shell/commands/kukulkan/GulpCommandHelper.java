@@ -26,7 +26,9 @@ package mx.infotec.dads.kukulkan.shell.commands.kukulkan;
 
 public class GulpCommandHelper {
 
-    public static final String GULP_LINUX_COMMAND = "./gulp.js";
+    public static final String GULP_COMMAND = "gulp.js";
+    
+    public static final String NODE_COMMAND = "node";
 
     public static final String GULP_BIN_LOCATION = "node_modules/gulp/bin";
 

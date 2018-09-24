@@ -28,6 +28,7 @@ import static mx.infotec.dads.kukulkan.shell.commands.kukulkan.CommandHelper.LAY
 import static mx.infotec.dads.kukulkan.shell.commands.kukulkan.CommandHelper.computeExcludedLayers;
 import static mx.infotec.dads.kukulkan.shell.commands.kukulkan.CommandHelper.createGeneratorContext;
 import static mx.infotec.dads.kukulkan.shell.commands.validation.UserInputValidation.validateParams;
+import static mx.infotec.dads.kukulkan.shell.services.impl.CommandServiceImpl.isWindowsOS;
 
 import java.io.File;
 import java.nio.file.Paths;
@@ -263,7 +264,8 @@ public class AppGeneration extends AbstractCommand {
         yarnArgs.addAll(Arrays.asList(args.split(" ")));
         yarnArgs.add(YarnCommandHelper.YARN_CWD_OPTION);
         yarnArgs.add(navigator.getCurrentPath().toString());
-        return new ShellCommand(YarnCommandHelper.YARN_LINUX_COMMAND, yarnArgs.toArray(new String[yarnArgs.size()]));
+        return new ShellCommand(isWindowsOS() ? YarnCommandHelper.YARN_COMMAND : "./" + YarnCommandHelper.YARN_COMMAND,
+                yarnArgs.toArray(new String[yarnArgs.size()]));
     }
 
     public Availability isLocalYarnInstalled() {
@@ -278,8 +280,7 @@ public class AppGeneration extends AbstractCommand {
     @ShellMethodAvailability("isLocalGulpInstalled")
     public void gulp(@ShellOption(defaultValue = "") String arguments) {
         executor.execute(() -> commandService.exec(
-                navigator.getCurrentPath().resolve(GulpCommandHelper.GULP_BIN_LOCATION).toFile(),
-                getGulpCommand(arguments), line -> {
+                navigator.getCurrentPath().resolve("node").toFile(), getGulpCommand(arguments), line -> {
                     printService.print(TextFormatter.formatLogText(line));
                     return Optional.ofNullable(new Line(line));
                 }));
@@ -287,10 +288,13 @@ public class AppGeneration extends AbstractCommand {
 
     public ShellCommand getGulpCommand(String args) {
         List<String> gulpArgs = new ArrayList<>();
+        gulpArgs.add(navigator.getCurrentPath().resolve(GulpCommandHelper.GULP_BIN_LOCATION)
+                .resolve(GulpCommandHelper.GULP_COMMAND).toString());
         gulpArgs.addAll(Arrays.asList(args.split(" ")));
         gulpArgs.add(GulpCommandHelper.GULP_CWD_OPTION);
         gulpArgs.add(navigator.getCurrentPath().toString());
-        return new ShellCommand(GulpCommandHelper.GULP_LINUX_COMMAND, gulpArgs.toArray(new String[gulpArgs.size()]));
+        return new ShellCommand(isWindowsOS() ? GulpCommandHelper.NODE_COMMAND : "./" + GulpCommandHelper.NODE_COMMAND,
+                gulpArgs.toArray(new String[gulpArgs.size()]));
     }
 
     public Availability isLocalGulpInstalled() {
@@ -316,7 +320,8 @@ public class AppGeneration extends AbstractCommand {
         List<String> bowerArgs = new ArrayList<>();
         bowerArgs.addAll(Arrays.asList(args.split(" ")));
         bowerArgs.add(BowerCommandHelper.BOWER_CWD_OPTION + "=" + navigator.getCurrentPath());
-        return new ShellCommand(BowerCommandHelper.BOWER_LINUX_COMMAND,
+        return new ShellCommand(
+                isWindowsOS() ? BowerCommandHelper.BOWER_COMMAND : "./" + BowerCommandHelper.BOWER_COMMAND,
                 bowerArgs.toArray(new String[bowerArgs.size()]));
     }
 

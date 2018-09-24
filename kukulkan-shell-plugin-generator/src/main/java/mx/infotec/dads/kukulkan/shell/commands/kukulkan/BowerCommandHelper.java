@@ -26,7 +26,7 @@ package mx.infotec.dads.kukulkan.shell.commands.kukulkan;
 
 public class BowerCommandHelper {
 
-    public static final String BOWER_LINUX_COMMAND = "./bower";
+    public static final String BOWER_COMMAND = "bower";
 
     public static final String BOWER_BIN_LOCATION = "node_modules/bower/bin";
 

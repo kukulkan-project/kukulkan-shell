@@ -26,7 +26,7 @@ package mx.infotec.dads.kukulkan.shell.commands.kukulkan;
 
 public class YarnCommandHelper {
     
-    public static final String YARN_LINUX_COMMAND = "./yarn";
+    public static final String YARN_COMMAND = "yarn";
     
     public static final String YARN_BIN_LOCATION = "node/yarn/dist/bin"; 
     
