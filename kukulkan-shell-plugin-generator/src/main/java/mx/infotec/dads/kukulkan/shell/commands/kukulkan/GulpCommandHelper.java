@@ -24,12 +24,12 @@
 
 package mx.infotec.dads.kukulkan.shell.commands.kukulkan;
 
-public class BowerCommandHelper {
+public class GulpCommandHelper {
 
-    public static final String BOWER_LINUX_COMMAND = "./bower";
+    public static final String GULP_LINUX_COMMAND = "./gulp.js";
 
-    public static final String BOWER_BIN_LOCATION = "node_modules/bower/bin";
+    public static final String GULP_BIN_LOCATION = "node_modules/gulp/bin";
 
-    public static final String BOWER_CWD_OPTION = "--config.cwd";
+    public static final String GULP_CWD_OPTION = "--cwd";
 
 }

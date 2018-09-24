@@ -23,10 +23,11 @@
  */
 package mx.infotec.dads.kukulkan.shell.services;
 
+import java.io.File;
 import java.nio.file.Path;
 import java.util.List;
-import mx.infotec.dads.kukulkan.shell.component.Navigator;
 
+import mx.infotec.dads.kukulkan.shell.component.Navigator;
 import mx.infotec.dads.kukulkan.shell.domain.Line;
 import mx.infotec.dads.kukulkan.shell.domain.NativeCommand;
 import mx.infotec.dads.kukulkan.shell.domain.ShellCommand;
@@ -40,6 +41,19 @@ import mx.infotec.dads.kukulkan.shell.util.LineValuedProcessor;
  */
 
 public interface CommandService {
+
+    /**
+     * Exec.
+     *
+     * @param workingDirectory
+     *            the working directory
+     * @param command
+     *            the command
+     * @param processor
+     *            the processor
+     * @return the list
+     */
+    List<Line> exec(final File workingDirectory, final ShellCommand command, LineValuedProcessor processor);
 
     /**
      * Exec.
@@ -86,9 +100,11 @@ public interface CommandService {
     List<CharSequence> exec(final Path workingDirectory, final ShellCommand command, LineProcessor processor);
 
     /**
-     * Exec a command in the current directory (from Navigator class), and write the output to console with PrintService.
+     * Exec a command in the current directory (from Navigator class), and write the
+     * output to console with PrintService.
      * 
-     * @param command The Command to excecute.
+     * @param command
+     *            The Command to excecute.
      * @return True if command end with no error.
      * @see PrintService
      * @see Navigator
@@ -96,10 +112,13 @@ public interface CommandService {
     boolean execToConsole(final ShellCommand command);
 
     /**
-     * Exec a command in the workingDirectory, and write the output to console with PrintService.
+     * Exec a command in the workingDirectory, and write the output to console with
+     * PrintService.
      * 
-     * @param workingDirectory The working directory.
-     * @param command The Command to excecute.
+     * @param workingDirectory
+     *            The working directory.
+     * @param command
+     *            The Command to excecute.
      * @return True if command end with no error.
      * @see PrintService
      */

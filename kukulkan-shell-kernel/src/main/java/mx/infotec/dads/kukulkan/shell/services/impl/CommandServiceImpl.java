@@ -24,6 +24,7 @@
 package mx.infotec.dads.kukulkan.shell.services.impl;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -84,22 +85,7 @@ public class CommandServiceImpl implements CommandService {
      */
     @Override
     public List<Line> exec(final ShellCommand command, LineValuedProcessor processor) {
-        List<Line> lines = new ArrayList<>();
-        try {
-            ProcessBuilder pb = new ProcessBuilder(fixShellCommand(command).getExecutableCommand());
-            pb.directory(nav.getCurrentPath().toFile());
-            pb.redirectErrorStream(true);
-            Process p = pb.start();
-            try (InputStream is = p.getInputStream()) {
-                List<Line> readBufferProcess = readBufferProcess(is, new LineCollector(processor));
-                p.waitFor();
-                return readBufferProcess;
-            }
-        } catch (Exception e) {
-            LOGGER.debug(GENERIC_ERROR_MSG, e);
-            printService.print(new AttributedString(String.format("The command [%s] could not be executed", command)));
-        }
-        return lines;
+        return exec(nav.getCurrentPath().toFile(), command, processor);
     }
 
     /*
@@ -215,16 +201,6 @@ public class CommandServiceImpl implements CommandService {
         return false;
     }
 
-    private void close(InputStream is) {
-        if (is != null) {
-            try {
-                is.close();
-            } catch (IOException ex) {
-                LOGGER.warn("Error al close stream", ex);
-            }
-        }
-    }
-
     public static boolean isWindowsOS() {
         return System.getProperty("os.name").startsWith("Windows");
     }
@@ -242,5 +218,25 @@ public class CommandServiceImpl implements CommandService {
 
     private static ShellCommand getWindowsBaseShellCommand() {
         return new ShellCommand("cmd.exe").addArg("/C");
+    }
+
+    @Override
+    public List<Line> exec(File workingDirectory, ShellCommand command, LineValuedProcessor processor) {
+        List<Line> lines = new ArrayList<>();
+        try {
+            ProcessBuilder pb = new ProcessBuilder(fixShellCommand(command).getExecutableCommand());
+            pb.directory(workingDirectory);
+            pb.redirectErrorStream(true);
+            Process p = pb.start();
+            try (InputStream is = p.getInputStream()) {
+                List<Line> readBufferProcess = readBufferProcess(is, new LineCollector(processor));
+                p.waitFor();
+                return readBufferProcess;
+            }
+        } catch (Exception e) {
+            LOGGER.debug(GENERIC_ERROR_MSG, e);
+            printService.print(new AttributedString(String.format("The command [%s] could not be executed", command)));
+        }
+        return lines;
     }
 }

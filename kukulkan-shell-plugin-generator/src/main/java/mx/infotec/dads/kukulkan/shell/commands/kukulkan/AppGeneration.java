@@ -246,11 +246,16 @@ public class AppGeneration extends AbstractCommand {
         }
     }
 
+    /* YARN */
     @ShellMethod("Execute local installed yarn")
     @ShellMethodAvailability("isLocalYarnInstalled")
-    public void yarn(@ShellOption String arguments) {
-        commandService.execToConsole(navigator.getCurrentPath().resolve(YarnCommandHelper.YARN_BIN_LOCATION),
-                getYarnCommand(arguments));
+    public void yarn(@ShellOption(defaultValue = "") String arguments) {
+        executor.execute(() -> commandService.exec(
+                navigator.getCurrentPath().resolve(YarnCommandHelper.YARN_BIN_LOCATION).toFile(),
+                getYarnCommand(arguments), line -> {
+                    printService.print(TextFormatter.formatLogText(line));
+                    return Optional.ofNullable(new Line(line));
+                }));
     }
 
     public ShellCommand getYarnCommand(String args) {
@@ -261,36 +266,65 @@ public class AppGeneration extends AbstractCommand {
         return new ShellCommand(YarnCommandHelper.YARN_LINUX_COMMAND, yarnArgs.toArray(new String[yarnArgs.size()]));
     }
 
-//    public ShellCommand getBowerCommand(String args) {
-//        List<String> bowerArgs = new ArrayList<>();
-//        bowerArgs.addAll(Arrays.asList(args.split(" ")));
-//        return new ShellCommand(BowerCommandHelper.BOWER_LINUX_COMMAND,
-//                bowerArgs.toArray(new String[bowerArgs.size()]));
-//    }
-//
-//    @ShellMethod("Execute local installed bower")
-//    @ShellMethodAvailability("isLocalBowerInstalled")
-//    public void bower(@ShellOption String arguments) {
-//        commandService.execToConsole(navigator.getCurrentPath().resolve(BowerCommandHelper.BOWER_BIN_LOCATION),
-//                getBowerCommand(arguments));
-//    }
-
-//    @ShellMethod("Execute local installed gulp")
-//    @ShellMethodAvailability("isLocalGulpInstalled")
-//    public void gulp(@ShellOption String arguments) {
-//        commandService.execToConsole(navigator.getCurrentPath().resolve("node_modules/bower/bin"),
-//                new ShellCommand(BowerCommandHelper.BOWER_LINUX_COMMAND, arguments.split(" ")));
-//    }
-
     public Availability isLocalYarnInstalled() {
-        return navigator.getCurrentPath().resolve("node/yarn/dist/bin").toFile().exists() ? Availability.available()
+        return navigator.getCurrentPath().resolve(YarnCommandHelper.YARN_BIN_LOCATION).toFile().exists()
+                ? Availability.available()
                 : Availability.unavailable("Yarn local installation was not found in this directory");
     }
 
-//    public Availability isLocalBowerInstalled() {
-//        return navigator.getCurrentPath().resolve(BowerCommandHelper.BOWER_BIN_LOCATION).toFile().exists() ? Availability.available()
-//                : Availability.unavailable("Bower local installation was not found in this directory");
-//    }
+    /* GULP */
+
+    @ShellMethod("Execute local installed gulp")
+    @ShellMethodAvailability("isLocalGulpInstalled")
+    public void gulp(@ShellOption(defaultValue = "") String arguments) {
+        executor.execute(() -> commandService.exec(
+                navigator.getCurrentPath().resolve(GulpCommandHelper.GULP_BIN_LOCATION).toFile(),
+                getGulpCommand(arguments), line -> {
+                    printService.print(TextFormatter.formatLogText(line));
+                    return Optional.ofNullable(new Line(line));
+                }));
+    }
+
+    public ShellCommand getGulpCommand(String args) {
+        List<String> gulpArgs = new ArrayList<>();
+        gulpArgs.addAll(Arrays.asList(args.split(" ")));
+        gulpArgs.add(GulpCommandHelper.GULP_CWD_OPTION);
+        gulpArgs.add(navigator.getCurrentPath().toString());
+        return new ShellCommand(GulpCommandHelper.GULP_LINUX_COMMAND, gulpArgs.toArray(new String[gulpArgs.size()]));
+    }
+
+    public Availability isLocalGulpInstalled() {
+        return navigator.getCurrentPath().resolve(GulpCommandHelper.GULP_BIN_LOCATION).toFile().exists()
+                ? Availability.available()
+                : Availability.unavailable("Yarn local installation was not found in this directory");
+    }
+
+    /* BOWER */
+
+    @ShellMethod("Execute local installed bower")
+    @ShellMethodAvailability("isLocalBowerInstalled")
+    public void bower(@ShellOption(defaultValue = "") String arguments) {
+        executor.execute(() -> commandService.exec(
+                navigator.getCurrentPath().resolve(BowerCommandHelper.BOWER_BIN_LOCATION).toFile(),
+                getBowerCommand(arguments), line -> {
+                    printService.print(TextFormatter.formatLogText(line));
+                    return Optional.ofNullable(new Line(line));
+                }));
+    }
+
+    public ShellCommand getBowerCommand(String args) {
+        List<String> bowerArgs = new ArrayList<>();
+        bowerArgs.addAll(Arrays.asList(args.split(" ")));
+        bowerArgs.add(BowerCommandHelper.BOWER_CWD_OPTION + "=" + navigator.getCurrentPath());
+        return new ShellCommand(BowerCommandHelper.BOWER_LINUX_COMMAND,
+                bowerArgs.toArray(new String[bowerArgs.size()]));
+    }
+
+    public Availability isLocalBowerInstalled() {
+        return navigator.getCurrentPath().resolve(BowerCommandHelper.BOWER_BIN_LOCATION).toFile().exists()
+                ? Availability.available()
+                : Availability.unavailable("Bower local installation was not found in this directory");
+    }
 
     @ShellMethod("Run a Spring-Boot App")
     public void run(@ShellOption(defaultValue = "DEV") Profile profile) {
