@@ -46,9 +46,19 @@ public class FileCommands extends AbstractCommand {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(FileCommands.class);
 
-    @ShellMethod("make a ping to a host")
+    @ShellMethod("Move or rename a file to a target file.")
     public void mv(@ShellOption(valueProvider = FileLocationValueProvider.class) String from,
             @ShellOption(valueProvider = FileLocationValueProvider.class) String to) throws IOException {
         Files.move(Paths.get(from), Paths.get(to), StandardCopyOption.REPLACE_EXISTING);
+    }
+
+    @ShellMethod("make a ping to a host")
+    public void rename(@ShellOption(valueProvider = FileNameProvider.class) String file) throws IOException {
+        System.out.println("file Name: " + file.toString());
+    }
+
+    @ShellMethod("make a ping to a host")
+    public void createCsv(@ShellOption(valueProvider = FileNameProvider.class) String file) throws IOException {
+        System.out.println("file Name: " + file.toString());
     }
 }
