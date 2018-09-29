@@ -5,9 +5,10 @@ import java.nio.file.FileVisitResult;
 import java.nio.file.Path;
 import java.nio.file.SimpleFileVisitor;
 import java.nio.file.attribute.BasicFileAttributes;
+import java.util.List;
 import java.util.regex.Pattern;
 
-public class ListFiles extends SimpleFileVisitor<Path> {
+public class ListFile extends SimpleFileVisitor<Path> {
 
     final Pattern p = Pattern.compile(".*\\.md$");
 
@@ -21,11 +22,16 @@ public class ListFiles extends SimpleFileVisitor<Path> {
 
     @Override
     public FileVisitResult preVisitDirectory(Path dir, BasicFileAttributes attrs) throws IOException {
-//        if (FileUtil.isExcludedFolder(dir.getFileName().toString())) {
-//            return FileVisitResult.SKIP_SUBTREE;
-//        } else {
-//            return FileVisitResult.CONTINUE;
-//        }
+        // if (FileUtil.isExcludedFolder(dir.getFileName().toString())) {
+        // return FileVisitResult.SKIP_SUBTREE;
+        // } else {
+        // return FileVisitResult.CONTINUE;
+        // }
         return FileVisitResult.CONTINUE;
+    }
+
+    public List<String> getData() {
+        
+        return null;
     }
 }

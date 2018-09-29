@@ -24,17 +24,20 @@
 package mx.infotec.dads.kukulkan.shell.commands.files;
 
 import java.io.IOException;
+import java.nio.file.FileVisitor;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
-import mx.infotec.dads.kukulkan.shell.commands.AbstractCommand;
-
-import org.springframework.shell.standard.ShellComponent;
-import org.springframework.shell.standard.ShellMethod;
+import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.shell.standard.ShellComponent;
+import org.springframework.shell.standard.ShellMethod;
 import org.springframework.shell.standard.ShellOption;
+
+import mx.infotec.dads.kukulkan.shell.commands.AbstractCommand;
 
 /**
  * Util Commands.
@@ -59,6 +62,12 @@ public class FileCommands extends AbstractCommand {
 
     @ShellMethod("make a ping to a host")
     public void createCsv(@ShellOption(valueProvider = FileNameProvider.class) String file) throws IOException {
-        System.out.println("file Name: " + file.toString());
+        ListFile listFiles = new ListFile();
+        Files.walkFileTree(navigator.getCurrentPath(), listFiles);
+        saveCsv(listFiles.getData());
+    }
+
+    private void saveCsv(List<String> data) {
+        // TODO Auto-generated method stub
     }
 }
