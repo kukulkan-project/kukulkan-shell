@@ -46,8 +46,8 @@ public class AppInput {
     private final static String MYSQL_DRIVER_CLASS = "com.mysql.jdbc.Driver";
     private final static String H2_DEFAULT_URL = "jdbc:h2:~";
     private final static String H2_DRIVER_CLASS = "org.h2.Driver";
-    private final static String ORACLE_DEFAULT_URL = "jdbc:h2:~";
-    private final static String ORACLE_DRIVER_CLASS = "org.h2.Driver";
+    private final static String ORACLE_DEFAULT_URL = "jdbc:oracle:thin:@localhost:1521";
+    private final static String ORACLE_DRIVER_CLASS = "oracle.jdbc.driver.OracleDriver";
 
     @Autowired
     private InputShell inputShell;
