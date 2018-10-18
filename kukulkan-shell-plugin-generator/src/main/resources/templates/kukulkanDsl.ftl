@@ -3,7 +3,9 @@
 entity ${entity.name} (${entity.tableName}) <#if entity.properties?has_content>{
 	<#list entity.properties as property>
 		<#assign constraint = property.constraint>
+	<#if !property.name?ends_with('ContentType')>
 	<#if entity.displayField == property>-> </#if>${property.name} : <#if property.type == "boolean">Boolean<#elseif property.type == "byte[]">Blob<#else>${property.type}</#if><#if !constraint.nullable> required</#if><#if constraint.min?has_content> min(${constraint.min})</#if><#if constraint.max?has_content && (property.literal || property.number || property.blob)> max(${constraint.max})</#if><#if property?index < entity.properties?size - 1 || entity.ownerAssociations?has_content>,</#if>
+	</#if>
 	</#list>
 	<#list entity.ownerAssociations as association>
 	<#if association.type == "ONE_TO_ONE">
