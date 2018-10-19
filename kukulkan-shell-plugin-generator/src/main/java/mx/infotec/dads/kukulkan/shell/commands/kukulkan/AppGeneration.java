@@ -247,6 +247,21 @@ public class AppGeneration extends AbstractCommand {
         }
     }
 
+    /**
+     * Configurate a front end application, It execute the command "mvn package
+     * -Pprod -DskiptTests".
+     * 
+     * @param type
+     *            Config type
+     */
+    @ShellMethod("Configurate the project")
+    public void sonar() {
+        commandService.exec(new ShellCommand(getMavenWrapperCommand(), "sonar:sonar"), line -> {
+            printService.print(TextFormatter.formatLogText(line));
+            return Optional.ofNullable(new Line(line));
+        });
+    }
+
     /* YARN */
     @ShellMethod("Execute local installed yarn")
     @ShellMethodAvailability("isLocalYarnInstalled")
@@ -279,8 +294,8 @@ public class AppGeneration extends AbstractCommand {
     @ShellMethod("Execute local installed gulp")
     @ShellMethodAvailability("isLocalGulpInstalled")
     public void gulp(@ShellOption(defaultValue = "") String arguments) {
-        executor.execute(() -> commandService.exec(
-                navigator.getCurrentPath().resolve("node").toFile(), getGulpCommand(arguments), line -> {
+        executor.execute(() -> commandService.exec(navigator.getCurrentPath().resolve("node").toFile(),
+                getGulpCommand(arguments), line -> {
                     printService.print(TextFormatter.formatLogText(line));
                     return Optional.ofNullable(new Line(line));
                 }));
