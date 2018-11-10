@@ -146,27 +146,6 @@ public class AppGeneration extends AbstractCommand {
         config(ConfigurationType.FRONT_END);
     }
 
-    @ShellMethod("Add entities from differents sources")
-    public void addEntitiesFromDatabase(
-            @ShellOption(valueProvider = LayersValueProvider.class, defaultValue = LAYERS_OPTION_DEFAULT_VALUE) String excludeLayers,
-            @ShellOption(defaultValue = "SQL_MYSQL") DatabaseType source) {
-        computeExcludedLayers(shellContext, excludeLayers);
-        ProjectConfiguration pConf = shellContext.getConfiguration()
-                .orElseThrow(() -> new GeneratorException("No ProjectConfiguration Found"));
-        try {
-            GeneratorContext genCtx = createGeneratorContext(shellContext.getConfiguration(),
-                    appInput.readDataStore(source), dataBaseTranslatorService);
-            FileUtil.deleteFiles(navigator.getCurrentPath().getParent().toString(), pConf.getEntities());
-            engineGenerator.process(genCtx);
-            ProjectUtil.addEntities(genCtx, pConf);
-            FileUtil.saveToFile(genCtx);
-            ProjectUtil.writeKukulkanFile(pConf);
-            config(ConfigurationType.FRONT_END);
-        } catch (SchemaAnalyzerException e) {
-            printService.error(e.getMessage());
-        }
-    }
-
     @ShellMethod("Create a 3k file with the entities definition extracted from database")
     public void createDomainModelFromDatabase(@ShellOption(defaultValue = "SQL_MYSQL") DatabaseType source,
             @ShellOption(defaultValue = "") String fileName) {
