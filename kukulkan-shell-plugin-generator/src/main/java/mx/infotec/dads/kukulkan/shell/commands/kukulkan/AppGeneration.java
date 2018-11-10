@@ -60,7 +60,6 @@ import com.fasterxml.jackson.databind.SerializationFeature;
 import mx.infotec.dads.kukulkan.engine.service.EngineGenerator;
 import mx.infotec.dads.kukulkan.engine.service.FileUtil;
 import mx.infotec.dads.kukulkan.engine.translator.database.DataBaseTranslatorService;
-import mx.infotec.dads.kukulkan.engine.translator.database.SchemaAnalyzerException;
 import mx.infotec.dads.kukulkan.metamodel.context.GeneratorContext;
 import mx.infotec.dads.kukulkan.metamodel.conventions.CodeStandard;
 import mx.infotec.dads.kukulkan.metamodel.foundation.Database;
