@@ -77,6 +77,7 @@ public class KukulkanPromptProvided implements PromptProvider {
         basePrompt = defaulBasePrompt();
         endPrompt = defaulEndPrompt();
         prompt = AttributedString.join(new AttributedString(""), basePrompt, endPrompt);
+        changeLocationAwarenessActions();
     }
 
     /*
