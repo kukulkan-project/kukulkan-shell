@@ -1,11 +1,15 @@
 package mx.infotec.dads.kukulkan.shell.commands.usermanagement;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 
 import org.hibernate.validator.constraints.Email;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
@@ -57,6 +61,9 @@ public class User {
 
     @JsonProperty(value = "last_modified_by")
     private String lastModifiedBy = "kukulkan";
+
+    @JsonIgnore
+    private Set<Authority> authorities = new HashSet<>();
 
     public Long getId() {
         return id;
@@ -146,11 +153,24 @@ public class User {
         this.lastModifiedBy = lastModifiedBy;
     }
 
+    public Set<Authority> getAuthorities() {
+        return authorities;
+    }
+
+    public void setAuthorities(Set<Authority> authorities) {
+        this.authorities = authorities;
+    }
+
+    public void addAuthority(Authority authority) {
+        authorities.add(authority);
+    }
+
     @Override
     public String toString() {
         return "User [id=" + id + ", login=" + login + ", password=" + password + ", firstName=" + firstName
                 + ", lastName=" + lastName + ", email=" + email + ", activated=" + activated + ", langKey=" + langKey
-                + ", imageUrl=" + imageUrl + ", createdBy=" + createdBy + ", lastModifiedBy=" + lastModifiedBy + "]";
+                + ", imageUrl=" + imageUrl + ", createdBy=" + createdBy + ", lastModifiedBy=" + lastModifiedBy
+                + ", authorities=" + authorities + "]";
     }
 
 }
