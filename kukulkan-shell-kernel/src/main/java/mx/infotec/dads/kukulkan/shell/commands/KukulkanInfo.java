@@ -21,8 +21,10 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package mx.infotec.dads.kukulkan.shell.commands.kukulkan;
+package mx.infotec.dads.kukulkan.shell.commands;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.info.BuildProperties;
 import org.springframework.shell.standard.ShellComponent;
 import org.springframework.shell.standard.ShellMethod;
 
@@ -34,6 +36,9 @@ import org.springframework.shell.standard.ShellMethod;
 @ShellComponent
 public class KukulkanInfo {
 
+    @Autowired
+    BuildProperties properties;
+
     /**
      * Info.
      *
@@ -41,7 +46,7 @@ public class KukulkanInfo {
      */
     @ShellMethod("Show the version of Kukulkan Shell")
     public String info() {
-        return "v1.0.0";
+        return "v" + properties.getVersion();
     }
 
     /**
@@ -82,7 +87,7 @@ public class KukulkanInfo {
         StringBuilder sb = new StringBuilder();
         sb.append("Daniel Cortes Pichardo").append(System.lineSeparator());
         sb.append("daniel.cortes@infotec.mx").append(System.lineSeparator());
-        sb.append("https://github.com/danimaniarqsoft/kukulkan-shell");
+        sb.append("https://github.com/kukulkan-project/kukulkan-shell");
         return sb.toString();
     }
 }

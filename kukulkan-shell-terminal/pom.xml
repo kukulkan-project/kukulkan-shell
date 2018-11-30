@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<artifactId>kukulkan-shell-terminal</artifactId>
@@ -123,12 +124,12 @@
 											dir="target/classes">
 											<include name="kukulkan.sh" />
 										</replace>
-										<replace token="kukulkan-deploy-id" value="${kukulkan-deploy-id}"
-											dir="target/classes">
+										<replace token="kukulkan-deploy-id"
+											value="${kukulkan-deploy-id}" dir="target/classes">
 											<include name="kukulkan.sh" />
 										</replace>
-										<replace token="project.version" value="${project.version}"
-											dir="target/classes">
+										<replace token="project.version"
+											value="${project.version}" dir="target/classes">
 											<include name="kukulkan.sh" />
 										</replace>
 									</target>
@@ -253,6 +254,12 @@
 					<execution>
 						<goals>
 							<goal>repackage</goal>
+						</goals>
+					</execution>
+					<execution>
+						<id>build-info</id>
+						<goals>
+							<goal>build-info</goal>
 						</goals>
 					</execution>
 				</executions>
