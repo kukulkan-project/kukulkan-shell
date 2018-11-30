@@ -14,7 +14,7 @@ import org.springframework.stereotype.Component;
 public class AuthorityValueProvider extends ValueProviderSupport {
 
     @Autowired
-    private UserAuthorityManagement usersMgmt;
+    private UserAuthorityManagementCommands usersMgmt;
 
     @Override
     public List<CompletionProposal> complete(MethodParameter arg0, CompletionContext arg1, String[] arg2) {

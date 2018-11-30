@@ -15,18 +15,15 @@ import mx.infotec.dads.kukulkan.shell.domain.ShellCompletionProposal;
 @Component
 public class UserValueProvider extends ValueProviderSupport {
 
-    @Autowired
-    private UserAuthorityManagement usersMgmt;
+	@Autowired
+	private UserAuthorityManagementCommands usersMgmt;
 
-    @Override
-    public List<CompletionProposal> complete(MethodParameter arg0, CompletionContext arg1, String[] arg2) {
-        UserAuthorityRepository repo = usersMgmt.createRepo();
-        // return repo.findAll().stream().map(user -> new
-        // CompletionProposal(user.getId().toString()))
-        // .collect(Collectors.toList());
-        return repo.findAll().stream()
-                .map(user -> new ShellCompletionProposal(user.getId().toString(), user.getLogin()))
-                .collect(Collectors.toList());
-    }
+	@Override
+	public List<CompletionProposal> complete(MethodParameter arg0, CompletionContext arg1, String[] arg2) {
+		UserAuthorityRepository repo = usersMgmt.createRepo();
+		return repo.findAll().stream()
+				.map(user -> new ShellCompletionProposal(user.getId().toString(), user.getLogin()))
+				.collect(Collectors.toList());
+	}
 
 }
