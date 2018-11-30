@@ -162,7 +162,7 @@ public class UserAuthorityManagementCommands extends AbstractCommand {
         try {
             repo.delete(new Authority(name));
             repo.flush();
-            printer.info("Authority %s deleted", name);
+            printer.info(String.format("Authority %s deleted", name));
         } catch (AuthorityHasAssociatedUsers e) {
             printer.error(e.getMessage());
         }
@@ -206,7 +206,7 @@ public class UserAuthorityManagementCommands extends AbstractCommand {
             printer.error(e.getMessage());
         }
     }
-    
+
     private String encodePassword(String password) {
         PasswordEncoder encoder = new BCryptPasswordEncoder();
         return encoder.encode(password);

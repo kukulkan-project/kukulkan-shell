@@ -27,10 +27,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
-import java.util.List;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.shell.standard.ShellComponent;
 import org.springframework.shell.standard.ShellMethod;
 import org.springframework.shell.standard.ShellOption;
@@ -45,27 +42,27 @@ import mx.infotec.dads.kukulkan.shell.commands.AbstractCommand;
 @ShellComponent
 public class FileCommands extends AbstractCommand {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(FileCommands.class);
-
     @ShellMethod("Move or rename a file to a target file.")
     public void mv(@ShellOption(valueProvider = FileLocationValueProvider.class) String from,
             @ShellOption(valueProvider = FileLocationValueProvider.class) String to) throws IOException {
         Files.move(Paths.get(from), Paths.get(to), StandardCopyOption.REPLACE_EXISTING);
     }
 
-    @ShellMethod("make a ping to a host")
-    public void rename(@ShellOption(valueProvider = FileNameProvider.class) String file) throws IOException {
-        System.out.println("file Name: " + file.toString());
-    }
-
-    @ShellMethod("make a ping to a host")
-    public void createCsv(@ShellOption(valueProvider = FileNameProvider.class) String file) throws IOException {
-        ListFile listFiles = new ListFile();
-        Files.walkFileTree(navigator.getCurrentPath(), listFiles);
-        saveCsv(listFiles.getData());
-    }
-
-    private void saveCsv(List<String> data) {
-        // TODO Auto-generated method stub
-    }
+    // @ShellMethod("make a ping to a host")
+    // public void rename(@ShellOption(valueProvider = FileNameProvider.class)
+    // String file) throws IOException {
+    // System.out.println("file Name: " + file.toString());
+    // }
+    //
+    // @ShellMethod("make a ping to a host")
+    // public void createCsv(@ShellOption(valueProvider = FileNameProvider.class)
+    // String file) throws IOException {
+    // ListFile listFiles = new ListFile();
+    // Files.walkFileTree(navigator.getCurrentPath(), listFiles);
+    // saveCsv(listFiles.getData());
+    // }
+    //
+    // private void saveCsv(List<String> data) {
+    // // TODO Auto-generated method stub
+    // }
 }

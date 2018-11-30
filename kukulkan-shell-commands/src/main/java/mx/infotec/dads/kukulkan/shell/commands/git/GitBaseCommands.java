@@ -24,14 +24,14 @@
 package mx.infotec.dads.kukulkan.shell.commands.git;
 
 import static mx.infotec.dads.kukulkan.shell.commands.git.GitHelper.GIT_COMMAND;
-import mx.infotec.dads.kukulkan.shell.commands.git.service.GitCommandsService;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.shell.Availability;
-import org.springframework.shell.standard.ShellMethodAvailability;
+import org.springframework.stereotype.Component;
 
+import mx.infotec.dads.kukulkan.shell.commands.git.service.GitCommandsService;
 import mx.infotec.dads.kukulkan.shell.domain.NativeCommand;
 import mx.infotec.dads.kukulkan.shell.domain.NativeCommandContext;
 import mx.infotec.dads.kukulkan.shell.domain.ShellCommand;
@@ -44,7 +44,8 @@ import mx.infotec.dads.kukulkan.shell.services.CommandService;
  *
  * @author Daniel Cortes Pichardo
  */
-public abstract class GitBaseCommands {
+@Component
+public class GitBaseCommands {
 
     protected static final String LOGGER_EXEC = mx.infotec.dads.kukulkan.shell.commands.git.service.GitCommandsService.LOGGER_EXEC;
 
@@ -66,13 +67,12 @@ public abstract class GitBaseCommands {
 
     @Autowired
     protected GitCommandsService gitCommandsService;
-    
+
     /**
      * Check for Availability in all git commands
      * 
      * @return Availability
      */
-    @ShellMethodAvailability
     public Availability availabilityCheck() {
         NativeCommand gitCmd = projectContext.getAvailableCommands().get(GIT_COMMAND);
         if (gitCmd != null && gitCmd.isActive()) {
@@ -81,7 +81,7 @@ public abstract class GitBaseCommands {
             return Availability.unavailable("you must install git");
         }
     }
-    
+
     protected void execGitCommand(ShellCommand shellCommand) {
         commandService.execToConsole(shellCommand);
         publisher.publishEvent(new LocationUpdatedEvent(EventType.FILE_NAVIGATION));

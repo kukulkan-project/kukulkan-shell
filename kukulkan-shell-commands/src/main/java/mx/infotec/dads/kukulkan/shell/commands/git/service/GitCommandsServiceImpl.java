@@ -37,7 +37,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 
-import mx.infotec.dads.kukulkan.shell.commands.git.GitCommands;
+import mx.infotec.dads.kukulkan.shell.commands.git.GitBaseCommands;
 import mx.infotec.dads.kukulkan.shell.commands.git.GitContext;
 import mx.infotec.dads.kukulkan.shell.commands.git.GitHelper;
 import mx.infotec.dads.kukulkan.shell.component.Navigator;
@@ -71,7 +71,7 @@ public class GitCommandsServiceImpl implements GitCommandsService {
     private PrintService printService;
 
     @Autowired
-    private GitCommands gitCommands;
+    private GitBaseCommands gitCommands;
 
     @Autowired
     private Navigator navigator;
@@ -113,7 +113,7 @@ public class GitCommandsServiceImpl implements GitCommandsService {
     }
 
     @Override
-    public void addAll(String desc, String longDesc) {
+    public void addAllAndCommit(String desc, String longDesc) {
         if (gitCommands.availabilityCheck().isAvailable()) {
             boolean res = false;
             if (!isGitRepo()) {

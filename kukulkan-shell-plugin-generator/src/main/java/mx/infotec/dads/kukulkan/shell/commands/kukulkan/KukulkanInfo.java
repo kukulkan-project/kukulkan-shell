@@ -48,15 +48,15 @@ public class KukulkanInfo {
      * Archetypes.
      *
      * @return the string
-     * @throws InterruptedException the interrupted exception
+     * @throws InterruptedException
+     *             the interrupted exception
      */
     @ShellMethod("Show a list of supported archetypes")
-    public String archetypes() throws InterruptedException {
+    public String archetypes() {
         StringBuilder sb = new StringBuilder();
-        sb.append("Angular 4 - Spring - JPA").append("\n");
-        sb.append("Angular 4 - Spring - Mongo").append("\n");
-        sb.append("Angular 1.5.8 - Spring - JPA").append("\n");
-        sb.append("Angular 1.5.8 - Spring - Mongo").append("\n");
+        sb.append("Angular 1.5.8 - Spring - JPA").append(System.lineSeparator());
+        sb.append("Angular 1.5.8 - Spring - Mongo").append(System.lineSeparator());
+        sb.append("Angular 1.5.8 (GobMx look and feel) - Spring JPA").append(System.lineSeparator());
         return sb.toString();
     }
 
@@ -68,7 +68,7 @@ public class KukulkanInfo {
     @ShellMethod("Show the copyright")
     public String copyright() {
         StringBuilder sb = new StringBuilder();
-        sb.append("@CONACYT - INFOTEC").append("\n");
+        sb.append("@CONACYT - INFOTEC").append(System.lineSeparator());
         return sb.toString();
     }
 
@@ -80,8 +80,8 @@ public class KukulkanInfo {
     @ShellMethod("Show the contact information")
     public String contact() {
         StringBuilder sb = new StringBuilder();
-        sb.append("Daniel Cortes Pichardo").append("\n");
-        sb.append("daniel.cortes@infotec.mx").append("\n");
+        sb.append("Daniel Cortes Pichardo").append(System.lineSeparator());
+        sb.append("daniel.cortes@infotec.mx").append(System.lineSeparator());
         sb.append("https://github.com/danimaniarqsoft/kukulkan-shell");
         return sb.toString();
     }

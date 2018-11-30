@@ -32,7 +32,7 @@ import java.io.Serializable;
 public interface GitCommandsService extends Serializable {
 
     String LOGGER_EXEC = "exec [{} {}]";
-    
+
     /**
      * Exec git status command.
      *
@@ -43,7 +43,8 @@ public interface GitCommandsService extends Serializable {
     /**
      * Exec git init command.
      *
-     * @param quiet true if no output in excecution.
+     * @param quiet
+     *            true if no output in excecution.
      * @return true if no error.
      */
     boolean init(boolean quiet);
@@ -51,7 +52,8 @@ public interface GitCommandsService extends Serializable {
     /**
      * Exec git clone command.
      *
-     * @param repositoryPath Repository to clone.
+     * @param repositoryPath
+     *            Repository to clone.
      * @return true if no error.
      */
     boolean clone(String repositoryPath);
@@ -59,8 +61,10 @@ public interface GitCommandsService extends Serializable {
     /**
      * Exec git add command.
      *
-     * @param force Force add operation.
-     * @param fileName The filename.
+     * @param force
+     *            Force add operation.
+     * @param fileName
+     *            The filename.
      * @return true if no error.
      */
     boolean add(boolean force, String fileName);
@@ -68,8 +72,10 @@ public interface GitCommandsService extends Serializable {
     /**
      * Exec git commit command.
      *
-     * @param message Message in the command.
-     * @param author Author of commit.
+     * @param message
+     *            Message in the command.
+     * @param author
+     *            Author of commit.
      * @return true if no error.
      */
     boolean commit(String message, String author);
@@ -77,7 +83,8 @@ public interface GitCommandsService extends Serializable {
     /**
      * Exec git push command.
      *
-     * @param setUpstream True if set upstream.
+     * @param setUpstream
+     *            True if set upstream.
      * @return true if no error.
      */
     boolean push(boolean setUpstream);
@@ -88,38 +95,43 @@ public interface GitCommandsService extends Serializable {
      * @return true if no error.
      */
     boolean pull();
-    
+
     /**
      * Exec git checkout command.
      * 
-     * @param branchName The branch name.
+     * @param branchName
+     *            The branch name.
      * @return true if no error.
      */
     boolean checkout(String branchName);
-    
+
     /**
      * Exec git branch command.
      * 
-     * @param branchName The branch name.
+     * @param branchName
+     *            The branch name.
      * @return true if no error.
      */
     boolean branch(String branchName);
-    
+
     /**
-     * If branch exists, perform git checkout command. Otherwise perform git branch command.
+     * If branch exists, perform git checkout command. Otherwise perform git branch
+     * command.
      * 
-     * @param branchName The branch name.
+     * @param branchName
+     *            The branch name.
      * @return true if no error.
      */
     boolean branchOrCheckout(String branchName);
 
     /**
-     * addAll elements in the current git workspace
+     * addAll elements in the current git workspace and commit with given short and
+     * long description
      * 
      * @param desc
      * @param longDesc
      * @return
      */
-    void addAll(String desc, String longDesc);
-    
+    void addAllAndCommit(String desc, String longDesc);
+
 }
