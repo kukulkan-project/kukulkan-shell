@@ -138,7 +138,7 @@ public class UserAuthorityManagementCommands extends AbstractCommand {
             String login = repo.findOne(id).getLogin();
             repo.delete(id);
             repo.flush();
-            printer.info("Deleted user %s", login);
+            printer.info(String.format("Deleted user %s", login));
         }
     }
 
