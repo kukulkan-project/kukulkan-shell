@@ -53,9 +53,9 @@
         <javadoc.opts>-Xdoclint:none</javadoc.opts>
         <checkstyle.config.location>etc/checkstyle/checkstyle.xml</checkstyle.config.location>
         <!-- Kukulkan dependencies -->
-        <kukulkan-metamodel.version>0.2.0-RELEASE</kukulkan-metamodel.version>
-        <kukulkan-engine.version>0.2.0-RELEASE</kukulkan-engine.version>
-        <kukulkan-generator-angularjs.version>0.3.0-RELEASE</kukulkan-generator-angularjs.version>
+        <kukulkan-metamodel.version>0.3.0-RELEASE</kukulkan-metamodel.version>
+        <kukulkan-engine.version>0.3.0-RELEASE</kukulkan-engine.version>
+        <kukulkan-generator-angularjs.version>0.4.0-RELEASE</kukulkan-generator-angularjs.version>
         <!-- Kukulkan Shell Modules dependencies -->
     </properties>
 
