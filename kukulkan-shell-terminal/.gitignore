@@ -2,7 +2,7 @@
 # Project Specific
 ######################
 
-kukulkan.log
+logs/*.*
 .springBeans
 
 

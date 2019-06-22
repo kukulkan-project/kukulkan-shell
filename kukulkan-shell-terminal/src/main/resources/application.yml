@@ -34,3 +34,5 @@ logging:
 #pattern:
 #    console: "[%green(%-5level)] : %white(%msg%n)"
 #   file: "%d %-5level [%thread] %logger : %msg%n"
+application:
+  version: 1.0.0
