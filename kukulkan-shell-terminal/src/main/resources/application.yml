@@ -27,7 +27,7 @@ kukulkan:
 logging:
   file: logs/kukulkan.log
   level:
-    root: info
+    root: error
     org.springframework.web: false
     org.hibernate: false
     org.hibernate.SQL: false
