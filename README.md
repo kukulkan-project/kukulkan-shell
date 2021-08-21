@@ -1,3 +1,13 @@
+<h1 align="center">Bienvenido a Kukulkan 👋</h1>
+<p>
+  <a href="https://www.npmjs.com/package/generator-crip" target="_blank">
+    <img alt="Version" src="https://img.shields.io/npm/v/generator-crip.svg">
+  </a>
+  <a href="#" target="_blank">
+    <img alt="License: MIT" src="https://img.shields.io/badge/License-MIT-yellow.svg" />
+  </a>
+</p>
+
 # Tabla de Contenido
 
 1. [Introducción](#introducción)
